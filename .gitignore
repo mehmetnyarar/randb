@@ -1,0 +1,15 @@
+# Directories
+coverage
+node_modules
+
+# Package Manager
+yarn.*
+yarn-*
+
+# Environment Variables
+.env
+.env.*
+!.env.config
+
+# Misc
+.DS_Store

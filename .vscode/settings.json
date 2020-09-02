@@ -1,0 +1,34 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "editor.formatOnSave": true,
+  // disable if "Prettier - Code formatter" extension is not installed
+  // https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // disable if "Prettier ESLint" extension is not installed
+  // https://marketplace.visualstudio.com/items?itemName=rvest.vs-code-prettier-eslint
+  "[javascript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  // disable if "VSCode Conventional Commits" extension is not installed
+  // https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits
+  "conventionalCommits.scopes": [
+    "server",
+    "shared-logic",
+    "shared-ui",
+    "app-web",
+    "app-mobile",
+    "app-desktop"
+  ]
+}

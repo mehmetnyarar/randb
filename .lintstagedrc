@@ -1,0 +1,4 @@
+{
+  './*.{js,ts,json,html,css,md}': ['prettier --write'],
+  './*.{js,ts}': ['eslint --fix', 'git add .', 'jest --findRelatedTests']
+}

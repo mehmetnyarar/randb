@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    /* Basic Options */
+    "declaration": false,
+    "removeComments": false
+  },
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,77 @@
+{
+  "name": "randb-manager",
+  "version": "1.0.0",
+  "license": "",
+  "description": "RAN database manager",
+  "keywords": [
+    "ran",
+    "radio access network",
+    "database",
+    "manager"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "homepage": "",
+  "repository": {},
+  "bugs": {},
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "reset": "yarn clean && yarn install",
+    "clean": "lerna run clean --stream && rm -rf node_modules yarn*",
+    "validate": "lerna run validate --stream --concurrency 1",
+    "typings": "lerna run typings --stream --concurrency 1",
+    "format": "npm-run-all format:root format:packages",
+    "format:root": "prettier --write \"./*.{js,ts,json,html,css,md}\" --ignore-path .gitignore",
+    "format:packages": "lerna run format --stream --concurrency 1",
+    "lint": "npm-run-all lint:root lint:packages",
+    "lint:root": "eslint --fix \"./*.{js,ts}\" --ignore-path .gitignore",
+    "lint:packages": "lerna run lint --stream --concurrency 1",
+    "test": "jest && lerna run test --stream --concurrency 1",
+    "test:coverage": "jest && lerna run test --stream --concurrency 1 -- --coverage",
+    "precommit": "lint-staged && lerna run precommit --stream --concurrency 1",
+    "commit": "git add . && git-cz"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5",
+    "react": "~16.11.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
+    "@commitlint/config-lerna-scopes": "^9.1.2",
+    "@types/jest": "^26.0.12",
+    "@types/node": "^14.6.2",
+    "@types/react": "~16.9.23",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "commitizen": "^4.2.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-jsx": "^8.1.0",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "jest-runner-eslint": "^0.10.0",
+    "lerna": "^3.22.1",
+    "lerna-update-wizard": "^0.17.8",
+    "lerna-wizard": "^1.1.1",
+    "lint-staged": "^10.2.13",
+    "prettier": "^2.1.1",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2"
+  }
+}
