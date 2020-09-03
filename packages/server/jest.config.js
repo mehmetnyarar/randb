@@ -19,6 +19,10 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/index.ts',
     '!<rootDir>/src/**/const.ts',
+    '!<rootDir>/src/**/enum.ts',
+    '!<rootDir>/src/**/model.ts',
+    '!<rootDir>/src/**/type.ts',
+    '!<rootDir>/src/**/options.ts',
     '!<rootDir>/src/db/tasks/*.ts'
   ],
   coverageThreshold: {

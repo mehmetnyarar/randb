@@ -1,4 +1,5 @@
 import { config } from 'dotenv'
+import 'reflect-metadata'
 import { LogMethod } from '~/logger'
 
 // MongoDB In-Memory Server

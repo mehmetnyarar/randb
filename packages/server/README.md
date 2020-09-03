@@ -10,6 +10,7 @@ This is a back-end server which provides data access and business logic to the f
 | db        | Database utilities   |
 | express   | Express application  |
 | logger    | Logging utility      |
+| models    | Database models      |
 | modules   | Server functionality |
 
 ## Config
@@ -82,6 +83,40 @@ Below methods can be used for logging in addition to the standard console method
 - [ ] db: saves logs to the database
 - [x] file: saves logs in the filesystem
 - [ ] remote: sends logs to a remote server
+
+## Models
+
+Database/business models (entities and embed documents) can be located in the `~/models` directory.
+
+| Directory   | Description                   |
+| ----------- | ----------------------------- |
+| embed       | Embed models for the entities |
+| entity      | Database entities             |
+| entity/base | Base entity                   |
+| entity/log  | Log entity                    |
+| entity/user | User entity                   |
+
+Embed models
+
+- should be located in their own directory under `~/models/embed`
+- should use `EmbedModel` (`~/models/embed/options.ts`)
+
+Entity models
+
+- should be located in their own directory under `~/models/entity`
+- should be derived from the base entity (`~/models/entity/base`)
+- should use `EntityModel` (`~/models/entity/options.ts`)
+
+Structure:
+
+| File    | Description                                    |
+| ------- | ---------------------------------------------- |
+| const   | Default values and other constants             |
+| enum    | Enumerations                                   |
+| input   | Input models for queries                       |
+| type    | The object model - represented in the database |
+| types   | Types and interfaces                           |
+| utility | Utilities related to the model (e.g. DTOs)     |
 
 ## Modules
 

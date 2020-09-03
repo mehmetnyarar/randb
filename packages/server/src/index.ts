@@ -1,4 +1,5 @@
 import { createServer } from 'http'
+import 'reflect-metadata'
 import { DB_INIT, DB_URI, HTTP_URL, PORT } from './config'
 import { connect, initialize } from './db'
 import { app } from './express'

@@ -1,5 +1,6 @@
 import { Mongoose } from 'mongoose'
 import { Logger } from '~/logger'
+import { LogModel, UserModel } from '~/models'
 
 const logger = Logger.create({
   src: 'db/reset',
@@ -13,5 +14,8 @@ const logger = Logger.create({
 export const reset = async (db: Mongoose) => {
   await db.connection.dropDatabase()
   logger.success('Drop database')
-  logger.todo('Create collections')
+
+  await LogModel.createCollection()
+  await UserModel.createCollection()
+  logger.success('Create collections')
 }
