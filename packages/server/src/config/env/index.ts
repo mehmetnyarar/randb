@@ -22,7 +22,10 @@ export const {
   CORS_ALLOWED,
   CORS_BLOCKED,
   DB_URI,
-  DB_INIT
+  DB_INIT,
+  GRAPHQL_AUTH,
+  GRAPHQL_PATH,
+  GRAPHQL_CONFIG
 } = create()
 
 if (!isTest()) {
@@ -40,7 +43,10 @@ if (!isTest()) {
         CORS_ALLOWED,
         CORS_BLOCKED,
         DB_URI,
-        DB_INIT
+        DB_INIT,
+        GRAPHQL_AUTH,
+        GRAPHQL_PATH,
+        GRAPHQL_CONFIG
       },
       null,
       2

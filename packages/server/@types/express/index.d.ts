@@ -1,5 +1,9 @@
+import { CurrentUser } from '~/modules/auth'
+
 declare global {
   namespace Express {
-    interface Request {}
+    interface Request {
+      user?: CurrentUser
+    }
   }
 }

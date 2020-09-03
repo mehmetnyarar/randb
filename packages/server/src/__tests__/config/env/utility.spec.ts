@@ -14,7 +14,21 @@ const base: EnvConfig = {
   CORS_BLOCKED: [],
   CORS_ALLOWED: [],
   DB_URI: '',
-  DB_INIT: ''
+  DB_INIT: '',
+  GRAPHQL_AUTH: true,
+  GRAPHQL_PATH: undefined,
+  GRAPHQL_CONFIG: {
+    tracing: undefined,
+    playground: undefined,
+    introspection: undefined,
+    uploads: {
+      maxFiles: 10,
+      maxFileSize: 100000000
+    },
+    subscriptions: undefined,
+    engine: undefined
+  },
+  APOLLO_KEY: undefined
 }
 
 // #endregion
@@ -53,7 +67,7 @@ describe('config/env/utility', () => {
   describe('create', () => {
     it('should create a configuration (process.env)', () => {
       const result = create()
-      expect(Object.keys(result)).toHaveLength(10)
+      expect(Object.keys(result)).toHaveLength(14)
     })
 
     it('should create a configuration (default env)', () => {

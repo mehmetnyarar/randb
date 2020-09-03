@@ -1,5 +1,5 @@
 import { compact, uniq } from 'lodash'
-import { isProduction, Phase } from '../phase'
+import { isDevelopment, isProduction, Phase } from '../phase'
 import { Env, EnvConfig, RequiredEnv } from './types'
 
 /**
@@ -53,7 +53,16 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     CORS_WHITELIST = '',
     CORS_BLACKLIST = '',
     DB_URI = '',
-    DB_INIT = ''
+    DB_INIT = '',
+    GQL_AUTH = 'true',
+    GQL_API_PATH,
+    GQL_SUBSCRIPTIONS_PATH,
+    GQL_TRACING,
+    GQL_PLAYGROUND,
+    GQL_INTROSPECTION,
+    GQL_UPLOADS_MAX_FILES = '10',
+    GQL_UPLOADS_MAX_FILE_SIZE = '100000000',
+    APOLLO_KEY
   } = env || process.env
 
   // SSL configuration
@@ -97,6 +106,29 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
       uniq([HTTP_URL, WS_URL, ...CLIENTS])
     ),
     DB_URI,
-    DB_INIT
+    DB_INIT,
+    GRAPHQL_AUTH:
+      GQL_AUTH === 'true'
+        ? true
+        : GQL_AUTH === 'false'
+          ? false
+          : GQL_AUTH.split(','),
+    GRAPHQL_PATH: GQL_API_PATH,
+    GRAPHQL_CONFIG: {
+      tracing: GQL_TRACING ? GQL_TRACING === 'true' : undefined,
+      playground: GQL_PLAYGROUND ? GQL_PLAYGROUND === 'true' : undefined,
+      introspection: GQL_INTROSPECTION
+        ? GQL_INTROSPECTION === 'true'
+        : undefined,
+      uploads: {
+        maxFiles: Number(GQL_UPLOADS_MAX_FILES),
+        maxFileSize: Number(GQL_UPLOADS_MAX_FILE_SIZE)
+      },
+      subscriptions: GQL_SUBSCRIPTIONS_PATH
+        ? { path: GQL_SUBSCRIPTIONS_PATH }
+        : undefined,
+      engine: APOLLO_KEY ? { reportSchema: isDevelopment() } : undefined
+    },
+    APOLLO_KEY
   }
 }

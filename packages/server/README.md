@@ -4,14 +4,17 @@ This is a back-end server which provides data access and business logic to the f
 
 ## Structure
 
-| Directory | Description          |
-| --------- | -------------------- |
-| config    | Configuration        |
-| db        | Database utilities   |
-| express   | Express application  |
-| logger    | Logging utility      |
-| models    | Database models      |
-| modules   | Server functionality |
+| Directory | Description                 |
+| --------- | --------------------------- |
+| config    | Configuration               |
+| db        | Database utilities          |
+| express   | Express application         |
+| graphql   | Apollo GraphQL              |
+| logger    | Logging utility             |
+| models    | Database models             |
+| modules   | Server functionality        |
+| resolvers | GraphQL resolvers           |
+| types     | Custom types and interfaces |
 
 ## Config
 
@@ -39,6 +42,31 @@ Database utilites are located in the `~/db` directory.
 ## Express
 
 - Custom Express middlewares are/should be located at `~/express/middlewares`
+
+## GraphQL
+
+- Custom GraphQL scalars are/should be located at `~/graphql/scalars`
+- Custom GraphQL middlewares are/should be located at `~/graphql/middlewares`
+- Apollo Server can be configured via environment variables starting with `GQL_`
+- Apollo Studio can be configured via environment variable `APOLLO_KEY`
+
+### Auth Checker
+
+Queries and mutation can be authorized by user roles:
+
+```ts
+@Authorized() // can be executed by only logged in users
+@Authorized([]) // can be executed by only logged in users
+@Authorized([UserRole.ADMIN]) // can be executed only by admins
+```
+
+Auth checker can be enabled/disabled via environment variable `GQL_AUTH`:
+
+| Config                               | Description                          |
+| ------------------------------------ | ------------------------------------ |
+| false                                | Disabled                             |
+| true (default)                       | Enabled                              |
+| user roles as comma-separated values | Enabled only for the specified roles |
 
 ## Logger
 
@@ -125,3 +153,13 @@ Modules which are located in the `~/modules` directory extend the functionality 
 | Module | Description             |
 | ------ | ----------------------- |
 | fs     | File system and uploads |
+
+## Resolvers
+
+GraphQL resolvers which are located in the `~/resolvers` directory, provide data to the front-end applications via GraphQL queries, mutations and subscriptions.
+
+Built-in resolvers:
+
+| Resolver | Description            |
+| -------- | ---------------------- |
+| common   | API for non-model data |

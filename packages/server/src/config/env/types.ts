@@ -1,3 +1,5 @@
+import { Config as ApolloConfig } from 'apollo-server-express'
+
 /**
  * Environment variables.
  */
@@ -10,6 +12,15 @@ export interface Env {
   CORS_BLACKLIST?: string
   DB_URI?: string
   DB_INIT?: string
+  GQL_AUTH?: string
+  GQL_API_PATH?: string
+  GQL_SUBSCRIPTIONS_PATH?: string
+  GQL_TRACING?: string
+  GQL_PLAYGROUND?: string
+  GQL_INTROSPECTION?: string
+  GQL_UPLOADS_MAX_FILES?: string
+  GQL_UPLOADS_MAX_FILE_SIZE?: string
+  APOLLO_KEY?: string
 }
 
 /**
@@ -70,4 +81,24 @@ export interface EnvConfig {
    * Tasks to be executed during the database initialization.
    */
   DB_INIT: string
+
+  /**
+   * GraphQL auth checker configuration.
+   */
+  GRAPHQL_AUTH?: boolean | string[]
+
+  /**
+   * GraphQL path.
+   */
+  GRAPHQL_PATH?: string
+
+  /**
+   * Apollo server configuration.
+   */
+  GRAPHQL_CONFIG: ApolloConfig
+
+  /**
+   * API key for Apollo Studio.
+   */
+  APOLLO_KEY?: string
 }
