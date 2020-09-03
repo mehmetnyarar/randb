@@ -8,6 +8,8 @@ export interface Env {
   CLIENT_PORTS?: string
   CORS_WHITELIST?: string
   CORS_BLACKLIST?: string
+  DB_URI?: string
+  DB_INIT?: string
 }
 
 /**
@@ -58,4 +60,14 @@ export interface EnvConfig {
    * Addresses that should be blocked by CORS.
    */
   CORS_BLOCKED: string[]
+
+  /**
+   * MongoDB connection string.
+   */
+  DB_URI: string
+
+  /**
+   * Tasks to be executed during the database initialization.
+   */
+  DB_INIT: string
 }

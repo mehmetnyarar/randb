@@ -20,7 +20,9 @@ export const {
   CLIENTS,
   MAIN_CLIENT,
   CORS_ALLOWED,
-  CORS_BLOCKED
+  CORS_BLOCKED,
+  DB_URI,
+  DB_INIT
 } = create()
 
 if (!isTest()) {
@@ -36,7 +38,9 @@ if (!isTest()) {
         CLIENTS,
         MAIN_CLIENT,
         CORS_ALLOWED,
-        CORS_BLOCKED
+        CORS_BLOCKED,
+        DB_URI,
+        DB_INIT
       },
       null,
       2

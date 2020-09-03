@@ -51,7 +51,9 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     SERVER_PORT = '4000',
     CLIENT_PORTS = '5000',
     CORS_WHITELIST = '',
-    CORS_BLACKLIST = ''
+    CORS_BLACKLIST = '',
+    DB_URI = '',
+    DB_INIT = ''
   } = env || process.env
 
   // SSL configuration
@@ -93,6 +95,8 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     CORS_BLOCKED: compact(CORS_BLACKLIST.split(',')),
     CORS_ALLOWED: compact(CORS_WHITELIST.split(',')).concat(
       uniq([HTTP_URL, WS_URL, ...CLIENTS])
-    )
+    ),
+    DB_URI,
+    DB_INIT
   }
 }

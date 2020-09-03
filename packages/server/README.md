@@ -7,6 +7,7 @@ This is a back-end server which provides data access and business logic to the f
 | Directory | Description          |
 | --------- | -------------------- |
 | config    | Configuration        |
+| db        | Database utilities   |
 | express   | Express application  |
 | logger    | Logging utility      |
 | modules   | Server functionality |
@@ -17,6 +18,22 @@ Configuration of any sort is provided via constants and environment variables th
 
 - Check `.env.config` to see how environment variables are/should be set
 - Check `~/config/env` to see how environment variables are configured
+
+## Database
+
+Database utilites are located in the `~/db` directory.
+
+| Utility    | Description                   |
+| ---------- | ----------------------------- |
+| tasks      | Database initialization tasks |
+| connect    | Database connection           |
+| initialize | Database initializer          |
+
+- Database connection URI is set via `DB_URI` environment variable
+- Database initialization tasks can be configured via `DB_INIT` environment variable:
+  - Tasks: `reset`, `seed`, `mock`, `migrate`
+  - Initializer looks for the tasks to be executed
+  - See `~/db/initialize` for more details
 
 ## Express
 

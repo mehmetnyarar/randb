@@ -18,7 +18,8 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/index.ts',
-    '!<rootDir>/src/**/const.ts'
+    '!<rootDir>/src/**/const.ts',
+    '!<rootDir>/src/db/tasks/*.ts'
   ],
   coverageThreshold: {
     global: {

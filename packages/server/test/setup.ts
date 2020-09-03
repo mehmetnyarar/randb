@@ -1,4 +1,9 @@
+import { config } from 'dotenv'
 import { LogMethod } from '~/logger'
+
+// MongoDB In-Memory Server
+config() // Read environment variables for mongodb-memory-server (MONGOMS_*)
+jest.setTimeout(600000) // Additional time to download MongoDB binaries
 
 // Disable console printing for the following methods during the tests
 // Use .warn() method if you need to debug

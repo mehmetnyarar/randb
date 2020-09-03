@@ -12,7 +12,9 @@ const base: EnvConfig = {
   CLIENTS: [],
   MAIN_CLIENT: '',
   CORS_BLOCKED: [],
-  CORS_ALLOWED: []
+  CORS_ALLOWED: [],
+  DB_URI: '',
+  DB_INIT: ''
 }
 
 // #endregion
@@ -37,19 +39,21 @@ describe('config/env/utility', () => {
 
     it('should report the unset variables', () => {
       expect(() => {
-        validate({ HOST_DOMAIN: '' }, REQUIRED_ENV)
+        validate({ HOST_DOMAIN: '', DB_URI: '' }, REQUIRED_ENV)
       }).toThrow()
     })
 
     it('should validate successfully', () => {
-      expect(validate({ HOST_DOMAIN: 'domain' }, REQUIRED_ENV)).toBeTruthy()
+      expect(
+        validate({ HOST_DOMAIN: 'domain', DB_URI: 'uri' }, REQUIRED_ENV)
+      ).toBeTruthy()
     })
   })
 
   describe('create', () => {
     it('should create a configuration (process.env)', () => {
       const result = create()
-      expect(Object.keys(result)).toHaveLength(8)
+      expect(Object.keys(result)).toHaveLength(10)
     })
 
     it('should create a configuration (default env)', () => {
