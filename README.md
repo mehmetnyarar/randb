@@ -39,6 +39,9 @@ This is the repository for the RAN DB Manager applications.
 | test:coverage   | Runs tests and generates coverage reports                                 |
 | precommit       | Ensures that the files are formatted, linted and tested before any commit |
 | commit          | Commits changes based on conventional commits standards                   |
+| dev:server      | Starts the server in development mode                                     |
+| test:server     | Runs tests for the server                                                 |
+| start:server    | Starts the server in production mode                                      |
 
 You can run scripts from packages using `yarn` or `lerna`:
 
@@ -68,16 +71,16 @@ Use `yarn commit` command to commit changes.
 
 TODO
 
-- [ ]
+- [ ] Create and configure `.env` in `packages/server`
 
 ```sh
-
+yarn dev:server
 ```
 
 ## Testing
 
 ```sh
-
+yarn test:server
 ```
 
 ## Production

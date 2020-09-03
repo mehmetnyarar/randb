@@ -1,0 +1,47 @@
+{
+  "name": "@app/server",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Back-end server",
+  "keywords": [
+    "back-end",
+    "data access",
+    "business logic"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "scripts": {
+    "clean": "rm -rf coverage node_modules yarn*",
+    "validate": "npm-run-all typings format lint test:coverage",
+    "typings": "tsc --project tsconfig.json --noEmit",
+    "format": "prettier --write \"**/*.{js,ts,json,html,css,md}\" --ignore-path .gitignore",
+    "lint": "eslint --fix \"**/*.{js,ts}\" --ignore-path .gitignore",
+    "precommit": "yarn typings && lint-staged",
+    "dev": "nodemon",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "start": "cross-env NODE_ENV=production ts-node --project=tsconfig.server.json -r tsconfig-paths/register src"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
+    "date-fns": "^2.16.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fs-extra": "^9.0.1",
+    "lodash": "^4.17.20",
+    "sanitize-filename": "^1.6.3",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.7",
+    "@types/express": "^4.17.8",
+    "@types/fs-extra": "^9.0.1",
+    "@types/lodash": "^4.14.161",
+    "nodemon": "^2.0.4"
+  }
+}
