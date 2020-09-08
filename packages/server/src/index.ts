@@ -69,4 +69,4 @@ const main = async () => {
 }
 
 // Start the server
-main().catch(logger.error)
+main().catch(console.error)

@@ -38,107 +38,96 @@ export class GeoLocation {
  * Geometry.
  * @see https://docs.mongodb.com/manual/reference/geojson/
  */
+@EmbedModel(true, 0)
 export class Geometry {
   @Prop({ enum: GeometryType, type: String, required: true })
   type!: GeometryType
 
-  @Prop({ type: Number, default: [] })
+  @Prop({ required: true })
   coordinates!: Coordinates
 }
 
 /**
  * GeoJSON/Point.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoPoint extends Geometry {
-  @Prop({ enum: GeometryType, type: String, default: GeometryType.Point })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.Point
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: Point
 }
 
 /**
  * GeoJSON/LineString.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoLineString extends Geometry {
-  @Prop({ enum: GeometryType, type: String, default: GeometryType.LineString })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.LineString
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: LineString
 }
 
 /**
  * GeoJSON/Polygon.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoPolygon extends Geometry {
-  @Prop({ enum: GeometryType, type: String, default: GeometryType.Polygon })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.Polygon
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: Polygon
 }
 
 /**
  * GeoJSON/MultiPoint.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoMultiPoint {
-  @Prop({ enum: GeometryType, type: String, default: GeometryType.MultiPoint })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.MultiPoint
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: Point[]
 }
 
 /**
  * GeoJSON/MultiLineString.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoMultiLineString {
-  @Prop({
-    enum: GeometryType,
-    type: String,
-    default: GeometryType.MultiLineString
-  })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.MultiLineString
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: LineString[]
 }
 
 /**
  * GeoJSON/MultiPolygon.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeoMultiPolygon {
-  @Prop({
-    enum: GeometryType,
-    type: String,
-    default: GeometryType.MultiPolygon
-  })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.MultiPolygon
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   coordinates!: Polygon[]
 }
 
 /**
  * GeoJSON/GeometryCollection.
  */
-@EmbedModel()
+@EmbedModel(true, 0)
 export class GeometryCollection {
-  @Prop({
-    enum: GeometryType,
-    type: String,
-    default: GeometryType.GeometryCollection
-  })
-  type!: GeometryType
+  @Prop({ enum: GeometryType, type: String })
+  type!: GeometryType.GeometryCollection
 
-  @Prop({ default: [] })
+  @Prop({ required: true })
   geometries!: Geometry[]
 }
 

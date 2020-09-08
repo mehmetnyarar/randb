@@ -31,7 +31,9 @@ Database utilites are located in the `~/db` directory.
 | ---------- | ----------------------------- |
 | tasks      | Database initialization tasks |
 | connect    | Database connection           |
+| error      | Custom error implementation   |
 | initialize | Database initializer          |
+| repository | Entity manager (CRUD)         |
 
 - Database connection URI is set via `DB_URI` environment variable
 - Database initialization tasks can be configured via `DB_INIT` environment variable:
@@ -123,6 +125,28 @@ Database/business models (entities and embed documents) can be located in the `~
 | entity/base | Base entity                   |
 | entity/log  | Log entity                    |
 | entity/user | User entity                   |
+
+Network models:
+
+| Directory      | Description                        |
+| -------------- | ---------------------------------- |
+| entity/antenna | Antenna                            |
+| entity/parent  | Base model for topological parents |
+| entity/bsc     | BSC (derived from entity/parent)   |
+| entity/rnc     | RNC (derived from entity/parent)   |
+| entity/tac     | TAC (derived from entity/parent)   |
+| entity/lac     | LAC (derived from entity/parent)   |
+| entity/site    | Base station                       |
+| entity/cell    | Base model for cells               |
+| entity/cell2g  | 2G cell (derived from entity/cell) |
+| entity/cell3g  | 3G cell (derived from entity/cell) |
+| entity/cell4g  | 4G cell (derived from entity/cell) |
+
+Network Topology:
+
+- Parent: BSC/RNC/TAC
+  - Site
+    - Cell: Cell2G, Cell3G, Cell4G
 
 Embed models
 

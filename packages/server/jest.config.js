@@ -20,6 +20,7 @@ module.exports = {
     '!<rootDir>/src/**/index.ts',
     '!<rootDir>/src/**/const.ts',
     '!<rootDir>/src/**/enum.ts',
+    '!<rootDir>/src/**/error.ts',
     '!<rootDir>/src/**/model.ts',
     '!<rootDir>/src/**/type.ts',
     '!<rootDir>/src/**/options.ts',

@@ -2,7 +2,7 @@ import { Index, Prop, Ref } from '@typegoose/typegoose'
 import { Field, ObjectType } from 'type-graphql'
 import {
   GeoLocation,
-  GeoPoint,
+  Geometry,
   PersonGender,
   PersonName,
   PhoneNumber
@@ -46,7 +46,7 @@ export class User extends Entity {
 
   @Field(() => GeoLocation, { nullable: true })
   @Prop()
-  location?: GeoPoint
+  location?: Geometry
 
   @Field(() => [GeoLocation])
   @Prop({ type: GeoLocation, default: [] })
