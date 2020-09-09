@@ -11,7 +11,11 @@ import {
 } from './config'
 import { connect, initialize } from './db'
 import { app } from './express'
-import { createApolloServer, createGraphQLSchema } from './graphql'
+import {
+  createApolloServer,
+  createGraphQLSchema,
+  createGraphQLSchemaFiles
+} from './graphql'
 import { Logger } from './logger'
 import { ensureDirs } from './modules/fs'
 
@@ -39,6 +43,8 @@ const main = async () => {
 
   // Initialize the Apollo server
   const schema = await createGraphQLSchema()
+  await createGraphQLSchemaFiles(schema, '../shared-logic')
+
   const apolloServer = await createApolloServer(schema)
   apolloServer.applyMiddleware({
     app,

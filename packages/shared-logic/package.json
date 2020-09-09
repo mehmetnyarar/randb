@@ -1,0 +1,43 @@
+{
+  "name": "@app/logic",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Provides application logic to the front-end applications",
+  "keywords": [
+    "shared",
+    "library",
+    "logic"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "scripts": {
+    "clean": "rm -rf coverage lib node_modules yarn*",
+    "validate": "npm-run-all typings format lint test",
+    "typings": "tsc --project tsconfig.json --noEmit",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,md}\" --ignore-path .gitignore",
+    "lint": "eslint --fix \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
+    "dev": "tsc --project tsconfig.build.json -w",
+    "test": "jest",
+    "build": "rm -rf lib && tsc --project tsconfig.build.json",
+    "generate": "graphql-codegen --config codegen.yml",
+    "generate-gql": "npm-run-all generate format lint",
+    "apollo:check": "apollo client:check"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.1.4",
+    "chalk": "^4.1.0",
+    "date-fns": "^2.16.1",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^2.0.1",
+    "@graphql-codegen/cli": "1.17.8",
+    "@graphql-codegen/typescript": "1.17.9",
+    "@graphql-codegen/typescript-operations": "1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "2.0.6",
+    "dotenv": "^8.2.0"
+  }
+}

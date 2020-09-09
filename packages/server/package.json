@@ -22,7 +22,8 @@
     "dev": "nodemon",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "start": "cross-env NODE_ENV=production ts-node --project=tsconfig.server.json -r tsconfig-paths/register src"
+    "start": "cross-env NODE_ENV=production ts-node --project=tsconfig.server.json -r tsconfig-paths/register src",
+    "apollo:push": "apollo service:push"
   },
   "dependencies": {
     "@typegoose/typegoose": "^7.3.4",

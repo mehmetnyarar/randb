@@ -25,7 +25,8 @@ export const {
   DB_INIT,
   GRAPHQL_AUTH,
   GRAPHQL_PATH,
-  GRAPHQL_CONFIG
+  GRAPHQL_CONFIG,
+  APOLLO_KEY
 } = create()
 
 if (!isTest()) {
@@ -46,7 +47,8 @@ if (!isTest()) {
         DB_INIT,
         GRAPHQL_AUTH,
         GRAPHQL_PATH,
-        GRAPHQL_CONFIG
+        GRAPHQL_CONFIG,
+        APOLLO_KEY
       },
       null,
       2

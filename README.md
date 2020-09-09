@@ -23,25 +23,31 @@ This is the repository for the RAN DB Manager applications.
 
 ## Scripts
 
-| Script          | Description                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| reset           | Cleans up the repository and installs npm modules                         |
-| clean           | Removes npm modules, packager files and cleans up the packages            |
-| validate        | Validates all packages                                                    |
-| typings         | Validates TS typings in all packages                                      |
-| format          | Formats files                                                             |
-| format:root     | Formats files under the root directory                                    |
-| format:packages | Formats files in all packages                                             |
-| lint            | Lints files                                                               |
-| lint:root       | Lints files under the root directory                                      |
-| lint:packages   | Lints files in all packages                                               |
-| test            | Runs tests for the root directory and the packages                        |
-| test:coverage   | Runs tests and generates coverage reports                                 |
-| precommit       | Ensures that the files are formatted, linted and tested before any commit |
-| commit          | Commits changes based on conventional commits standards                   |
-| dev:server      | Starts the server in development mode                                     |
-| test:server     | Runs tests for the server                                                 |
-| start:server    | Starts the server in production mode                                      |
+| Script              | Description                                                               |
+| ------------------- | ------------------------------------------------------------------------- |
+| reset               | Cleans up the repository and installs npm modules                         |
+| clean               | Removes npm modules, packager files and cleans up the packages            |
+| validate            | Validates all packages                                                    |
+| typings             | Validates TS typings in all packages                                      |
+| format              | Formats files                                                             |
+| format:root         | Formats files under the root directory                                    |
+| format:packages     | Formats files in all packages                                             |
+| lint                | Lints files                                                               |
+| lint:root           | Lints files under the root directory                                      |
+| lint:packages       | Lints files in all packages                                               |
+| test                | Runs tests for the root directory and the packages                        |
+| test:coverage       | Runs tests and generates coverage reports                                 |
+| precommit           | Ensures that the files are formatted, linted and tested before any commit |
+| commit              | Commits changes based on conventional commits standards                   |
+| dev:server          | Starts the server in development mode                                     |
+| test:server         | Runs tests for the server                                                 |
+| start:server        | Starts the server in production mode                                      |
+| apollo:service:push | Pushes a service definition to Apollo Graph Manager (requires APOLLO_KEY) |
+| generate-gql        | Generates GraphQL types                                                   |
+| dev:server          | Watches changes in the logic library during the development               |
+| test:server         | Runs tests for the logic library                                          |
+| build:server        | Builds shared logic for the production mode                               |
+| apollo:client:check | Checks logic library against a pushed service (requires APOLLO_KEY)       |
 
 You can run scripts from packages using `yarn` or `lerna`:
 
@@ -72,15 +78,18 @@ Use `yarn commit` command to commit changes.
 TODO
 
 - [ ] Create and configure `.env` in `packages/server`
+- [ ] Create and configure `~/config/env/env.ts` in `packages/shared-logic`
 
 ```sh
 yarn dev:server
+yarn dev:logic
 ```
 
 ## Testing
 
 ```sh
 yarn test:server
+yarn test:logic
 ```
 
 ## Production

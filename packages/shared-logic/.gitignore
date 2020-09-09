@@ -1,7 +1,8 @@
 # Directories
 /coverage
-/logs
+/lib
 /node_modules
 
 # Files
+env.ts
 *.graphql
