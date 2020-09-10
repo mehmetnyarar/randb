@@ -1,7 +1,15 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true // eslint-plugin-react
+    }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import" // eslint-import-resolver-typescript
+  ],
   "extends": [
     "eslint:recommended",
     "prettier",
@@ -16,10 +24,25 @@
     "standard-react"
   ],
   "rules": {
+    "import/no-unresolved": "error", // eslint-import-resolver-typescript
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-interface": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/jsx-uses-react": "error", // eslint-plugin-react
+    "react/jsx-uses-vars": "error" // eslint-plugin-react
+  },
+  "settings": {
+    // eslint-import-resolver-typescript
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": ["tsconfig.json", "packages/*/tsconfig.json"]
+      }
+    }
   },
   "overrides": [
     {

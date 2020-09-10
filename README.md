@@ -44,10 +44,13 @@ This is the repository for the RAN DB Manager applications.
 | start:server        | Starts the server in production mode                                      |
 | apollo:service:push | Pushes a service definition to Apollo Graph Manager (requires APOLLO_KEY) |
 | generate-gql        | Generates GraphQL types                                                   |
-| dev:server          | Watches changes in the logic library during the development               |
-| test:server         | Runs tests for the logic library                                          |
-| build:server        | Builds shared logic for the production mode                               |
+| dev:logic           | Watches changes in the logic library during the development               |
+| test:logic          | Runs tests for the logic library                                          |
+| build:logic         | Builds shared logic for the production mode                               |
 | apollo:client:check | Checks logic library against a pushed service (requires APOLLO_KEY)       |
+| dev:ui              | Watches changes in the ui library during the development                  |
+| test:ui             | Runs tests for the ui library                                             |
+| build:ui            | Builds shared ui for the production mode                                  |
 
 You can run scripts from packages using `yarn` or `lerna`:
 
@@ -79,10 +82,12 @@ TODO
 
 - [ ] Create and configure `.env` in `packages/server`
 - [ ] Create and configure `~/config/env/env.ts` in `packages/shared-logic`
+- [ ] Update brand colors (`~/theme/palette/brand.ts` in `packages/shared-ui`)
 
 ```sh
 yarn dev:server
 yarn dev:logic
+yarn dev:ui
 ```
 
 ## Testing
@@ -90,6 +95,7 @@ yarn dev:logic
 ```sh
 yarn test:server
 yarn test:logic
+yarn test:ui
 ```
 
 ## Production

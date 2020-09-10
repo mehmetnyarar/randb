@@ -1,0 +1,32 @@
+{
+  "name": "@app/ui",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Provides themes, styles and components to the front-end applications",
+  "keywords": [
+    "shared",
+    "library",
+    "ui",
+    "themes",
+    "styles",
+    "components"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "scripts": {
+    "clean": "rm -rf coverage lib node_modules yarn*",
+    "validate": "npm-run-all typings format lint test",
+    "typings": "tsc --project tsconfig.json --noEmit",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,md}\" --ignore-path .gitignore",
+    "lint": "eslint --fix \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
+    "dev": "tsc --project tsconfig.build.json -w",
+    "test": "jest",
+    "build": "rm -rf lib && tsc --project tsconfig.build.json"
+  },
+  "dependencies": {
+    "@eva-design/eva": "^2.0.0"
+  },
+  "devDependencies": {}
+}
