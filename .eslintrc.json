@@ -30,7 +30,8 @@
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-uses-react": "error", // eslint-plugin-react
-    "react/jsx-uses-vars": "error" // eslint-plugin-react
+    "react/jsx-uses-vars": "error", // eslint-plugin-react
+    "react/prop-types": "off" // Mostly React.FC is used and props are provided with interfaces/types
   },
   "settings": {
     // eslint-import-resolver-typescript

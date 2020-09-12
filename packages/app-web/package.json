@@ -1,0 +1,47 @@
+{
+  "name": "@app/web",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Web application (for all users)",
+  "keywords": [
+    "web",
+    "application"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "scripts": {
+    "clean": "rm -rf coverage node_modules yarn*",
+    "validate": "npm-run-all typings format lint test",
+    "typings": "tsc --project tsconfig.json --noEmit",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,md}\" --ignore-path .gitignore",
+    "lint": "eslint --fix \"**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore",
+    "dev:next": "next dev",
+    "build:next": "next build",
+    "start:next": "next start",
+    "dev": "nodemon",
+    "test": "jest",
+    "build": "next build && tsc --project tsconfig.server.json",
+    "start": "cross-env NODE_ENV=production ts-node --project tsconfig.server.json -r tsconfig-paths/register server",
+    "start:node": "cross-env NODE_ENV=production node dist/index.js"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.1.5",
+    "@app/logic": "1.0.0",
+    "@app/ui": "1.0.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.3.0",
+    "next": "^9.5.3",
+    "next-transpile-modules": "^4.1.0",
+    "subscriptions-transport-ws": "^0.9.18",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.8",
+    "nodemon": "^2.0.4"
+  }
+}

@@ -15,6 +15,8 @@
   "contributors": [
     "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
   ],
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "clean": "rm -rf coverage lib node_modules yarn*",
     "validate": "npm-run-all typings format lint test",

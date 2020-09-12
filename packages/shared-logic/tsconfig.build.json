@@ -8,6 +8,7 @@
     "outDir": "lib",
     "rootDir": "src"
   },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "src/graphql/documents/**/*.ts",
     "test/**/*.ts",

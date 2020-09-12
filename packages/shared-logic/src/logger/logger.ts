@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { isBrowser, isProduction, Phase } from '~/config'
+import { isBrowser, isProduction, Phase } from '../config'
 import { levels, styles } from './const'
 import {
   CreateLoggerOptions,
