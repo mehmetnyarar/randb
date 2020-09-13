@@ -1,7 +1,9 @@
+import { Types } from 'mongoose'
 import { ResolverData } from 'type-graphql'
 import { GraphQLContext } from '~/graphql'
 import { authChecker, getIgnoredRoles } from '~/graphql/auth'
 import { UserRole } from '~/models'
+import { CurrentUser } from '~/modules'
 
 // #region Setup
 
@@ -30,11 +32,10 @@ const withUser = {
   context: {
     ...data.context,
     auth: true,
-    currentUser: {
-      id: 'userid',
-      auth: 0,
+    currentUser: new CurrentUser({
+      id: Types.ObjectId().toHexString(),
       roles: [UserRole.MANAGER]
-    }
+    })
   }
 }
 

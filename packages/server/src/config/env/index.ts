@@ -26,7 +26,10 @@ export const {
   GRAPHQL_AUTH,
   GRAPHQL_PATH,
   GRAPHQL_CONFIG,
-  APOLLO_KEY
+  APOLLO_KEY,
+  RESET_TOKEN,
+  ACCESS_TOKEN,
+  REFRESH_TOKEN
 } = create()
 
 if (!isTest()) {
@@ -48,7 +51,10 @@ if (!isTest()) {
         GRAPHQL_AUTH,
         GRAPHQL_PATH,
         GRAPHQL_CONFIG,
-        APOLLO_KEY
+        APOLLO_KEY,
+        RESET_TOKEN,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN
       },
       null,
       2

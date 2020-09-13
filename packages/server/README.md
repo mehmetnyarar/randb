@@ -174,9 +174,10 @@ Structure:
 
 Modules which are located in the `~/modules` directory extend the functionality of the server.
 
-| Module | Description             |
-| ------ | ----------------------- |
-| fs     | File system and uploads |
+| Module | Description                      |
+| ------ | -------------------------------- |
+| auth   | Authentication and authorization |
+| fs     | File system and uploads          |
 
 ## Resolvers
 
@@ -186,4 +187,5 @@ Built-in resolvers:
 
 | Resolver | Description            |
 | -------- | ---------------------- |
+| auth     | Authentication API     |
 | common   | API for non-model data |

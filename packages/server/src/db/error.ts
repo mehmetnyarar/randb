@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-express'
 import { EntityType } from '~/models'
 
 /**
@@ -45,12 +46,11 @@ export interface DatabaseErrorMeta extends DatabaseErrorStack {
   error?: Error
 }
 
-export class DatabaseError extends Error {
+export class DatabaseError extends ApolloError {
   constructor (message: DatabaseErrorMessage, meta: DatabaseErrorMeta) {
-    super(message)
+    super(message, 'DATABASE_ERROR')
 
     const { error, ...stack } = meta
-
     Object.defineProperty(this, 'name', { value: 'DatabaseError' })
     Object.defineProperty(this, 'stack', { value: JSON.stringify(stack) })
     Object.defineProperty(this, 'originalError', { value: error })

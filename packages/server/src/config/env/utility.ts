@@ -62,7 +62,10 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     GQL_INTROSPECTION,
     GQL_UPLOADS_MAX_FILES = '10',
     GQL_UPLOADS_MAX_FILE_SIZE = '100000000',
-    APOLLO_KEY
+    APOLLO_KEY,
+    AUTH_RESET_TOKEN = '',
+    AUTH_ACCESS_TOKEN = '',
+    AUTH_REFRESH_TOKEN = ''
   } = env || process.env
 
   // SSL configuration
@@ -129,6 +132,9 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
         : undefined,
       engine: APOLLO_KEY ? { reportSchema: isDevelopment() } : undefined
     },
-    APOLLO_KEY
+    APOLLO_KEY,
+    RESET_TOKEN: AUTH_RESET_TOKEN,
+    ACCESS_TOKEN: AUTH_ACCESS_TOKEN,
+    REFRESH_TOKEN: AUTH_REFRESH_TOKEN
   }
 }

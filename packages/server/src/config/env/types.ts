@@ -21,6 +21,9 @@ export interface Env {
   GQL_UPLOADS_MAX_FILES?: string
   GQL_UPLOADS_MAX_FILE_SIZE?: string
   APOLLO_KEY?: string
+  AUTH_RESET_TOKEN?: string
+  AUTH_ACCESS_TOKEN?: string
+  AUTH_REFRESH_TOKEN?: string
 }
 
 /**
@@ -101,4 +104,19 @@ export interface EnvConfig {
    * API key for Apollo Studio.
    */
   APOLLO_KEY?: string
+
+  /**
+   * Reset token configuration.
+   */
+  RESET_TOKEN: string
+
+  /**
+   * Access token configuration.
+   */
+  ACCESS_TOKEN: string
+
+  /**
+   * Refresh token configuration.
+   */
+  REFRESH_TOKEN: string
 }

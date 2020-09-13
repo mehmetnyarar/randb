@@ -19,5 +19,8 @@ export const DEFAULT_USER: CreateQuery<User> = {
   locations: [],
   auth: 0,
   roles: [],
+  password: '',
+  oldPasswords: [],
+  signinFailures: 0,
   isActive: false
 }

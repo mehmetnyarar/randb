@@ -28,7 +28,10 @@ const base: EnvConfig = {
     subscriptions: undefined,
     engine: undefined
   },
-  APOLLO_KEY: undefined
+  APOLLO_KEY: undefined,
+  RESET_TOKEN: '',
+  ACCESS_TOKEN: '',
+  REFRESH_TOKEN: ''
 }
 
 // #endregion
@@ -53,13 +56,31 @@ describe('config/env/utility', () => {
 
     it('should report the unset variables', () => {
       expect(() => {
-        validate({ HOST_DOMAIN: '', DB_URI: '' }, REQUIRED_ENV)
+        validate(
+          {
+            HOST_DOMAIN: '',
+            DB_URI: '',
+            AUTH_RESET_TOKEN: '',
+            AUTH_ACCESS_TOKEN: '',
+            AUTH_REFRESH_TOKEN: ''
+          },
+          REQUIRED_ENV
+        )
       }).toThrow()
     })
 
     it('should validate successfully', () => {
       expect(
-        validate({ HOST_DOMAIN: 'domain', DB_URI: 'uri' }, REQUIRED_ENV)
+        validate(
+          {
+            HOST_DOMAIN: 'domain',
+            DB_URI: 'uri',
+            AUTH_RESET_TOKEN: 'token,config',
+            AUTH_ACCESS_TOKEN: 'token,config',
+            AUTH_REFRESH_TOKEN: 'token,config'
+          },
+          REQUIRED_ENV
+        )
       ).toBeTruthy()
     })
   })
@@ -67,7 +88,7 @@ describe('config/env/utility', () => {
   describe('create', () => {
     it('should create a configuration (process.env)', () => {
       const result = create()
-      expect(Object.keys(result)).toHaveLength(14)
+      expect(Object.keys(result)).toHaveLength(17)
     })
 
     it('should create a configuration (default env)', () => {

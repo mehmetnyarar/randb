@@ -5,7 +5,8 @@ import {
   Geometry,
   PersonGender,
   PersonName,
-  PhoneNumber
+  PhoneNumber,
+  UserToken
 } from '~/models/embed'
 import { Entity } from '../base'
 import { EntityModel } from '../options'
@@ -65,6 +66,18 @@ export class User extends Entity {
   @Field(() => [UserRole])
   @Prop({ enum: UserRole, type: String, default: [] })
   roles!: UserRole[]
+
+  @Prop({ default: '' })
+  password!: string
+
+  @Prop({ default: [] })
+  oldPasswords!: string[]
+
+  @Prop({ default: 0 })
+  signinFailures!: number
+
+  @Prop()
+  resetToken?: UserToken
 
   // #endregion
 
