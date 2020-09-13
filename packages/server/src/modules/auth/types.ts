@@ -1,3 +1,4 @@
+import { UserToken } from '~/models'
 import { CurrentUser } from '..'
 
 /**
@@ -38,6 +39,22 @@ export interface ResetTokenPayload {
 }
 
 /**
- * Payload for access/refresh token.
+ * Payload to create auth tokens.
  */
 export type AuthTokenPayload = Pick<CurrentUser, 'id' | 'roles'>
+
+/**
+ * Auth token configurations.
+ */
+export interface AuthTokenConfig {
+  accessToken: TokenConfig
+  refreshToken: TokenConfig
+}
+
+/**
+ * Authentication tokens.
+ */
+export interface AuthToken {
+  accessToken?: UserToken
+  refreshToken?: UserToken
+}

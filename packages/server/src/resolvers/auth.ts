@@ -15,6 +15,7 @@ import {
 import {
   AuthError,
   AuthErrorMessage,
+  cookies,
   createAuthCode,
   createResetToken,
   CurrentUser,
@@ -139,7 +140,7 @@ export class AuthResolver {
     // create auth tokens and send cookies
     currentUser.setTokens()
     if (input.origin === RequestOrigin.WEB) {
-      currentUser.sendCookies(res)
+      cookies.send(res, currentUser)
     }
 
     return currentUser
@@ -176,7 +177,7 @@ export class AuthResolver {
 
     // clear cookies
     if (input.origin === RequestOrigin.WEB) {
-      currentUser.clearCookies(res)
+      cookies.clear(res)
     }
 
     return true

@@ -24,6 +24,7 @@ export interface Env {
   AUTH_RESET_TOKEN?: string
   AUTH_ACCESS_TOKEN?: string
   AUTH_REFRESH_TOKEN?: string
+  SA_PASSWORD?: string
 }
 
 /**
@@ -44,6 +45,11 @@ export interface EnvConfig {
    * Server's port number.
    */
   PORT: number
+
+  /**
+   * Domain address.
+   */
+  DOMAIN: string
 
   /**
    * Server's HTTP URL.
@@ -119,4 +125,9 @@ export interface EnvConfig {
    * Refresh token configuration.
    */
   REFRESH_TOKEN: string
+
+  /**
+   * Password for system admin.
+   */
+  SA_PASSWORD: string
 }

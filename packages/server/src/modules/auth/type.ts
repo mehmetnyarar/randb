@@ -1,16 +1,15 @@
-import { CookieOptions, Response } from 'express'
 import { Field, ID, ObjectType } from 'type-graphql'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/config'
 import { User, UserRole, UserToken } from '~/models'
 import { EntityOrDocument } from '~/types'
-import { AuthTokenPayload } from './types'
-import { createAuthToken } from './utility'
+import { AuthToken, AuthTokenConfig, AuthTokenPayload } from './types'
+import { createAuthToken, getTokenConfig } from './utility'
 
 /**
  * Current user.
  */
 @ObjectType()
-export class CurrentUser {
+export class CurrentUser implements AuthToken {
   // #region Properties
 
   @Field(() => ID)
@@ -29,6 +28,11 @@ export class CurrentUser {
 
   // #region Constructor
 
+  /**
+   * Initializes a new instance of CurrentUser.
+   * @param user User.
+   * @param [config] Auth token configuration.
+   */
   constructor (user: AuthTokenPayload | EntityOrDocument<User>) {
     this.id = user.id
     this.roles = Array.from([...user.roles])
@@ -39,54 +43,17 @@ export class CurrentUser {
   // #region Methods
 
   /**
-   *
-   */
-  setAccessToken () {
-    this.accessToken = createAuthToken(this, ACCESS_TOKEN)
-  }
-
-  /**
-   * Sets the refresh token for the current user.
-   */
-  setRefreshToken () {
-    this.refreshToken = createAuthToken(this, REFRESH_TOKEN)
-  }
-
-  /**
    * Creates new authentication tokens for the user.
+   * @param [config] COnfiguration.
    */
-  setTokens () {
-    this.setAccessToken()
-    this.setRefreshToken()
-  }
+  setTokens (config: Partial<AuthTokenConfig> = {}) {
+    const {
+      accessToken = getTokenConfig(ACCESS_TOKEN),
+      refreshToken = getTokenConfig(REFRESH_TOKEN)
+    } = config
 
-  /**
-   * Sends authentication cookies to the client.
-   * @param res Server response.
-   * @param [options] Cookie options.
-   */
-  sendCookies (res: Response, options: CookieOptions = {}) {
-    if (this.accessToken) {
-      res.cookie(this.accessToken.name, this.accessToken.value, {
-        ...options,
-        expires: this.accessToken.expires
-      })
-    }
-    if (this.refreshToken) {
-      res.cookie(this.refreshToken.name, this.refreshToken.value, {
-        ...options,
-        expires: this.refreshToken.expires
-      })
-    }
-  }
-
-  /**
-   * Clears the authentication cookies.
-   * @param res Server response.
-   */
-  clearCookies (res: Response) {
-    res.clearCookie('access-token')
-    res.clearCookie('resfresh-token')
+    this.accessToken = createAuthToken(this, accessToken)
+    this.refreshToken = createAuthToken(this, refreshToken)
   }
 
   // #endregion

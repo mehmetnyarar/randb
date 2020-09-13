@@ -15,6 +15,7 @@ validate(parsed, REQUIRED_ENV)
 export const {
   SSL,
   PORT,
+  DOMAIN,
   HTTP_URL,
   WS_URL,
   CLIENTS,
@@ -29,7 +30,8 @@ export const {
   APOLLO_KEY,
   RESET_TOKEN,
   ACCESS_TOKEN,
-  REFRESH_TOKEN
+  REFRESH_TOKEN,
+  SA_PASSWORD
 } = create()
 
 if (!isTest()) {
@@ -40,6 +42,7 @@ if (!isTest()) {
       {
         SSL,
         PORT,
+        DOMAIN,
         HTTP_URL,
         WS_URL,
         CLIENTS,
@@ -54,7 +57,8 @@ if (!isTest()) {
         APOLLO_KEY,
         RESET_TOKEN,
         ACCESS_TOKEN,
-        REFRESH_TOKEN
+        REFRESH_TOKEN,
+        SA_PASSWORD
       },
       null,
       2

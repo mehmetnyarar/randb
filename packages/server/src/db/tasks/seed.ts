@@ -1,11 +1,14 @@
+import { hash } from 'bcrypt'
 import { join } from 'path'
+import { DOMAIN, SA_PASSWORD } from '~/config'
 import { Logger } from '~/logger'
 import {
   DEFAULT_USER,
   getPersonName,
   getPhoneNumber,
   User,
-  UserModel
+  UserModel,
+  UserRole
 } from '~/models'
 import { excel } from '~/modules/fs'
 
@@ -26,7 +29,10 @@ export const seed = async () => {
   const userData: Partial<User>[] = [
     {
       name: { first: 'Super', last: 'Admin' },
-      phone: { cc: '1', dc: '100', sn: '1000001' }
+      email: `system.admin@${DOMAIN}`,
+      phone: { cc: '0', dc: '000', sn: '0000000' },
+      roles: [UserRole.ADMIN],
+      password: SA_PASSWORD
     }
   ]
 
@@ -34,7 +40,8 @@ export const seed = async () => {
     userData.map(async item => {
       const user = await UserModel.create({
         ...DEFAULT_USER,
-        ...item
+        ...item,
+        password: await hash(item.password, 10)
       })
 
       const name = getPersonName(user.name)

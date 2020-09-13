@@ -45,6 +45,10 @@ Database utilites are located in the `~/db` directory.
 
 - Custom Express middlewares are/should be located at `~/express/middlewares`
 
+| Middleware | Description                      |
+| ---------- | -------------------------------- |
+| auth       | Custom authentication middleware |
+
 ## GraphQL
 
 - Custom GraphQL scalars are/should be located at `~/graphql/scalars`

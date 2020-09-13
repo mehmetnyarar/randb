@@ -7,6 +7,7 @@ import { create, validate } from '~/config/env/utility'
 const base: EnvConfig = {
   SSL: false,
   PORT: 4000,
+  DOMAIN: '',
   HTTP_URL: '',
   WS_URL: '',
   CLIENTS: [],
@@ -31,7 +32,8 @@ const base: EnvConfig = {
   APOLLO_KEY: undefined,
   RESET_TOKEN: '',
   ACCESS_TOKEN: '',
-  REFRESH_TOKEN: ''
+  REFRESH_TOKEN: '',
+  SA_PASSWORD: ''
 }
 
 // #endregion
@@ -62,7 +64,8 @@ describe('config/env/utility', () => {
             DB_URI: '',
             AUTH_RESET_TOKEN: '',
             AUTH_ACCESS_TOKEN: '',
-            AUTH_REFRESH_TOKEN: ''
+            AUTH_REFRESH_TOKEN: '',
+            SA_PASSWORD: ''
           },
           REQUIRED_ENV
         )
@@ -77,7 +80,8 @@ describe('config/env/utility', () => {
             DB_URI: 'uri',
             AUTH_RESET_TOKEN: 'token,config',
             AUTH_ACCESS_TOKEN: 'token,config',
-            AUTH_REFRESH_TOKEN: 'token,config'
+            AUTH_REFRESH_TOKEN: 'token,config',
+            SA_PASSWORD: 'password'
           },
           REQUIRED_ENV
         )
@@ -88,7 +92,7 @@ describe('config/env/utility', () => {
   describe('create', () => {
     it('should create a configuration (process.env)', () => {
       const result = create()
-      expect(Object.keys(result)).toHaveLength(17)
+      expect(Object.keys(result)).toHaveLength(19)
     })
 
     it('should create a configuration (default env)', () => {
@@ -111,6 +115,7 @@ describe('config/env/utility', () => {
       }
       const config: EnvConfig = {
         ...base,
+        DOMAIN: 'localhost',
         HTTP_URL: 'http://localhost:4000',
         WS_URL: 'ws://localhost:4000',
         CLIENTS: [],
@@ -129,6 +134,7 @@ describe('config/env/utility', () => {
       const config: EnvConfig = {
         ...base,
         SSL: true,
+        DOMAIN: 'myapp.com',
         HTTP_URL: 'https://myapp.com',
         WS_URL: 'wss://myapp.com',
         CLIENTS: ['https://myapp.com'],

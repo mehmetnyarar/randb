@@ -2,9 +2,9 @@ import { addMilliseconds } from 'date-fns'
 import { sign } from 'jsonwebtoken'
 import { pick } from 'lodash'
 import ms from 'ms'
-import { RESET_TOKEN } from '~/config'
+import { ACCESS_TOKEN, REFRESH_TOKEN, RESET_TOKEN } from '~/config'
 import { UserToken } from '~/models'
-import { AuthTokenPayload, CurrentUser } from '~/modules'
+import { AuthTokenConfig, AuthTokenPayload, CurrentUser } from '~/modules'
 import { ResetTokenPayload, TokenConfig } from '../types'
 
 /**
@@ -36,10 +36,10 @@ export const getTokenConfig = (config: string): TokenConfig => {
  */
 export const createResetToken = (
   code: string,
-  config = RESET_TOKEN,
+  config?: TokenConfig,
   startDate?: Date
 ): UserToken => {
-  const { name, secret, expiry } = getTokenConfig(config)
+  const { name, secret, expiry } = config || getTokenConfig(RESET_TOKEN)
   const expiryDate = addMilliseconds(startDate || new Date(), expiry)
   const payload: ResetTokenPayload = { code, expiry: expiryDate }
 
@@ -47,6 +47,22 @@ export const createResetToken = (
     name,
     value: sign(payload, secret, { expiresIn: expiry }),
     expires: expiryDate
+  }
+}
+
+/**
+ * Creates auth configuration.
+ * @param access Access token config.
+ * @param refresh Refresh token config.
+ * @returns Auth token configuration.
+ */
+export const getAuthTokenConfig = (
+  access = ACCESS_TOKEN,
+  refresh = REFRESH_TOKEN
+): AuthTokenConfig => {
+  return {
+    accessToken: getTokenConfig(access),
+    refreshToken: getTokenConfig(refresh)
   }
 }
 
@@ -59,10 +75,10 @@ export const createResetToken = (
  */
 export const createAuthToken = (
   user: CurrentUser,
-  config = '',
+  config: TokenConfig,
   startDate?: Date
 ): UserToken => {
-  const { name, secret, expiry } = getTokenConfig(config)
+  const { name, secret, expiry } = config
   const payload: AuthTokenPayload = pick(user, ['id', 'roles'])
 
   return {

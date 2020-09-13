@@ -65,7 +65,8 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     APOLLO_KEY,
     AUTH_RESET_TOKEN = '',
     AUTH_ACCESS_TOKEN = '',
-    AUTH_REFRESH_TOKEN = ''
+    AUTH_REFRESH_TOKEN = '',
+    SA_PASSWORD = ''
   } = env || process.env
 
   // SSL configuration
@@ -100,6 +101,7 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
   return {
     SSL,
     PORT,
+    DOMAIN: HOST_DOMAIN,
     HTTP_URL,
     WS_URL,
     CLIENTS,
@@ -135,6 +137,7 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     APOLLO_KEY,
     RESET_TOKEN: AUTH_RESET_TOKEN,
     ACCESS_TOKEN: AUTH_ACCESS_TOKEN,
-    REFRESH_TOKEN: AUTH_REFRESH_TOKEN
+    REFRESH_TOKEN: AUTH_REFRESH_TOKEN,
+    SA_PASSWORD
   }
 }
