@@ -16,6 +16,11 @@ export type Scalars = {
   DateTime: any
 }
 
+export type AnalyticsInput = {
+  agent?: Maybe<Scalars['String']>
+  origin?: Maybe<RequestOrigin>
+}
+
 export type Antenna = {
   __typename?: 'Antenna'
   beamwidth: Scalars['Float']
@@ -182,6 +187,14 @@ export enum Cell4GBand {
   FDD1800MHZ20 = 'FDD1800MHZ20'
 }
 
+export type CurrentUser = {
+  __typename?: 'CurrentUser'
+  accessToken?: Maybe<UserToken>
+  id: Scalars['ID']
+  refreshToken?: Maybe<UserToken>
+  roles: Array<UserRole>
+}
+
 export type Entity = {
   __typename?: 'Entity'
   createdAt?: Maybe<Scalars['DateTime']>
@@ -208,6 +221,9 @@ export enum EntityType {
 }
 
 export enum EventType {
+  AUTH_SIGNIN = 'AUTH_SIGNIN',
+  AUTH_SIGNOUT = 'AUTH_SIGNOUT',
+  AUTH_WRONG_PASSWORD = 'AUTH_WRONG_PASSWORD',
   ENTITY_CREATE = 'ENTITY_CREATE',
   ENTITY_DELETE = 'ENTITY_DELETE',
   ENTITY_SEARCH = 'ENTITY_SEARCH',
@@ -266,6 +282,20 @@ export type Log = {
   updatedBy?: Maybe<User>
 }
 
+export type Mutation = {
+  __typename?: 'Mutation'
+  signinUser?: Maybe<CurrentUser>
+  signoutUser: Scalars['Boolean']
+}
+
+export type MutationsigninUserArgs = {
+  data: SigninUserInput
+}
+
+export type MutationsignoutUserArgs = {
+  data?: Maybe<SignoutUserInput>
+}
+
 export type Parent = {
   __typename?: 'Parent'
   createdAt?: Maybe<Scalars['DateTime']>
@@ -302,8 +332,15 @@ export type PhoneNumber = {
   sn: Scalars['String']
 }
 
+export type PhoneNumberInput = {
+  cc: Scalars['String']
+  dc: Scalars['String']
+  sn: Scalars['String']
+}
+
 export type Query = {
   __typename?: 'Query'
+  currentUser?: Maybe<CurrentUser>
   welcome: Scalars['String']
 }
 
@@ -331,6 +368,19 @@ export type Rnc = {
 export enum Scenario {
   INDOOR = 'INDOOR',
   OUTDOOR = 'OUTDOOR'
+}
+
+export type SigninUserInput = {
+  agent?: Maybe<Scalars['String']>
+  email: Scalars['String']
+  origin?: Maybe<RequestOrigin>
+  password: Scalars['String']
+  phone: PhoneNumberInput
+}
+
+export type SignoutUserInput = {
+  agent?: Maybe<Scalars['String']>
+  origin?: Maybe<RequestOrigin>
 }
 
 export type Site = {
@@ -399,10 +449,244 @@ export enum UserRole {
   USER = 'USER'
 }
 
+export type UserToken = {
+  __typename?: 'UserToken'
+  expires: Scalars['DateTime']
+  name: Scalars['String']
+  value: Scalars['String']
+}
+
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
+
+export type CurrentUserQuery = { __typename?: 'Query' } & {
+  currentUser?: Maybe<
+    { __typename?: 'CurrentUser' } & Pick<CurrentUser, 'id' | 'roles'> & {
+        accessToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<
+            UserToken,
+            'name' | 'value' | 'expires'
+          >
+        >
+        refreshToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<
+            UserToken,
+            'name' | 'value' | 'expires'
+          >
+        >
+      }
+  >
+}
+
+export type SigninUserMutationVariables = Exact<{
+  data: SigninUserInput
+}>
+
+export type SigninUserMutation = { __typename?: 'Mutation' } & {
+  signinUser?: Maybe<
+    { __typename?: 'CurrentUser' } & Pick<CurrentUser, 'id' | 'roles'> & {
+        accessToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<
+            UserToken,
+            'name' | 'value' | 'expires'
+          >
+        >
+        refreshToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<
+            UserToken,
+            'name' | 'value' | 'expires'
+          >
+        >
+      }
+  >
+}
+
+export type SignoutUserMutationVariables = Exact<{
+  data: SignoutUserInput
+}>
+
+export type SignoutUserMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'signoutUser'
+>
+
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
 
+export const CurrentUserDocument = gql`
+  query CurrentUser {
+    currentUser {
+      id
+      roles
+      accessToken {
+        name
+        value
+        expires
+      }
+      refreshToken {
+        name
+        value
+        expires
+      }
+    }
+  }
+`
+
+/**
+ * __useCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentUserQuery (
+  baseOptions?: Apollo.QueryHookOptions<
+    CurrentUserQuery,
+    CurrentUserQueryVariables
+  >
+) {
+  return Apollo.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(
+    CurrentUserDocument,
+    baseOptions
+  )
+}
+export function useCurrentUserLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CurrentUserQuery,
+    CurrentUserQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(
+    CurrentUserDocument,
+    baseOptions
+  )
+}
+export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>
+export type CurrentUserLazyQueryHookResult = ReturnType<
+  typeof useCurrentUserLazyQuery
+>
+export type CurrentUserQueryResult = Apollo.QueryResult<
+  CurrentUserQuery,
+  CurrentUserQueryVariables
+>
+export function refetchCurrentUserQuery (variables?: CurrentUserQueryVariables) {
+  return { query: CurrentUserDocument, variables: variables }
+}
+export const SigninUserDocument = gql`
+  mutation SigninUser($data: SigninUserInput!) {
+    signinUser(data: $data) {
+      id
+      roles
+      accessToken {
+        name
+        value
+        expires
+      }
+      refreshToken {
+        name
+        value
+        expires
+      }
+    }
+  }
+`
+export type SigninUserMutationFn = Apollo.MutationFunction<
+  SigninUserMutation,
+  SigninUserMutationVariables
+>
+
+/**
+ * __useSigninUserMutation__
+ *
+ * To run a mutation, you first call `useSigninUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSigninUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signinUserMutation, { data, loading, error }] = useSigninUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSigninUserMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    SigninUserMutation,
+    SigninUserMutationVariables
+  >
+) {
+  return Apollo.useMutation<SigninUserMutation, SigninUserMutationVariables>(
+    SigninUserDocument,
+    baseOptions
+  )
+}
+export type SigninUserMutationHookResult = ReturnType<
+  typeof useSigninUserMutation
+>
+export type SigninUserMutationResult = Apollo.MutationResult<SigninUserMutation>
+export type SigninUserMutationOptions = Apollo.BaseMutationOptions<
+  SigninUserMutation,
+  SigninUserMutationVariables
+>
+export const SignoutUserDocument = gql`
+  mutation SignoutUser($data: SignoutUserInput!) {
+    signoutUser(data: $data)
+  }
+`
+export type SignoutUserMutationFn = Apollo.MutationFunction<
+  SignoutUserMutation,
+  SignoutUserMutationVariables
+>
+
+/**
+ * __useSignoutUserMutation__
+ *
+ * To run a mutation, you first call `useSignoutUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignoutUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signoutUserMutation, { data, loading, error }] = useSignoutUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSignoutUserMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    SignoutUserMutation,
+    SignoutUserMutationVariables
+  >
+) {
+  return Apollo.useMutation<SignoutUserMutation, SignoutUserMutationVariables>(
+    SignoutUserDocument,
+    baseOptions
+  )
+}
+export type SignoutUserMutationHookResult = ReturnType<
+  typeof useSignoutUserMutation
+>
+export type SignoutUserMutationResult = Apollo.MutationResult<
+  SignoutUserMutation
+>
+export type SignoutUserMutationOptions = Apollo.BaseMutationOptions<
+  SignoutUserMutation,
+  SignoutUserMutationVariables
+>
 export const WelcomeDocument = gql`
   query Welcome {
     welcome

@@ -45,14 +45,12 @@ export const createGraphQLSchemaFiles = async (
   const name = 'schema.graphql'
   const src = join(ROOT_DIR, name)
 
-  // Create file if it doesn't exist
-  if (!(await pathExists(src))) {
-    try {
-      await emitSchemaDefinitionFile(name, schema)
-      logger.success('Create file on server')
-    } catch (error) {
-      logger.error('Failed to create file', { error })
-    }
+  // Create schema file whenever server starts
+  try {
+    await emitSchemaDefinitionFile(name, schema)
+    logger.success('Create file on server')
+  } catch (error) {
+    logger.error('Failed to create file', { error })
   }
 
   // Copy to target directory
