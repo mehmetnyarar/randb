@@ -2,6 +2,7 @@ import { compare } from 'bcrypt'
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Repository } from '~/db'
 import { GraphQLContext } from '~/graphql'
+import { Logger } from '~/logger'
 import {
   DEFAULT_USER,
   EntityType,
@@ -22,6 +23,10 @@ import {
   SigninUserInput,
   SignoutUserInput
 } from '~/modules'
+
+const logger = Logger.create({
+  src: 'resolver/auth'
+})
 
 /**
  * Authentication resolver.
@@ -143,6 +148,7 @@ export class AuthResolver {
       cookies.send(res, currentUser)
     }
 
+    logger.debug('signinUser', { now: new Date(), currentUser })
     return currentUser
   }
 

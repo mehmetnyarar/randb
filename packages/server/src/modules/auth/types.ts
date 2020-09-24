@@ -41,7 +41,7 @@ export interface ResetTokenPayload {
 /**
  * Payload to create auth tokens.
  */
-export type AuthTokenPayload = Pick<CurrentUser, 'id' | 'roles'>
+export type AuthTokenPayload = Pick<CurrentUser, 'id' | 'name' | 'roles'>
 
 /**
  * Auth token configurations.

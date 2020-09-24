@@ -1,5 +1,4 @@
 import { Request } from 'express'
-import { pick } from 'lodash'
 import { Types } from 'mongoose'
 import {
   getCurrentUser,
@@ -22,7 +21,11 @@ const config: AuthTokenConfig = {
 }
 
 const id = Types.ObjectId().toHexString()
-const user = new CurrentUser({ id, roles: [] })
+const user = new CurrentUser({
+  id,
+  name: { first: 'Test', last: 'User' },
+  roles: []
+})
 const accessToken = createAuthToken(user, config.accessToken)
 const refreshToken = createAuthToken(user, config.refreshToken)
 
@@ -49,7 +52,7 @@ describe('express/auth', () => {
         accessToken.value,
         config.accessToken.secret
       )
-      expect(currentUser).toMatchObject({ id, roles: [] })
+      expect(currentUser).toMatchObject(user)
     })
   })
 
@@ -63,7 +66,7 @@ describe('express/auth', () => {
         } as Request,
         config
       )
-      expect(result.user).toMatchObject(pick(user, ['id', 'roles']))
+      expect(result.user).toMatchObject(user)
       expect(result.refresh).toBeFalsy()
       expect(result.expired).toBeFalsy()
 
@@ -73,7 +76,7 @@ describe('express/auth', () => {
         } as Request,
         config
       )
-      expect(result.user).toMatchObject(pick(user, ['id', 'roles']))
+      expect(result.user).toMatchObject(user)
       expect(result.refresh).toBeFalsy()
       expect(result.expired).toBeFalsy()
 
@@ -83,7 +86,7 @@ describe('express/auth', () => {
         } as Request,
         config
       )
-      expect(result.user).toMatchObject(pick(user, ['id', 'roles']))
+      expect(result.user).toMatchObject(user)
       expect(result.refresh).toBeTruthy()
       expect(result.expired).toBeFalsy()
 

@@ -4,17 +4,29 @@ This is a shared library that provides application logic to the front-end applic
 
 ## Structure
 
-| Directory | Description     |
-| --------- | --------------- |
-| config    | Configuration   |
-| graphql   | Apollo GraphQL  |
-| logger    | Logging utility |
+| Directory | Description                                                                      |
+| --------- | -------------------------------------------------------------------------------- |
+| config    | Configuration                                                                    |
+| form      | Form utilities                                                                   |
+| graphql   | Apollo GraphQL                                                                   |
+| logger    | Logging utility                                                                  |
+| models    | Types/interfaces, hooks, and other helpers & utilities                           |
+| modules   | Types/interfaces, hooks, and other helpers & utilities                           |
+| storage   | [Async Storage](https://react-native-community.github.io/async-storage/) helpers |
 
 ## Config
 
 Configuration of any sort is provided via constants and environment variables that are located in the `~/config` directory.
 
 - Check `~/config/env/env.config.ts` to see how environment variables are/should be set
+
+## Form
+
+Provides form helpers.
+
+| Directory | Description                                                |
+| --------- | ---------------------------------------------------------- |
+| yup       | Form validation with [Yup](https://github.com/jquense/yup) |
 
 ## GraphQL
 
@@ -62,6 +74,18 @@ Below methods can be used for logging in addition to the standard console method
 | todo    | 6        | To-do messages   |
 | debug   | 7        | Debugging        |
 | trace   | 8        | Tracing          |
+
+## Models
+
+Provides types/interfaces, hooks, and other helpers & utilities for models. Directory structure is equivalent to the backend.
+
+## Modules
+
+Provides types/interfaces, hooks, and other helpers & utilities for modules. Directory structure is similar to the backend.
+
+| Module | Description        |
+| ------ | ------------------ |
+| auth   | Form hooks: signin |
 
 ### Storage
 

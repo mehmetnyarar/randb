@@ -1,11 +1,26 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { ApolloClientLocalState } from '@app/logic'
+import { ApolloClientLocalState, LogMethod } from '@app/logic'
 import '@testing-library/jest-dom/extend-expect'
 import { config } from 'dotenv'
 import 'jest-axe/extend-expect'
+import 'jest-localstorage-mock'
+import Modal from 'react-modal'
 
 // Load the environment variables
 config()
+
+// Mock next/router
+jest.mock('next/router', () => ({
+  useRouter () {
+    return {
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
+      push: jest.fn()
+    }
+  }
+}))
 
 // Mock Apollo Client
 jest.mock('~/apollo', () => {
@@ -19,10 +34,15 @@ jest.mock('~/apollo', () => {
   }
 })
 
+// Mock react-modal
+jest
+  .spyOn(Modal, 'setAppElement')
+  .mockImplementation(param => console.log(`setAppElement:'${param}'`))
+
 // Disable console printing for the following methods during the tests
-// Use .warn() method if you need to debug
+// Use log or warn methods if you need to debug
 const originalConsole = { ...console }
-const consoleMocks: any[] = ['debug', 'error', 'info', 'log', 'trace']
+const consoleMocks: LogMethod[] = ['debug', 'error', 'info', 'trace']
 
 beforeAll(() => {
   consoleMocks.forEach(method => {

@@ -1,17 +1,48 @@
+import { storage } from '@app/logic'
 import { renderHook } from '@testing-library/react-hooks'
+import { ColorScheme } from '~/theme'
+import { DEFAULT_SCHEME } from '~/theme/context/const'
 import { useTheme } from '~/theme/context/use'
 
+// #region Setup
+
+jest.spyOn(storage, 'get')
+jest.spyOn(storage, 'set')
+jest.spyOn(storage, 'remove')
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
+// #endregion
+
 describe('theme/context/use', () => {
-  it('should return context (default)', () => {
-    const { result } = renderHook(() => useTheme())
-    expect(result.current.scheme).toBe('light')
+  it('should save the default theme to the local storage', async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useTheme())
+
+    await waitForNextUpdate()
+    expect(result.current.scheme).toBe(DEFAULT_SCHEME)
+    expect(storage.set).toHaveBeenCalledWith('scheme', DEFAULT_SCHEME)
   })
 
-  it('should return context (initial)', () => {
-    const { result } = renderHook(() => useTheme({ scheme: 'dark' }))
-    expect(result.current.scheme).toBe('dark')
+  it('should save the theme to the local storage', async () => {
+    const scheme: ColorScheme = 'dark'
+    await storage.set('scheme', scheme)
 
-    result.current.changeScheme('light')
-    expect(result.current.scheme).toBe('light')
+    const { result, waitForNextUpdate } = renderHook(() => useTheme())
+
+    await waitForNextUpdate()
+    expect(result.current.scheme).toBe(scheme)
+    expect(storage.set).toHaveBeenCalledWith('scheme', scheme)
+  })
+
+  it('should change the theme', async () => {
+    const { result, waitForNextUpdate } = renderHook(() => useTheme())
+
+    result.current.onSchemeChange('dark')
+
+    await waitForNextUpdate()
+    expect(result.current.scheme).toBe('dark')
+    expect(storage.set).toHaveBeenCalledWith('scheme', 'dark')
   })
 })

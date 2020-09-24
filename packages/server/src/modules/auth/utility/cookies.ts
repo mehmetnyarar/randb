@@ -1,7 +1,12 @@
 import { CookieOptions, Response } from 'express'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/config'
+import { ACCESS_TOKEN, REFRESH_TOKEN, SSL } from '~/config'
+import { Logger } from '~/logger'
 import { AuthTokenConfig, getTokenConfig } from '~/modules'
 import { AuthToken } from '../types'
+
+const logger = Logger.create({
+  src: 'cookies'
+})
 
 /**
  * Creates a bearer token.
@@ -34,8 +39,11 @@ const send = (
     const { value, expires } = token.accessToken
     res.cookie(name, getBearerToken(value), {
       ...options,
-      expires: expires
+      httpOnly: true,
+      secure: SSL,
+      expires
     })
+    logger.success('send access token')
   }
 
   // send refresh token
@@ -44,8 +52,11 @@ const send = (
     const { value, expires } = token.refreshToken
     res.cookie(name, getBearerToken(value), {
       ...options,
-      expires: expires
+      httpOnly: true,
+      secure: SSL,
+      expires
     })
+    logger.success('send refresh token')
   }
 }
 
@@ -62,6 +73,7 @@ const clear = (res: Response, config: Partial<AuthTokenConfig> = {}) => {
 
   res.clearCookie(accessToken.name)
   res.clearCookie(refreshToken.name)
+  logger.success('clear tokens')
 }
 
 export { send, clear }

@@ -1,5 +1,6 @@
 import { DocumentType } from '@typegoose/typegoose'
 import { hash } from 'bcrypt'
+import { pick } from 'lodash'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Mongoose, Types } from 'mongoose'
 import { connect } from '~/db'
@@ -70,7 +71,7 @@ describe('resolver/auth', () => {
     })
 
     it('should return the current user', async () => {
-      const currentUser = new CurrentUser({ id: user.id, roles: user.roles })
+      const currentUser = new CurrentUser(pick(user, ['id', 'name', 'roles']))
       const ctx: GraphQLContext = { ...context, currentUser }
       const result = await resolver.currentUser(ctx)
       expect(result).toEqual(currentUser)
@@ -134,6 +135,7 @@ describe('resolver/auth', () => {
     it('should return false (user not found)', async () => {
       const currentUser = new CurrentUser({
         id: Types.ObjectId().toHexString(),
+        name: { first: 'Test', last: 'User' },
         roles: []
       })
       const ctx: GraphQLContext = { ...context, currentUser }
@@ -142,7 +144,7 @@ describe('resolver/auth', () => {
     })
 
     it('should return true', async () => {
-      const currentUser = new CurrentUser({ id: user.id, roles: user.roles })
+      const currentUser = new CurrentUser(pick(user, ['id', 'name', 'roles']))
       const ctx: GraphQLContext = { ...context, currentUser }
       const result = await resolver.signoutUser(
         { origin: RequestOrigin.WEB },

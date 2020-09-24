@@ -1,10 +1,6 @@
-import { MockedResponse } from '@apollo/client/testing'
-import welcome from './welcome'
+import * as currentUser from './current-user.query'
+import * as signinUser from './signin-user.mutation'
+import * as signoutUser from './signout-user.mutation'
+import * as welcome from './welcome.query'
 
-export const data: MockedResponse[] = [welcome]
-
-export const errors: MockedResponse[] = data.map(item => ({
-  ...item,
-  result: undefined,
-  error: new Error('GraphQL error!')
-}))
+export { welcome, currentUser, signinUser, signoutUser }

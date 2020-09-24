@@ -32,6 +32,9 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.{ts,tsx}',
     '!<rootDir>/src/**/index.ts',
+    '!<rootDir>/src/pages/_app.tsx',
+    '!<rootDir>/src/pages/_document.tsx',
+    '!<rootDir>/src/pages/_error.tsx',
     '!<rootDir>/src/apollo.ts',
     '!<rootDir>/src/config.ts'
   ],

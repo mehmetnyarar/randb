@@ -51,6 +51,10 @@ This is the repository for the RAN DB Manager applications.
 | dev:ui              | Watches changes in the ui library during the development                  |
 | test:ui             | Runs tests for the ui library                                             |
 | build:ui            | Builds shared ui for the production mode                                  |
+| dev:web             | Runs the web app in development mode                                      |
+| test:web            | Runs tests for the web app                                                |
+| build:web           | Initializes the web app for production                                    |
+| start:web           | Starts the web app in production mode                                     |
 
 You can run scripts from packages using `yarn` or `lerna`:
 

@@ -33,7 +33,11 @@ const log: Partial<Log> = {
 }
 
 const userId = Types.ObjectId()
-const user = new CurrentUser({ id: userId.toHexString(), roles: [] })
+const user = new CurrentUser({
+  id: userId.toHexString(),
+  name: { first: 'Test', last: 'User' },
+  roles: []
+})
 
 // #endregion
 

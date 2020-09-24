@@ -1,9 +1,13 @@
-import { logger } from '@typegoose/typegoose/lib/logSettings'
 import { Request } from 'express'
 import { verify } from 'jsonwebtoken'
 import { get, isEmpty } from 'lodash'
+import { Logger } from '~/logger'
 import { AuthTokenConfig, AuthTokenPayload, CurrentUser } from '~/modules'
 import { Token } from './types'
+
+const logger = Logger.create({
+  src: 'express/auth'
+})
 
 /**
  * Returns the token value if parses successfully.

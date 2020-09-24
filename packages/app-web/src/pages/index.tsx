@@ -14,8 +14,8 @@ const HomeScreen: React.FC = () => {
       <main role='main'>
         <p>Welcome to the web application!</p>
 
-        {loading && <p>Loading...</p>}
-        {error && <p>Error: {error.message}</p>}
+        {loading && <p>...</p>}
+        {error && <p data-testid='welcome-error'>{error.message}</p>}
         {data?.welcome && <p>{data.welcome}</p>}
       </main>
 

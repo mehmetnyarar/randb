@@ -51,7 +51,11 @@ describe('modules/auth/utility/token', () => {
   })
 
   describe('createAuthToken', () => {
-    const payload: AuthTokenPayload = { id: 'user-id', roles: [UserRole.USER] }
+    const payload: AuthTokenPayload = {
+      id: 'user-id',
+      name: { first: 'Test', last: 'User' },
+      roles: [UserRole.USER]
+    }
     const user = new CurrentUser(payload)
     const date = new Date()
 

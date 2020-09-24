@@ -6,11 +6,11 @@ import { AnalyticsInput, PhoneNumberInput } from '~/models'
  */
 @InputType()
 export class SigninUserInput extends AnalyticsInput {
-  @Field()
-  email!: string
+  @Field({ nullable: true })
+  email?: string
 
-  @Field(() => PhoneNumberInput)
-  phone!: PhoneNumberInput
+  @Field(() => PhoneNumberInput, { nullable: true })
+  phone?: PhoneNumberInput
 
   @Field()
   password!: string

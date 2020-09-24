@@ -79,7 +79,7 @@ export const createAuthToken = (
   startDate?: Date
 ): UserToken => {
   const { name, secret, expiry } = config
-  const payload: AuthTokenPayload = pick(user, ['id', 'roles'])
+  const payload: AuthTokenPayload = pick(user, ['id', 'name', 'roles'])
 
   return {
     name,

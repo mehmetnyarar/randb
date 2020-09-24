@@ -11,9 +11,9 @@ describe('theme/context/provider', () => {
   })
 
   it('should throw an error (default/changeScheme)', () => {
-    const { changeScheme } = DEFAULT_THEME
+    const { onSchemeChange } = DEFAULT_THEME
     expect(() => {
-      changeScheme('dark')
+      onSchemeChange('dark')
     }).toThrow()
   })
 })

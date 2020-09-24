@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/config'
-import { User, UserRole, UserToken } from '~/models'
+import { PersonName, User, UserRole, UserToken } from '~/models'
 import { EntityOrDocument } from '~/types'
 import { AuthToken, AuthTokenConfig, AuthTokenPayload } from './types'
 import { createAuthToken, getTokenConfig } from './utility'
@@ -14,6 +14,9 @@ export class CurrentUser implements AuthToken {
 
   @Field(() => ID)
   id: string
+
+  @Field(() => PersonName)
+  name: PersonName
 
   @Field(() => [UserRole])
   roles: UserRole[]
@@ -35,6 +38,7 @@ export class CurrentUser implements AuthToken {
    */
   constructor (user: AuthTokenPayload | EntityOrDocument<User>) {
     this.id = user.id
+    this.name = user.name
     this.roles = Array.from([...user.roles])
   }
 

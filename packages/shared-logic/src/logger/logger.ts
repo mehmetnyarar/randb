@@ -85,7 +85,7 @@ export class Logger {
 
     if (isBrowser()) {
       console[method](
-        `%c[${this.src}] %c${message}}`,
+        `%c[${this.src}] %c${message}`,
         'font: bold',
         styles.browser[level]
       )
@@ -237,7 +237,7 @@ export class Logger {
    */
   newline () {
     if (this.level !== 'off') {
-      console.log('\n')
+      console.debug('\n')
     }
   }
 

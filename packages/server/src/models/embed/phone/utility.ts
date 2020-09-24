@@ -12,9 +12,10 @@ export const getPhoneNumber = (phone: PhoneNumber) => {
 
 /**
  * Determines whether the phone number is default or not.
- * @param phone Phone number.
- * @returns True if the phone number is default.
+ * @param [phone] Phone number.
+ * @returns True if the phone number is undefined or has default values.
  */
-export const isDefaultPhoneNumber = ({ cc, dc, sn }: PhoneNumberInput) => {
-  return !cc && !dc && !sn
+export const isDefaultPhoneNumber = (phone?: Partial<PhoneNumberInput>) => {
+  if (!phone) return true
+  return !phone.cc && !phone.dc && !phone.sn
 }

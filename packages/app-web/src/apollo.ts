@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { ApolloClientLocalState, isBrowser } from '@app/logic'
 import { useMemo } from 'react'
 import { GRAPHQL_API_URL } from '~/config'
@@ -9,13 +9,16 @@ let apolloClient: ApolloClient<ApolloClientLocalState>
  * Creates a new ApolloClient.
  */
 function createApolloClient () {
+  // Cookie authentication
+  const httpLink = createHttpLink({
+    uri: GRAPHQL_API_URL, // Server URL (must be absolute),
+    credentials: 'include' // Additional fetch() options like `credentials` or `headers`
+  })
+
   return new ApolloClient({
-    ssrMode: !isBrowser(),
-    link: new HttpLink({
-      uri: GRAPHQL_API_URL, // Server URL (must be absolute)
-      credentials: 'same-origin' // Additional fetch() options like `credentials` or `headers`
-    }),
-    cache: new InMemoryCache()
+    link: httpLink,
+    cache: new InMemoryCache(),
+    ssrMode: !isBrowser()
   })
 }
 

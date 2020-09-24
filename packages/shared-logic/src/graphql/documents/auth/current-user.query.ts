@@ -4,17 +4,11 @@ export const query = gql`
   query CurrentUser {
     currentUser {
       id
+      name {
+        first
+        last
+      }
       roles
-      accessToken {
-        name
-        value
-        expires
-      }
-      refreshToken {
-        name
-        value
-        expires
-      }
     }
   }
 `

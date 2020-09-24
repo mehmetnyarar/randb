@@ -1,3 +1,4 @@
+import { Auth } from '@app/logic'
 import { ColorScheme, Theme } from '@app/ui'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -24,7 +25,8 @@ interface Props {
  * @param props Props.
  */
 export const Layout: React.FC<Props> = ({ title, children }) => {
-  const { scheme, palette, changeScheme } = useContext(Theme)
+  const { scheme, palette, onSchemeChange } = useContext(Theme)
+  const { initializing, user, loading, signout } = useContext(Auth)
 
   return (
     <>
@@ -37,6 +39,28 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
 
       <header role='banner'>
         <h2>{APP_NAME}</h2>
+        <div className='user' data-testid='user'>
+          {initializing ? (
+            <span>...</span>
+          ) : user ? (
+            <>
+              <span>Hello {user.name.first}</span>
+              <button
+                type='button'
+                onClick={() => signout()}
+                disabled={loading}
+                className='signout'
+                data-testid='signout'
+              >
+                Signout
+              </button>
+            </>
+          ) : (
+            <Link href='/signin'>
+              <a>Signin</a>
+            </Link>
+          )}
+        </div>
       </header>
 
       {children}
@@ -53,7 +77,8 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
             <select
               id='theme'
               value={scheme}
-              onChange={e => changeScheme(e.target.value as ColorScheme)}
+              onChange={e => onSchemeChange(e.target.value as ColorScheme)}
+              data-testid='theme'
             >
               {['light', 'dark'].map(option => (
                 <option key={option} value={option}>
@@ -87,6 +112,21 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
             font-variant: petite-caps;
           }
 
+          .signout {
+            cursor: pointer;
+            margin-left: 16px;
+            padding: 16px;
+            outline: none;
+            border: none;
+            border-radius: 4px;
+            background: ${palette['background-alternative-color-1']};
+            color: ${palette['text-alternate-color']};
+            transition: background 0.5s ease;
+          }
+          .signout:hover {
+            background: ${palette['background-alternative-color-4']};
+          }
+
           footer {
             display: flex;
             flex-direction: row;
@@ -96,7 +136,6 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
             border-top: 1px solid ${palette['outline-color']};
             background: ${palette['background-basic-color-2']};
           }
-
           footer section {
             display: block;
           }

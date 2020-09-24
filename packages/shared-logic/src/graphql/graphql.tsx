@@ -191,6 +191,7 @@ export type CurrentUser = {
   __typename?: 'CurrentUser'
   accessToken?: Maybe<UserToken>
   id: Scalars['ID']
+  name: PersonName
   refreshToken?: Maybe<UserToken>
   roles: Array<UserRole>
 }
@@ -372,10 +373,10 @@ export enum Scenario {
 
 export type SigninUserInput = {
   agent?: Maybe<Scalars['String']>
-  email: Scalars['String']
+  email?: Maybe<Scalars['String']>
   origin?: Maybe<RequestOrigin>
   password: Scalars['String']
-  phone: PhoneNumberInput
+  phone?: Maybe<PhoneNumberInput>
 }
 
 export type SignoutUserInput = {
@@ -461,18 +462,7 @@ export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 export type CurrentUserQuery = { __typename?: 'Query' } & {
   currentUser?: Maybe<
     { __typename?: 'CurrentUser' } & Pick<CurrentUser, 'id' | 'roles'> & {
-        accessToken?: Maybe<
-          { __typename?: 'UserToken' } & Pick<
-            UserToken,
-            'name' | 'value' | 'expires'
-          >
-        >
-        refreshToken?: Maybe<
-          { __typename?: 'UserToken' } & Pick<
-            UserToken,
-            'name' | 'value' | 'expires'
-          >
-        >
+        name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
       }
   >
 }
@@ -484,6 +474,7 @@ export type SigninUserMutationVariables = Exact<{
 export type SigninUserMutation = { __typename?: 'Mutation' } & {
   signinUser?: Maybe<
     { __typename?: 'CurrentUser' } & Pick<CurrentUser, 'id' | 'roles'> & {
+        name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
         accessToken?: Maybe<
           { __typename?: 'UserToken' } & Pick<
             UserToken,
@@ -517,17 +508,11 @@ export const CurrentUserDocument = gql`
   query CurrentUser {
     currentUser {
       id
+      name {
+        first
+        last
+      }
       roles
-      accessToken {
-        name
-        value
-        expires
-      }
-      refreshToken {
-        name
-        value
-        expires
-      }
     }
   }
 `
@@ -584,6 +569,10 @@ export const SigninUserDocument = gql`
   mutation SigninUser($data: SigninUserInput!) {
     signinUser(data: $data) {
       id
+      name {
+        first
+        last
+      }
       roles
       accessToken {
         name

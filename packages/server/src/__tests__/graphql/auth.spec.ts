@@ -34,6 +34,7 @@ const withUser = {
     auth: true,
     currentUser: new CurrentUser({
       id: Types.ObjectId().toHexString(),
+      name: { first: 'Test', last: 'User' },
       roles: [UserRole.MANAGER]
     })
   }

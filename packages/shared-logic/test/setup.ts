@@ -1,9 +1,12 @@
+import '@testing-library/jest-dom/extend-expect'
+import 'jest-axe/extend-expect'
+import 'jest-localstorage-mock'
 import { LogMethod } from '~/logger'
 
 // Disable console printing for the following methods during the tests
-// Use .warn() method if you need to debug
+// Use log or warn methods if you need to debug
 const originalConsole = { ...console }
-const consoleMocks: LogMethod[] = ['debug', 'error', 'info', 'log', 'trace']
+const consoleMocks: LogMethod[] = ['debug', 'error', 'info', 'trace']
 
 beforeAll(() => {
   consoleMocks.forEach(method => {

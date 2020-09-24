@@ -3,7 +3,7 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es5",
-    "jsx": "preserve",
+    "jsx": "react",
     /* Module Resolution Options */
     "baseUrl": ".",
     "paths": {

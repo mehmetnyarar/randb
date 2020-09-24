@@ -1,13 +1,19 @@
+import { ColorScheme } from '../types'
 import { getColorPalette } from '../utility'
 import { ThemeContext } from './types'
+
+/**
+ * Default scheme.
+ */
+export const DEFAULT_SCHEME: ColorScheme = 'light'
 
 /**
  * Default context.
  */
 export const DEFAULT_THEME: ThemeContext = {
-  scheme: 'light',
-  palette: getColorPalette('light'),
-  changeScheme: () => {
-    throw new Error('"ThemeContext/changeScheme" is not implemented!')
+  scheme: DEFAULT_SCHEME,
+  palette: getColorPalette(DEFAULT_SCHEME),
+  onSchemeChange: () => {
+    throw new Error('"ThemeContext/onSchemeChange" is not implemented!')
   }
 }

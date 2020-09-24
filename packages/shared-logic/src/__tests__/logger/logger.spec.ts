@@ -282,14 +282,14 @@ describe('logger', () => {
       const logger = Logger.create()
 
       logger.newline()
-      expect(console.log).toHaveBeenCalled()
+      expect(console.debug).toHaveBeenCalled()
     })
 
     it('should not print a new line', () => {
       const logger = Logger.create({ level: 'off' })
 
       logger.newline()
-      expect(console.log).not.toHaveBeenCalled()
+      expect(console.debug).not.toHaveBeenCalled()
     })
   })
 

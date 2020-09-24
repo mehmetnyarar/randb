@@ -1,7 +1,7 @@
 /**
  * Basic colors.
  */
-export interface BasicColorPalette {
+export interface BasicColorPalette extends Record<string, string> {
   'color-basic-100': string
   'color-basic-200': string
   'color-basic-300': string
@@ -30,7 +30,7 @@ export interface BasicColorPalette {
 /**
  * Brand colors.
  */
-export interface BrandColorPalette {
+export interface BrandColorPalette extends Record<string, string> {
   // primary
   'color-primary-100': string
   'color-primary-200': string
@@ -116,7 +116,7 @@ export interface BrandColorPalette {
 /**
  * Mapped colors.
  */
-export interface MappedColorPalette {
+export interface MappedColorPalette extends Record<string, string> {
   'color-basic-focus': string
   'color-basic-hover': string
   'color-basic-default': string
@@ -337,7 +337,8 @@ export interface MappedColorPalette {
  * Color palette.
  */
 export interface ColorPalette
-  extends BasicColorPalette,
+  extends Record<string, string>,
+    BasicColorPalette,
     BrandColorPalette,
     MappedColorPalette {}
 

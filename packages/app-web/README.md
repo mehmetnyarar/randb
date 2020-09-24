@@ -4,12 +4,13 @@ This is a web application ([Next.js](https://nextjs.org/)) which targets all use
 
 ## Structure
 
-| Directory  | Description      |
-| ---------- | ---------------- |
-| apollo     | Apollo Client    |
-| components | React components |
-| config     | Configuration    |
-| pages      | Next.js pages    |
+| Directory  | Description          |
+| ---------- | -------------------- |
+| apollo     | Apollo Client        |
+| components | React components     |
+| config     | Configuration        |
+| pages      | Next.js pages        |
+| types      | Interfaces and types |
 
 ## Apollo
 
@@ -37,7 +38,8 @@ Configuration of any sort is provided via constants and environment variables.
 
 ## Pages
 
-| Component | Description  | URL |
-| --------- | ------------ | --- |
+| Component | Description  | URL     |
+| --------- | ------------ | ------- |
 | \_app     | Next wrapper |
-| index     | Home page    | /   |
+| index     | Home page    | /       |
+| signin    | Signin page  | /signin |
