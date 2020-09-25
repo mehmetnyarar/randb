@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["dom", "esnext", "es2017"],
+    "jsx": "react-native",
+    "noEmit": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "test/*": ["test/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    /* Advanced Options */
+    "skipLibCheck": true,
+    /* Custom Options */
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "**/test/**", "**/__tests__/**"]
+}

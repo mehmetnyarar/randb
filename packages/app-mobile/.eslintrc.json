@@ -1,0 +1,10 @@
+{
+  "extends": "../../.eslintrc.json",
+  "rules": {
+    // Settings for 'eslint-import-resolver-typescript' did not solve 'no-use-before-define' error
+    // See https://stackoverflow.com/questions/63818415/react-was-used-before-it-was-defined
+    // See https://github.com/typescript-eslint/typescript-eslint/issues/2502
+    "no-use-before-define": [0],
+    "@typescript-eslint/no-use-before-define": [1]
+  }
+}

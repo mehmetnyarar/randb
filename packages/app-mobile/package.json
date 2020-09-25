@@ -1,0 +1,44 @@
+{
+  "name": "@app/mobile",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Mobile application (for all users)",
+  "keywords": [
+    "mobile",
+    "application"
+  ],
+  "author": "Mehmet N. Yarar <mehmetnyarar@gmail.com>",
+  "contributors": [
+    "Mehmet N. Yarar <mehmetnyarar@gmail.com>"
+  ],
+  "main": "__generated__/AppEntry.js",
+  "scripts": {
+    "postinstall": "expo-yarn-workspaces postinstall",
+    "dev": "expo start --clear",
+    "test": "jest",
+    "start": "expo start --clear",
+    "android": "expo start --android --clear",
+    "ios": "expo start --ios --clear",
+    "web": "expo start --web --clear",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@app/logic": "1.0.0",
+    "@app/ui": "1.0.0",
+    "expo": "~39.0.2",
+    "expo-status-bar": "~1.0.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
+    "react-native-web": "~0.13.12"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.9.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.10.4",
+    "@types/react": "~16.9.35",
+    "@types/react-dom": "~16.9.8",
+    "@types/react-native": "~0.63.2",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "expo-yarn-workspaces": "^1.2.1"
+  }
+}

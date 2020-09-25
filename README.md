@@ -55,6 +55,9 @@ This is the repository for the RAN DB Manager applications.
 | test:web            | Runs tests for the web app                                                |
 | build:web           | Initializes the web app for production                                    |
 | start:web           | Starts the web app in production mode                                     |
+| dev:mobile          | Runs the mobile app in development mode                                   |
+| test:mobile         | Runs tests for the mobile app                                             |
+| start:mobile        | Starts the mobile app in production mode                                  |
 
 You can run scripts from packages using `yarn` or `lerna`:
 
@@ -92,6 +95,8 @@ TODO
 yarn dev:server
 yarn dev:logic
 yarn dev:ui
+yarn dev:web
+yarn dev:mobile
 ```
 
 ## Testing
@@ -100,6 +105,8 @@ yarn dev:ui
 yarn test:server
 yarn test:logic
 yarn test:ui
+yarn test:web
+yarn test:mobile
 ```
 
 ## Production
