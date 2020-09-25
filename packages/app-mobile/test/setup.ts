@@ -1,5 +1,12 @@
+/// <reference types="../custom" />
+
 import { LogMethod } from '@app/logic'
+import mockAsyncStorage from '@react-native-community/async-storage/jest/async-storage-mock'
 import '@testing-library/jest-native/extend-expect'
+import 'dotenv/config'
+
+// Mock AsyncStorage
+jest.mock('@react-native-community/async-storage', () => mockAsyncStorage)
 
 // Disable console printing for the following methods during the tests
 // Use log or warn methods if you need to debug

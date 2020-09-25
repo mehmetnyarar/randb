@@ -1,23 +1,17 @@
+import { ApolloProvider } from '@apollo/client'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { apolloClient } from './apollo'
+import { HomeScreen } from './screens/main'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
-
+/**
+ * Application.
+ */
 export default function App () {
   return (
-    <View style={styles.container}>
-      <Text testID='welcome'>
-        Open up App.tsx to start working on your app!
-      </Text>
+    <ApolloProvider client={apolloClient}>
+      <HomeScreen />
       <StatusBar style='auto' />
-    </View>
+    </ApolloProvider>
   )
 }

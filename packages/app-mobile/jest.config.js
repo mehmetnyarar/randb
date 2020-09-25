@@ -32,13 +32,16 @@ module.exports = {
       testPathIgnorePatterns: [
         '<rootDir>/__generated__',
         '<rootDir>/.expo',
-        '<rootDir>/coverage'
+        '<rootDir>/coverage',
+        '<rootDir>/App.tsx',
+        '<rootDir>/src/index.tsx'
       ]
     }
   ],
   collectCoverageFrom: [
     '<rootDir>/src/**/*.{ts,tsx}',
-    '!<rootDir>/src/**/index.ts'
+    '!<rootDir>/src/**/index.ts',
+    '!<rootDir>/src/index.tsx'
   ],
   coverageThreshold: {
     global: {
