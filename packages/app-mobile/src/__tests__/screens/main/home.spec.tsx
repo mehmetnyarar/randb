@@ -1,19 +1,19 @@
-import { waitFor } from '@testing-library/react-native'
 import React from 'react'
 import { welcome } from 'test/mocks'
 import { render } from 'test/render'
+import { waitForResponse } from 'test/utils'
 import { HomeScreen } from '~/screens/main'
 
 describe('app', () => {
   it('should render', async () => {
-    const { getByTestId, queryByTestId } = render(<HomeScreen />, {
+    const { queryByText } = render(<HomeScreen />, {
       mocks: [welcome.success]
     })
-    expect(getByTestId('welcome')).toBeTruthy()
+    expect(queryByText(/mobile app/i)).toBeTruthy()
+    expect(queryByText(/loading/i)).toBeTruthy()
 
-    expect(queryByTestId('api-loading')).toHaveTextContent('...')
-    await waitFor(() => {
-      expect(queryByTestId('api-welcome')).toBeTruthy()
-    })
+    await waitForResponse()
+    expect(queryByText(/loading/i)).toBeFalsy()
+    expect(queryByText(/graphql/i)).toBeTruthy()
   })
 })

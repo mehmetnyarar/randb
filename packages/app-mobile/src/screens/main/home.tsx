@@ -22,12 +22,10 @@ export const HomeScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.container}>
-      <Text testID='welcome'>
-        Open up App.tsx to start working on your app!
-      </Text>
-      {loading && <Text testID='api-loading'>...</Text>}
-      {apiError && <Text testID='api-error'>{apiError}</Text>}
-      {data && <Text testID='api-welcome'>{data.welcome}</Text>}
+      <Text>Welcome to the mobile application!</Text>
+      {loading && <Text>Loading</Text>}
+      {apiError && <Text>{apiError}</Text>}
+      {data && <Text>{data.welcome}</Text>}
     </View>
   )
 }

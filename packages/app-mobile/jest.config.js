@@ -10,7 +10,7 @@ module.exports = {
       testEnvironment: 'node',
       testMatch: ['**/__tests__/**/+(*.)+(spec|test).+(js|ts)?(x)'],
       transformIgnorePatterns: [
-        'node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)'
+        'node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry|@ui-kitten/.*)'
       ],
       moduleNameMapper: {
         '^~/(.*)$': '<rootDir>/src/$1',
@@ -41,7 +41,10 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.{ts,tsx}',
     '!<rootDir>/src/**/index.ts',
-    '!<rootDir>/src/index.tsx'
+    '!<rootDir>/src/index.tsx',
+    '!<rootDir>/src/icons.tsx',
+    '!<rootDir>/src/apollo.ts',
+    '!<rootDir>/src/config.ts'
   ],
   coverageThreshold: {
     global: {

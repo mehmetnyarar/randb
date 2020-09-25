@@ -1,17 +1,34 @@
 import { ApolloProvider } from '@apollo/client'
-import { StatusBar } from 'expo-status-bar'
-import React from 'react'
+import { Theme, ThemeProvider } from '@app/ui'
+import * as eva from '@eva-design/eva'
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components'
+import { EvaIconsPack } from '@ui-kitten/eva-icons'
+import React, { useContext } from 'react'
 import { apolloClient } from './apollo'
-import { HomeScreen } from './screens/main'
+import { SettingsScreen } from './screens/settings'
+
+const WithTheme: React.FC = () => {
+  const { palette } = useContext(Theme)
+
+  return (
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={palette}>
+        <ApolloProvider client={apolloClient}>
+          <SettingsScreen />
+        </ApolloProvider>
+      </ApplicationProvider>
+    </>
+  )
+}
 
 /**
  * Application.
  */
 export default function App () {
   return (
-    <ApolloProvider client={apolloClient}>
-      <HomeScreen />
-      <StatusBar style='auto' />
-    </ApolloProvider>
+    <ThemeProvider>
+      <WithTheme />
+    </ThemeProvider>
   )
 }
