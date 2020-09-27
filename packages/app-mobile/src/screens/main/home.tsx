@@ -1,31 +1,36 @@
 import { getErrorMessage, getGraphQLError, useWelcomeQuery } from '@app/logic'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { Text } from '@ui-kitten/components'
 import React, { useMemo } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { Layout } from '~/components/layout'
+import { MainNavParams } from '~/navigation'
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  layout: {
     alignItems: 'center',
     justifyContent: 'center'
   }
 })
 
-interface Props {}
+type Props = BottomTabScreenProps<MainNavParams, 'Home'>
 
+/**
+ * Home screen.
+ * @param props Props.
+ */
 export const HomeScreen: React.FC<Props> = () => {
   const { data, error, loading } = useWelcomeQuery()
-  const apiError = useMemo(
-    () => error && getErrorMessage(getGraphQLError(error)),
-    [error]
-  )
+  const errorMessage = useMemo(() => {
+    return error ? getErrorMessage(getGraphQLError(error)) : undefined
+  }, [error])
 
   return (
-    <View style={styles.container}>
+    <Layout title='Home' style={styles.layout}>
       <Text>Welcome to the mobile application!</Text>
-      {loading && <Text>Loading</Text>}
-      {apiError && <Text>{apiError}</Text>}
       {data && <Text>{data.welcome}</Text>}
-    </View>
+      {loading && <Text>Loading</Text>}
+      {errorMessage && <Text>{errorMessage}</Text>}
+    </Layout>
   )
 }

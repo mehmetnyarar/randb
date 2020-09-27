@@ -5,6 +5,10 @@ import { AuthContext } from './types'
  * Default value for the authentication context.
  */
 export const DEFAULT_AUTH: AuthContext = {
+  skip: false,
+  onSkipChange: () => {
+    throw new Error('auth/onSkipChange has not been implemented yet!')
+  },
   user: undefined,
   initializing: undefined,
   getCurrentUser: () => {

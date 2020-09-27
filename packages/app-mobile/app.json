@@ -3,6 +3,7 @@
     "name": "RANDB Mobile",
     "slug": "randb-mobile",
     "version": "1.0.0",
+    "scheme": "randb",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {

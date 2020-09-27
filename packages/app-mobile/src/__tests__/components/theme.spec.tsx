@@ -1,13 +1,16 @@
+import { waitFor } from '@testing-library/react-native'
 import React from 'react'
 import { render } from 'test/render'
 import { ThemeSelection } from '~/components/theme'
 
-describe('components/layout', () => {
-  it('should render', () => {
+describe('components/theme', () => {
+  it('should render', async () => {
     const { queryByText } = render(<ThemeSelection />)
 
-    expect(queryByText('light')).toBeTruthy()
-    expect(queryByText('dark')).toBeFalsy()
+    await waitFor(() => {
+      expect(queryByText('light')).toBeTruthy()
+      expect(queryByText('dark')).toBeFalsy()
+    })
 
     test.todo('Simulate theme change')
   })

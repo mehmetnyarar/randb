@@ -29,6 +29,9 @@ const logger = Logger.create({
 export const useAuth = (options: AuthOptions = {}): AuthContext => {
   const { ...analytics } = options
 
+  const [skip, setSkip] = useState(false)
+  const onSkipChange = useCallback((value: boolean) => setSkip(value), [])
+
   const [user, setUser] = useState<CurrentUser>()
   const [loading, setLoading] = useState(false)
 
@@ -135,6 +138,8 @@ export const useAuth = (options: AuthOptions = {}): AuthContext => {
   useEffect(getCurrentUser, [getCurrentUser])
 
   return {
+    skip,
+    onSkipChange,
     user,
     initializing,
     getCurrentUser,

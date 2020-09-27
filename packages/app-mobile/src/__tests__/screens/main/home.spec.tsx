@@ -1,15 +1,15 @@
-import React from 'react'
-import { welcome } from 'test/mocks'
-import { render } from 'test/render'
+import { currentUser, welcome } from 'test/mocks'
+import { renderScreen } from 'test/render'
 import { waitForResponse } from 'test/utils'
 import { HomeScreen } from '~/screens/main'
 
-describe('app', () => {
+describe('screens/main/home', () => {
   it('should render', async () => {
-    const { queryByText } = render(<HomeScreen />, {
-      mocks: [welcome.success]
+    const { queryByText } = renderScreen(HomeScreen, {
+      mocks: [welcome.success, currentUser.isSignedIn]
     })
-    expect(queryByText(/mobile app/i)).toBeTruthy()
+
+    expect(queryByText(/app/i)).toBeTruthy()
     expect(queryByText(/loading/i)).toBeTruthy()
 
     await waitForResponse()

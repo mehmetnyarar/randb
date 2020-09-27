@@ -8,7 +8,7 @@ import Constants from 'expo-constants'
 export const GRAPHQL_API_URL: string = Constants.manifest.extra.GRAPHQL_API_URL
 
 /**
- * GraphQL endpoint for subscriptions
+ * GraphQL endpoint for subscriptions.
  * @see env/GQL_SUBSCRIPTIONS_URL
  * @see app.config/GRAPHQL_SUBSCRIPTIONS_URL
  */

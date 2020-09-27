@@ -1,11 +1,14 @@
+import { Theme } from '@app/ui'
+import { DrawerActions, useNavigation } from '@react-navigation/native'
 import {
-  Divider,
-  Layout as UILayout,
-  TopNavigation
+  Layout as LayoutView,
+  TopNavigation,
+  TopNavigationAction
 } from '@ui-kitten/components'
+import { RenderProp } from '@ui-kitten/components/devsupport'
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
-import { SafeAreaView, StyleProp, StyleSheet, ViewProps } from 'react-native'
+import React, { useContext } from 'react'
+import { SafeAreaView, StyleSheet, ViewProps } from 'react-native'
 import { ChevronLeftIcon, MenuIcon } from '~/icons'
 
 const styles = StyleSheet.create({
@@ -14,11 +17,11 @@ const styles = StyleSheet.create({
   }
 })
 
-interface Props {
+interface Props extends ViewProps {
   title?: string
-  style?: StyleProp<ViewProps>
-  showGoBack?: boolean
-  showDrawerMenu?: boolean
+  isAuthScreen?: boolean
+  allowBack?: boolean
+  allowMenu?: boolean
 }
 
 /**
@@ -27,27 +30,52 @@ interface Props {
  */
 export const Layout: React.FC<Props> = ({
   title,
+  allowBack = false,
+  allowMenu = true,
+  children,
   style,
-  showGoBack,
-  showDrawerMenu,
-  children
+  ...viewProps
 }) => {
+  const { scheme } = useContext(Theme)
+  const { dispatch, goBack } = useNavigation()
+
+  const GoBack: RenderProp<{}> | undefined =
+    title && allowBack
+      ? () => (
+        <TopNavigationAction
+          icon={ChevronLeftIcon}
+          onPress={goBack}
+          accessibilityLabel='Go Back'
+        />
+      )
+      : undefined
+
+  const ToggleMenu: RenderProp<{}> | undefined =
+    title && allowMenu
+      ? () => (
+        <TopNavigationAction
+          icon={MenuIcon}
+          onPress={() => dispatch(DrawerActions.toggleDrawer)}
+          accessibilityLabel='Toggle Menu'
+        />
+      )
+      : undefined
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {title && (
-        <>
-          <TopNavigation
-            title={title || 'TITLE IS REQUIRED'}
-            alignment='center'
-            accessoryLeft={showGoBack ? ChevronLeftIcon : undefined}
-            accessoryRight={showDrawerMenu ? MenuIcon : undefined}
-            accessibilityLabel='Top Navigation'
-          />
-          <Divider />
-        </>
+        <TopNavigation
+          title={title}
+          alignment='center'
+          accessoryLeft={GoBack}
+          accessoryRight={ToggleMenu}
+          accessibilityLabel='Top Navigation'
+        />
       )}
-      <UILayout style={[styles.layout, style]}>{children}</UILayout>
-      <StatusBar style='auto' />
+      <LayoutView level='1' style={[styles.layout, style]} {...viewProps}>
+        {children}
+      </LayoutView>
+      <StatusBar style={scheme} />
     </SafeAreaView>
   )
 }

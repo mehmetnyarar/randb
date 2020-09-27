@@ -44,7 +44,8 @@ module.exports = {
     '!<rootDir>/src/index.tsx',
     '!<rootDir>/src/icons.tsx',
     '!<rootDir>/src/apollo.ts',
-    '!<rootDir>/src/config.ts'
+    '!<rootDir>/src/config.ts',
+    '!<rootDir>/src/navigation/**/*.{ts,tsx}'
   ],
   coverageThreshold: {
     global: {

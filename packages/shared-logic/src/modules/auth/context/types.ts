@@ -18,6 +18,8 @@ export interface AuthOptions extends HookOptions {
  * Authentication context.
  */
 export interface AuthContext {
+  skip: boolean
+  onSkipChange: (value: boolean) => void
   user?: CurrentUser
   initializing?: boolean
   getCurrentUser: () => void

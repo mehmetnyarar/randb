@@ -1,13 +1,20 @@
 import { ApolloProvider } from '@apollo/client'
+import { Auth, AuthProvider, RequestOrigin } from '@app/logic'
 import { Theme, ThemeProvider } from '@app/ui'
 import * as eva from '@eva-design/eva'
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import React, { useContext } from 'react'
 import { apolloClient } from './apollo'
-import { SettingsScreen } from './screens/settings'
+import { AppNavigator } from './navigation'
 
-const WithTheme: React.FC = () => {
+export const WithAuth: React.FC = () => {
+  const { skip, user } = useContext(Auth)
+
+  return <AppNavigator auth={!(user || skip)} />
+}
+
+export const WithTheme: React.FC = () => {
   const { palette } = useContext(Theme)
 
   return (
@@ -15,7 +22,9 @@ const WithTheme: React.FC = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={palette}>
         <ApolloProvider client={apolloClient}>
-          <SettingsScreen />
+          <AuthProvider origin={RequestOrigin.MOBILE}>
+            <WithAuth />
+          </AuthProvider>
         </ApolloProvider>
       </ApplicationProvider>
     </>
@@ -25,10 +34,12 @@ const WithTheme: React.FC = () => {
 /**
  * Application.
  */
-export default function App () {
+export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <WithTheme />
     </ThemeProvider>
   )
 }
+
+export default App
