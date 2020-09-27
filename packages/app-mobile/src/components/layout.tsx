@@ -13,7 +13,9 @@ import { ChevronLeftIcon, MenuIcon } from '~/icons'
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 1
+    flex: 1,
+    padding: 16,
+    alignItems: 'stretch'
   }
 })
 

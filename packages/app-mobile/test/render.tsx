@@ -1,5 +1,5 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
-import { Auth, AuthProvider, RequestOrigin } from '@app/logic'
+import { Auth, AuthProvider, RequestOrigin, SnackProvider } from '@app/logic'
 import { ThemeProvider } from '@app/ui'
 import * as eva from '@eva-design/eva'
 import { NavigationContainer } from '@react-navigation/native'
@@ -11,6 +11,7 @@ import {
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import React, { useContext } from 'react'
+import { SnackBar } from '~/components/snackbar'
 import { SigninScreen } from '~/screens/auth'
 import { currentUser, welcome } from './mocks'
 
@@ -27,9 +28,12 @@ const WithTheme: React.FC<WrapperProps> = ({ mocks, children }) => {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       <IconRegistry icons={EvaIconsPack} />
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <AuthProvider origin={RequestOrigin.MOBILE}>{children}</AuthProvider>
-      </MockedProvider>
+      <SnackProvider>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <AuthProvider origin={RequestOrigin.MOBILE}>{children}</AuthProvider>
+        </MockedProvider>
+        <SnackBar />
+      </SnackProvider>
     </ApplicationProvider>
   )
 }

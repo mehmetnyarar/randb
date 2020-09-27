@@ -19,8 +19,7 @@ describe('components/layout', () => {
   })
 
   it('should render a support screen', async () => {
-    const { debug, queryByA11yLabel } = renderScreen(AboutScreen)
-    debug()
+    const { queryByA11yLabel } = renderScreen(AboutScreen)
     expect(queryByA11yLabel(/top nav/i)).toBeTruthy()
     expect(queryByA11yLabel(/go back/i)).toBeTruthy()
     expect(queryByA11yLabel(/toggle/i)).toBeTruthy()

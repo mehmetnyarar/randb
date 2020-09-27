@@ -9,6 +9,12 @@ export const ChevronLeftIcon: IconComponent = props => (
   <Icon {...props} name='chevron-left' />
 )
 
+export const EyeIcon: IconComponent = props => <Icon {...props} name='eye' />
+
+export const EyeOffIcon: IconComponent = props => (
+  <Icon {...props} name='eye-off' />
+)
+
 export const HomeIcon: IconComponent = props => <Icon {...props} name='home' />
 
 export const MenuIcon: IconComponent = props => <Icon {...props} name='menu' />

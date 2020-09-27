@@ -11,18 +11,12 @@ const styles = StyleSheet.create({
 interface Props extends ButtonProps {}
 
 /**
- * Ghost button.
- * @param props Props.
+ * Submit button.
+ * @param Props Props.
  */
-export const GhostButton: React.FC<Props> = ({ children, ...props }) => {
+export const SubmitButton: React.FC<Props> = ({ children, ...props }) => {
   return (
-    <Button
-      size='small'
-      status='basic'
-      appearance='ghost'
-      style={styles.button}
-      {...props}
-    >
+    <Button status='primary' style={styles.button} {...props}>
       {children}
     </Button>
   )
