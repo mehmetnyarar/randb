@@ -87,3 +87,10 @@ export const createAuthToken = (
     expires: addMilliseconds(startDate || new Date(), expiry)
   }
 }
+
+/**
+ * Creates a bearer token.
+ * @param token Token.
+ * @returns Bearer token.
+ */
+export const getBearerToken = (token: string) => 'Bearer ' + token

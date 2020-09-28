@@ -12,4 +12,9 @@ export const ROOT_DIR = process.cwd()
  */
 export const LOGS_DIR = join(ROOT_DIR, 'logs')
 
+/**
+ * Directory for i18n locales.
+ */
+export const LOCALES_DIR = join(ROOT_DIR, 'src/locales')
+
 // #endregion

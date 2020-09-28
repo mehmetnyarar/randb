@@ -1,21 +1,10 @@
-import { GraphQLContext, GraphQLContextConnection } from '~/graphql'
-import { context } from '~/graphql/context'
+import { httpContext, wsContext } from 'test/mocks'
+import { GraphQLContextConnection } from '~/graphql'
+import { context, getLang } from '~/graphql/context'
+import { Language } from '~/models'
+import { I18N } from '~/modules'
 
 // #region Setup
-
-const httpContext: GraphQLContext = {
-  req: {} as never,
-  res: {} as never,
-  auth: false,
-  currentUser: undefined
-}
-
-const wsContext: GraphQLContext = {
-  req: { method: 'ws' } as never,
-  res: { method: 'ws' } as never,
-  auth: false,
-  currentUser: undefined
-}
 
 const connection: GraphQLContextConnection = {
   query: '',
@@ -27,6 +16,15 @@ const connection: GraphQLContextConnection = {
 // #endregion
 
 describe('graphql/context', () => {
+  it('should return language', () => {
+    expect(getLang()).toBe(I18N.defaultLanguage)
+    expect(getLang('de')).toBe(I18N.defaultLanguage)
+    expect(getLang('en-US')).toBe(Language.en)
+    expect(getLang('kz-KZ')).toBe(Language.kz)
+    expect(getLang('ru-RU')).toBe(Language.ru)
+    expect(getLang('tr-TR')).toBe(Language.tr)
+  })
+
   it('should create a context', async () => {
     const result = await context(httpContext)
     expect(result).toEqual(httpContext)

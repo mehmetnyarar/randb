@@ -8,7 +8,8 @@
     /* Module Resolution Options */
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["src/*"],
+      "test/*": ["test/*"]
     },
     "typeRoots": [
       "@types",

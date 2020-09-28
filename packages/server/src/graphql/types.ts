@@ -1,8 +1,10 @@
 import { ContextFunction } from 'apollo-server-core'
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import { Request, Response } from 'express'
+import { TFunction } from 'i18next'
 import { ExecutionParams } from 'subscriptions-transport-ws'
-import { CurrentUser } from '~/modules/auth'
+import { Language } from '~/models'
+import { CurrentUser } from '~/modules'
 
 /**
  * GraphQL context.
@@ -17,6 +19,16 @@ export interface GraphQLContext {
    * Server response.
    */
   res: Response
+
+  /**
+   * i18n translator.
+   */
+  t: TFunction
+
+  /**
+   * Language.
+   */
+  lang: Language
 
   /**
    * Auth checker configuration.

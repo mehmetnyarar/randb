@@ -3,6 +3,7 @@ import { hash } from 'bcrypt'
 import { pick } from 'lodash'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Mongoose, Types } from 'mongoose'
+import { httpContext as context } from 'test/mocks'
 import { connect } from '~/db'
 import { GraphQLContext } from '~/graphql'
 import {
@@ -21,20 +22,6 @@ import { AuthResolver } from '~/resolvers/auth'
 let server: MongoMemoryServer
 let mongoose: Mongoose
 let user: DocumentType<User>
-
-const context: GraphQLContext = {
-  req: {} as any,
-  res: {
-    cookie: () => {
-      //
-    },
-    clearCookie: () => {
-      //
-    }
-  } as any,
-  auth: undefined,
-  currentUser: undefined
-}
 
 jest.spyOn(context.res, 'cookie')
 jest.spyOn(context.res, 'clearCookie')

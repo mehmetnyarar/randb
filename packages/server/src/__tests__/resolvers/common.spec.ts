@@ -1,3 +1,4 @@
+import { httpContext as context } from 'test/mocks'
 import { CommonResolver } from '~/resolvers/common'
 
 // #region Setup
@@ -8,6 +9,8 @@ const resolver = new CommonResolver()
 
 describe('resolver/common', () => {
   it('should return a string', () => {
-    expect(resolver.welcome()).toBeTruthy()
+    const result = resolver.welcome(context)
+    expect(result).toBeTruthy()
+    expect(context.t).toHaveBeenCalled()
   })
 })

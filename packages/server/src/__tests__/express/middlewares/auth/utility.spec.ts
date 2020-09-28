@@ -5,13 +5,13 @@ import {
   parse,
   validate
 } from '~/express/middlewares/auth/utility'
+import { CurrentUser } from '~/modules/auth/type'
+import { AuthTokenConfig } from '~/modules/auth/types'
 import {
-  AuthTokenConfig,
   createAuthToken,
-  CurrentUser,
+  getBearerToken,
   getTokenConfig
-} from '~/modules'
-import { getBearerToken } from '~/modules/auth/utility/cookies'
+} from '~/modules/auth/utility'
 
 // #region Setup
 

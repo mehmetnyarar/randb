@@ -10,11 +10,13 @@ This is a back-end server which provides data access and business logic to the f
 | db        | Database utilities          |
 | express   | Express application         |
 | graphql   | Apollo GraphQL              |
+| locales   | Translations                |
 | logger    | Logging utility             |
 | models    | Database models             |
 | modules   | Server functionality        |
 | resolvers | GraphQL resolvers           |
 | types     | Custom types and interfaces |
+| utility   | Various utilities           |
 
 ## Config
 
@@ -129,6 +131,8 @@ Database/business models (entities and embed documents) can be located in the `~
 | entity/base | Base entity                   |
 | entity/log  | Log entity                    |
 | entity/user | User entity                   |
+| enum        | Enumerations                  |
+| utility     | Various utilities             |
 
 Network models:
 
@@ -181,6 +185,7 @@ Modules which are located in the `~/modules` directory extend the functionality 
 | Module | Description                      |
 | ------ | -------------------------------- |
 | auth   | Authentication and authorization |
+| i18n   | Internationalization             |
 | fs     | File system and uploads          |
 
 ## Resolvers

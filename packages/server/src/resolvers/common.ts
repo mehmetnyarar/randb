@@ -1,4 +1,5 @@
-import { Query, Resolver } from 'type-graphql'
+import { Ctx, Query, Resolver } from 'type-graphql'
+import { GraphQLContext } from '~/graphql'
 
 /**
  * Common resolver.
@@ -8,8 +9,8 @@ export class CommonResolver {
   // #region Query
 
   @Query(() => String)
-  welcome () {
-    return 'Welcome to the GraphQL API!'
+  welcome (@Ctx() { t }: GraphQLContext) {
+    return t('welcome')
   }
 
   // #endregion

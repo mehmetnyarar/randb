@@ -1,19 +1,12 @@
 import { CookieOptions, Response } from 'express'
 import { ACCESS_TOKEN, REFRESH_TOKEN, SSL } from '~/config'
 import { Logger } from '~/logger'
-import { AuthTokenConfig, getTokenConfig } from '~/modules'
-import { AuthToken } from '../types'
+import { AuthToken, AuthTokenConfig } from '../types'
+import { getBearerToken, getTokenConfig } from './token'
 
 const logger = Logger.create({
   src: 'cookies'
 })
-
-/**
- * Creates a bearer token.
- * @param token Token.
- * @returns Bearer token.
- */
-export const getBearerToken = (token: string) => 'Bearer ' + token
 
 /**
  * Sends auth tokens in cookies.

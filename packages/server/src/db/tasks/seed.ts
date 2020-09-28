@@ -10,7 +10,7 @@ import {
   UserModel,
   UserRole
 } from '~/models'
-import { excel } from '~/modules/fs'
+import { excel } from '~/modules'
 
 const logger = Logger.create({
   src: 'db/seed',

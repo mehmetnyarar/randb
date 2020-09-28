@@ -3,7 +3,8 @@ import { verify } from 'jsonwebtoken'
 import ms from 'ms'
 import { ACCESS_TOKEN, RESET_TOKEN } from '~/config'
 import { UserRole } from '~/models'
-import { AuthTokenPayload, CurrentUser } from '~/modules'
+import { CurrentUser } from '~/modules/auth/type'
+import { AuthTokenPayload } from '~/modules/auth/types'
 import {
   createAuthToken,
   createResetToken,

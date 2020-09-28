@@ -2,7 +2,7 @@ import { Types } from 'mongoose'
 import { ResolverData } from 'type-graphql'
 import { GraphQLContext } from '~/graphql'
 import { authChecker, getIgnoredRoles } from '~/graphql/auth'
-import { UserRole } from '~/models'
+import { Language, UserRole } from '~/models'
 import { CurrentUser } from '~/modules'
 
 // #region Setup
@@ -13,7 +13,9 @@ const data: ResolverData<GraphQLContext> = {
   context: {
     req: {} as never,
     res: {} as never,
-    auth: undefined,
+    t: jest.fn(),
+    lang: Language.en,
+    auth: false,
     currentUser: undefined
   },
   info: {} as never
