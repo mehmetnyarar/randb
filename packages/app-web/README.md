@@ -33,6 +33,7 @@ The environment variables must be set correctly based on the settings in the ser
 | snackbar  | Modal dialog for messages         |
 | language  | Language selection                |
 | layout    | Layout                            |
+| sidebar   | Sidebar                           |
 | theme     | Theme selection                   |
 
 ## Configuration

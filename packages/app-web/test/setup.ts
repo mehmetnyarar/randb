@@ -61,7 +61,9 @@ jest.mock('~/i18n', () => {
         t,
         i18n: {
           language: 'en',
-          onChangeLanguage: jest.fn()
+          changeLanguage: jest
+            .fn()
+            .mockImplementation((lang: string) => console.log(lang))
         }
       }
     },

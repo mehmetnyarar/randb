@@ -6,6 +6,7 @@ import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
 import { LanguageSelection } from './language'
+import { Sidebar } from './sidebar'
 import { ThemeSelection } from './theme'
 
 // TODO Create the following pages
@@ -69,7 +70,14 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
         </div>
       </header>
 
-      {children}
+      {user ? (
+        <div className='with-sidebar'>
+          <Sidebar />
+          {children}
+        </div>
+      ) : (
+        children
+      )}
 
       <footer role='contentinfo'>
         <section>
@@ -81,7 +89,7 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
           <ThemeSelection />
           <LanguageSelection />
         </section>
-        <nav role='navigation'>
+        <nav role='navigation' aria-label='Footer Navigation'>
           {footerLinks.map((link, index) => (
             <Link key={index} href={link.path}>
               <a title={link.description}>{t(`screen.${link.title}`)}</a>
@@ -118,6 +126,14 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
           }
           .signout:hover {
             background: ${palette['background-alternative-color-4']};
+          }
+
+          .with-sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
           }
 
           footer {

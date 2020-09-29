@@ -6,9 +6,18 @@ import { render } from 'test/render'
 import { waitForResponse } from 'test/utils'
 import { Layout } from '~/components/layout'
 
+delete window.location
+window.location = { ...window.location, reload: jest.fn() }
+
 describe('components/layout', () => {
   it('should render', async () => {
-    const { container, getByRole, getByTestId, queryByTestId } = render(
+    const {
+      container,
+      getByRole,
+      getByTestId,
+      queryByTestId,
+      getAllByRole
+    } = render(
       <Layout title='Test Page'>
         <main role='main' />
       </Layout>,
@@ -28,7 +37,7 @@ describe('components/layout', () => {
     expect(getByRole('banner')).toBeInTheDocument()
     expect(getByRole('main')).toBeInTheDocument()
     expect(getByRole('contentinfo')).toBeInTheDocument()
-    expect(getByRole('navigation')).toBeInTheDocument()
+    expect(getAllByRole('navigation')).toHaveLength(2)
 
     const a11y = await axe(container)
     expect(a11y).toHaveNoViolations()
@@ -42,14 +51,23 @@ describe('components/layout', () => {
     await waitForResponse()
     await waitFor(() => {
       expect(queryByTestId('signout')).not.toBeInTheDocument()
+      expect(getAllByRole('navigation')).toHaveLength(1)
     })
 
-    const select = getByTestId('theme')
-    expect(select).toHaveValue('light')
+    const theme = getByTestId('theme')
+    expect(theme).toHaveValue('light')
 
-    fireEvent.change(select, { target: { value: 'dark' } })
+    fireEvent.change(theme, { target: { value: 'dark' } })
     await waitFor(() => {
-      expect(select).toHaveValue('dark')
+      expect(theme).toHaveValue('dark')
+    })
+
+    const language = getByTestId('language')
+    expect(language).toHaveValue('en')
+
+    fireEvent.change(language, { target: { value: 'tr' } })
+    await waitFor(() => {
+      expect(window.location.reload).toHaveBeenCalled()
     })
   })
 })
