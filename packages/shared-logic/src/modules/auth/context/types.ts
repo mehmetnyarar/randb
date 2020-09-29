@@ -1,6 +1,6 @@
 import { AppError } from '../../../error'
 import { CurrentUser, RequestOrigin, SigninUserInput } from '../../../graphql'
-import { HookOptions } from '../../types'
+import { HookOptions } from '../../../hooks'
 
 /**
  * Authentication options.

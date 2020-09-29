@@ -23,3 +23,27 @@ export class PhoneNumberInput {
   @Field()
   sn!: string
 }
+
+/**
+ * Phone number filter.
+ */
+@InputType()
+export class PhoneNumberFilter {
+  /**
+   * Country Calling Code.
+   */
+  @Field({ nullable: true })
+  cc?: string
+
+  /**
+   * National Destination Code.
+   */
+  @Field({ nullable: true })
+  dc?: string
+
+  /**
+   * Subscriber Number.
+   */
+  @Field({ nullable: true })
+  sn?: string
+}

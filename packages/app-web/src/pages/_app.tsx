@@ -4,6 +4,7 @@ import {
   isBrowser,
   Logger,
   RequestOrigin,
+  SearchProvider,
   SnackProvider
 } from '@app/logic'
 import { ThemeProvider } from '@app/ui'
@@ -36,7 +37,9 @@ function App ({ Component, pageProps }: AppProps) {
       <SnackProvider>
         <ApolloProvider client={apolloClient}>
           <AuthProvider origin={RequestOrigin.WEB}>
-            <Component {...pageProps} />
+            <SearchProvider>
+              <Component {...pageProps} />
+            </SearchProvider>
           </AuthProvider>
         </ApolloProvider>
         <SnackBar />

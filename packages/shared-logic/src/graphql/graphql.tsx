@@ -187,6 +187,13 @@ export enum Cell4GBand {
   FDD1800MHZ20 = 'FDD1800MHZ20'
 }
 
+export type ConnectionInput = {
+  after?: Maybe<Scalars['ID']>
+  before?: Maybe<Scalars['ID']>
+  first?: Maybe<Scalars['Int']>
+  page?: Maybe<Scalars['Int']>
+}
+
 export enum Currency {
   EUR = 'EUR',
   KZT = 'KZT',
@@ -203,6 +210,23 @@ export type CurrentUser = {
   roles: Array<UserRole>
 }
 
+export type DateRangeFilter = {
+  max?: Maybe<Scalars['DateTime']>
+  min?: Maybe<Scalars['DateTime']>
+}
+
+export type EntitiesFilter = {
+  agent?: Maybe<Scalars['String']>
+  createdAt?: Maybe<DateRangeFilter>
+  createdBy?: Maybe<Scalars['ID']>
+  ids?: Maybe<Array<Scalars['ID']>>
+  isActive?: Maybe<Scalars['Boolean']>
+  isMock?: Maybe<Scalars['Boolean']>
+  origin?: Maybe<RequestOrigin>
+  updatedAt?: Maybe<DateRangeFilter>
+  updatedBy?: Maybe<Scalars['ID']>
+}
+
 export type Entity = {
   __typename?: 'Entity'
   createdAt?: Maybe<Scalars['DateTime']>
@@ -212,6 +236,18 @@ export type Entity = {
   isMock?: Maybe<Scalars['Boolean']>
   logs?: Maybe<Array<Scalars['ID']>>
   updatedAt?: Maybe<Scalars['DateTime']>
+}
+
+export type EntityFilter = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
+}
+
+export type EntityInput = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
 }
 
 export enum EntityType {
@@ -246,6 +282,11 @@ export enum EventType {
   SYS_WARN = 'SYS_WARN'
 }
 
+export type FloatRangeFilter = {
+  max?: Maybe<Scalars['Float']>
+  min?: Maybe<Scalars['Float']>
+}
+
 export type GeoLocation = {
   __typename?: 'GeoLocation'
   date?: Maybe<Scalars['DateTime']>
@@ -260,6 +301,11 @@ export type I18n = {
   name: Scalars['String']
   supportedCurrencies: Array<Currency>
   supportedLanguages: Array<Language>
+}
+
+export type IntRangeFilter = {
+  max?: Maybe<Scalars['Int']>
+  min?: Maybe<Scalars['Int']>
 }
 
 export type Lac = {
@@ -320,6 +366,15 @@ export type MutationsignoutUserArgs = {
   data?: Maybe<SignoutUserInput>
 }
 
+export type PageInfo = {
+  __typename?: 'PageInfo'
+  currentPage: Scalars['Int']
+  endCursor: Scalars['ID']
+  hasNextPage: Scalars['Boolean']
+  hasPreviousPage: Scalars['Boolean']
+  startCursor: Scalars['ID']
+}
+
 export type Parent = {
   __typename?: 'Parent'
   createdAt?: Maybe<Scalars['DateTime']>
@@ -349,11 +404,22 @@ export type PersonName = {
   last: Scalars['String']
 }
 
+export type PersonNameFilter = {
+  first?: Maybe<Scalars['String']>
+  last?: Maybe<Scalars['String']>
+}
+
 export type PhoneNumber = {
   __typename?: 'PhoneNumber'
   cc: Scalars['String']
   dc: Scalars['String']
   sn: Scalars['String']
+}
+
+export type PhoneNumberFilter = {
+  cc?: Maybe<Scalars['String']>
+  dc?: Maybe<Scalars['String']>
+  sn?: Maybe<Scalars['String']>
 }
 
 export type PhoneNumberInput = {
@@ -365,7 +431,23 @@ export type PhoneNumberInput = {
 export type Query = {
   __typename?: 'Query'
   currentUser?: Maybe<CurrentUser>
+  pagedUsers: UserConnection
+  user?: Maybe<User>
+  users: Array<User>
   welcome: Scalars['String']
+}
+
+export type QuerypagedUsersArgs = {
+  connection?: Maybe<ConnectionInput>
+  filter?: Maybe<UsersFilter>
+}
+
+export type QueryuserArgs = {
+  filter: UserFilter
+}
+
+export type QueryusersArgs = {
+  filter?: Maybe<UsersFilter>
 }
 
 export enum RequestOrigin {
@@ -467,10 +549,50 @@ export type User = {
   updatedBy?: Maybe<User>
 }
 
+export type UserConnection = {
+  __typename?: 'UserConnection'
+  edges: Array<UserEdge>
+  pageInfo: PageInfo
+  pages: Scalars['Int']
+  total: Scalars['Int']
+}
+
+export type UserEdge = {
+  __typename?: 'UserEdge'
+  cursor: Scalars['ID']
+  node: User
+}
+
+export type UserFilter = {
+  agent?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
+  phone?: Maybe<PhoneNumberFilter>
+}
+
 export enum UserRole {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   USER = 'USER'
+}
+
+export type UsersFilter = {
+  agent?: Maybe<Scalars['String']>
+  birthday?: Maybe<DateRangeFilter>
+  createdAt?: Maybe<DateRangeFilter>
+  createdBy?: Maybe<Scalars['ID']>
+  email?: Maybe<Scalars['String']>
+  gender?: Maybe<Array<PersonGender>>
+  ids?: Maybe<Array<Scalars['ID']>>
+  isActive?: Maybe<Scalars['Boolean']>
+  isMock?: Maybe<Scalars['Boolean']>
+  name?: Maybe<PersonNameFilter>
+  origin?: Maybe<RequestOrigin>
+  phone?: Maybe<PhoneNumberFilter>
+  roles?: Maybe<Array<UserRole>>
+  updatedAt?: Maybe<DateRangeFilter>
+  updatedBy?: Maybe<Scalars['ID']>
 }
 
 export type UserToken = {
@@ -526,6 +648,107 @@ export type SignoutUserMutation = { __typename?: 'Mutation' } & Pick<
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
+
+export type PagedUsersQueryVariables = Exact<{
+  filter?: Maybe<UsersFilter>
+  connection?: Maybe<ConnectionInput>
+}>
+
+export type PagedUsersQuery = { __typename?: 'Query' } & {
+  pagedUsers: { __typename?: 'UserConnection' } & Pick<
+    UserConnection,
+    'total' | 'pages'
+  > & {
+      edges: Array<
+        { __typename?: 'UserEdge' } & Pick<UserEdge, 'cursor'> & {
+            node: { __typename?: 'User' } & Pick<
+              User,
+              'id' | 'email' | 'roles' | 'isMock' | 'isActive'
+            > & {
+                name: { __typename?: 'PersonName' } & Pick<
+                  PersonName,
+                  'first' | 'last'
+                >
+                phone: { __typename?: 'PhoneNumber' } & Pick<
+                  PhoneNumber,
+                  'cc' | 'dc' | 'sn'
+                >
+              }
+          }
+      >
+      pageInfo: { __typename?: 'PageInfo' } & Pick<
+        PageInfo,
+        | 'currentPage'
+        | 'hasPreviousPage'
+        | 'startCursor'
+        | 'hasNextPage'
+        | 'endCursor'
+      >
+    }
+}
+
+export type UserQueryVariables = Exact<{
+  filter: UserFilter
+}>
+
+export type UserQuery = { __typename?: 'Query' } & {
+  user?: Maybe<
+    { __typename?: 'User' } & Pick<
+      User,
+      | 'id'
+      | 'email'
+      | 'gender'
+      | 'birthday'
+      | 'roles'
+      | 'createdAt'
+      | 'updatedAt'
+      | 'isMock'
+      | 'isActive'
+      | 'deactivatedAt'
+    > & {
+        name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
+        phone: { __typename?: 'PhoneNumber' } & Pick<
+          PhoneNumber,
+          'cc' | 'dc' | 'sn'
+        >
+        createdBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
+              >
+            }
+        >
+        updatedBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
+              >
+            }
+        >
+      }
+  >
+}
+
+export type UsersQueryVariables = Exact<{
+  filter?: Maybe<UsersFilter>
+}>
+
+export type UsersQuery = { __typename?: 'Query' } & {
+  users: Array<
+    { __typename?: 'User' } & Pick<
+      User,
+      'id' | 'email' | 'roles' | 'isMock' | 'isActive'
+    > & {
+        name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
+        phone: { __typename?: 'PhoneNumber' } & Pick<
+          PhoneNumber,
+          'cc' | 'dc' | 'sn'
+        >
+      }
+  >
+}
 
 export const CurrentUserDocument = gql`
   query CurrentUser {
@@ -744,4 +967,229 @@ export type WelcomeQueryResult = Apollo.QueryResult<
 >
 export function refetchWelcomeQuery (variables?: WelcomeQueryVariables) {
   return { query: WelcomeDocument, variables: variables }
+}
+export const PagedUsersDocument = gql`
+  query PagedUsers($filter: UsersFilter, $connection: ConnectionInput) {
+    pagedUsers(filter: $filter, connection: $connection) {
+      total
+      edges {
+        node {
+          id
+          name {
+            first
+            last
+          }
+          email
+          phone {
+            cc
+            dc
+            sn
+          }
+          roles
+          isMock
+          isActive
+        }
+        cursor
+      }
+      pages
+      pageInfo {
+        currentPage
+        hasPreviousPage
+        startCursor
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`
+
+/**
+ * __usePagedUsersQuery__
+ *
+ * To run a query within a React component, call `usePagedUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePagedUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePagedUsersQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      connection: // value for 'connection'
+ *   },
+ * });
+ */
+export function usePagedUsersQuery (
+  baseOptions?: Apollo.QueryHookOptions<
+    PagedUsersQuery,
+    PagedUsersQueryVariables
+  >
+) {
+  return Apollo.useQuery<PagedUsersQuery, PagedUsersQueryVariables>(
+    PagedUsersDocument,
+    baseOptions
+  )
+}
+export function usePagedUsersLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PagedUsersQuery,
+    PagedUsersQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<PagedUsersQuery, PagedUsersQueryVariables>(
+    PagedUsersDocument,
+    baseOptions
+  )
+}
+export type PagedUsersQueryHookResult = ReturnType<typeof usePagedUsersQuery>
+export type PagedUsersLazyQueryHookResult = ReturnType<
+  typeof usePagedUsersLazyQuery
+>
+export type PagedUsersQueryResult = Apollo.QueryResult<
+  PagedUsersQuery,
+  PagedUsersQueryVariables
+>
+export function refetchPagedUsersQuery (variables?: PagedUsersQueryVariables) {
+  return { query: PagedUsersDocument, variables: variables }
+}
+export const UserDocument = gql`
+  query User($filter: UserFilter!) {
+    user(filter: $filter) {
+      id
+      name {
+        first
+        last
+      }
+      email
+      phone {
+        cc
+        dc
+        sn
+      }
+      gender
+      birthday
+      roles
+      createdAt
+      createdBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      updatedAt
+      updatedBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      isMock
+      isActive
+      deactivatedAt
+    }
+  }
+`
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useUserQuery (
+  baseOptions?: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>
+) {
+  return Apollo.useQuery<UserQuery, UserQueryVariables>(
+    UserDocument,
+    baseOptions
+  )
+}
+export function useUserLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>
+) {
+  return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(
+    UserDocument,
+    baseOptions
+  )
+}
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>
+export function refetchUserQuery (variables?: UserQueryVariables) {
+  return { query: UserDocument, variables: variables }
+}
+export const UsersDocument = gql`
+  query Users($filter: UsersFilter) {
+    users(filter: $filter) {
+      id
+      name {
+        first
+        last
+      }
+      email
+      phone {
+        cc
+        dc
+        sn
+      }
+      roles
+      isMock
+      isActive
+    }
+  }
+`
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useUsersQuery (
+  baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>
+) {
+  return Apollo.useQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    baseOptions
+  )
+}
+export function useUsersLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>
+) {
+  return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(
+    UsersDocument,
+    baseOptions
+  )
+}
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
+export type UsersQueryResult = Apollo.QueryResult<
+  UsersQuery,
+  UsersQueryVariables
+>
+export function refetchUsersQuery (variables?: UsersQueryVariables) {
+  return { query: UsersDocument, variables: variables }
 }

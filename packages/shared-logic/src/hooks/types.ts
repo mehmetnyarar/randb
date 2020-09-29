@@ -4,12 +4,33 @@ import {
   UseFormMethods
 } from 'react-hook-form'
 import { AppError } from '../error'
-import { AnalyticsInput } from '../graphql'
+import { AnalyticsInput, ConnectionInput } from '../graphql'
 
 /**
  * Hook options.
  */
 export interface HookOptions extends AnalyticsInput {}
+
+/**
+ * Hook result.
+ */
+export interface HookResult<Result> {
+  initializing?: boolean
+  loading?: boolean
+  result?: Result
+  error?: AppError
+}
+
+export type FindFn<Filter> = (filter?: Filter) => void | Promise<void>
+export type NextFn = (connection?: ConnectionInput) => void | Promise<void>
+
+/**
+ * Paging hook result.
+ */
+export interface PagedHookResult<Result, Filter> extends HookResult<Result> {
+  find: FindFn<Filter>
+  next: NextFn
+}
 
 /**
  * Form hook options.
@@ -24,12 +45,10 @@ export interface FormHookOptions<Values, Result> extends HookOptions {
  * Result of a form hook.
  */
 export interface FormHookResult<Values extends AnalyticsInput, Result>
-  extends UseFormMethods<Values> {
+  extends HookResult<Result>,
+    UseFormMethods<Values> {
   TypedController: any
   isDisabled: boolean
   onInvalid: SubmitErrorHandler<Values>
   onValid: SubmitHandler<Values>
-  loading?: boolean
-  result?: Result
-  error?: AppError
 }

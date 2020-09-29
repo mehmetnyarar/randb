@@ -1,8 +1,9 @@
-import { Auth } from '@app/logic'
+import { Auth, UserRole } from '@app/logic'
 import { Theme } from '@app/ui'
 import Head from 'next/head'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
+import { Error } from '~/components/error'
 import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
 import { LanguageSelection } from './language'
@@ -20,16 +21,24 @@ interface Props {
    * Page title.
    */
   title: string
+
+  /**
+   * Users who can view this screen.
+   */
+  roles?: UserRole[]
 }
 
 /**
  * Layout.
  * @param props Props.
  */
-export const Layout: React.FC<Props> = ({ title, children }) => {
+export const Layout: React.FC<Props> = ({ title, roles, children }) => {
   const { t } = useTranslation()
   const { palette } = useContext(Theme)
   const { initializing, user, loading, signout } = useContext(Auth)
+  const isAuthorized = useMemo(() => {
+    return !roles || (user && roles.some(role => user.roles.includes(role)))
+  }, [user, roles])
 
   return (
     <>
@@ -73,10 +82,12 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
       {user ? (
         <div className='with-sidebar'>
           <Sidebar />
-          {children}
+          {isAuthorized ? children : <Error statusCode={401} />}
         </div>
-      ) : (
+      ) : isAuthorized ? (
         children
+      ) : (
+        <Error statusCode={401} />
       )}
 
       <footer role='contentinfo'>

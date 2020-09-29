@@ -1,5 +1,5 @@
 import { CurrentUser, SigninUserInput } from '../../../graphql'
-import { FormHookOptions, FormHookResult } from '../../types'
+import { FormHookOptions, FormHookResult } from '../../../hooks'
 
 /**
  * Indicates how the user prefers to signin.

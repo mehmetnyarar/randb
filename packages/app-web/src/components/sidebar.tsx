@@ -1,7 +1,7 @@
 import { UserRole } from '@app/logic'
 import { Theme } from '@app/ui'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
 
@@ -65,13 +65,13 @@ export const Sidebar: React.FC<Props> = () => {
       <section id='sidebar' className='sidebar'>
         <nav role='navigation' aria-label='Sidebar Navigation'>
           {SIDEBAR.map((item, i) => (
-            <>
+            <Fragment key={i}>
               {item.section && <h3 className='section'>{t(item.section)}</h3>}
               <Link key={i} href={item.path}>
                 <a title={item.description}>{t(item.title)}</a>
               </Link>
               {item.hasSeparator && <div className='separator' />}
-            </>
+            </Fragment>
           ))}
         </nav>
       </section>

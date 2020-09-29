@@ -39,15 +39,15 @@ export const useAuth = (options: AuthOptions = {}): AuthContext => {
   const [currentUserError, setCurrentUserError] = useState<AppError>()
   const [getCurrentUser] = useCurrentUserLazyQuery({
     fetchPolicy: 'network-only',
-    onError: error => {
-      logger.error('getCurrentUser/onError', error)
-      setCurrentUserError(getGraphQLError(error))
-      setInitializing(false)
-    },
     onCompleted: data => {
       logger.debug('getCurrentUser/onCompleted', { data })
       if (!data) setCurrentUserError(getCustomError('nodata'))
       else if (data.currentUser) setUser(data.currentUser)
+      setInitializing(false)
+    },
+    onError: error => {
+      logger.error('getCurrentUser/onError', error)
+      setCurrentUserError(getGraphQLError(error))
       setInitializing(false)
     }
   })
