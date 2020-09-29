@@ -83,9 +83,11 @@ Provides types/interfaces, hooks, and other helpers & utilities for models. Dire
 
 Provides types/interfaces, hooks, and other helpers & utilities for modules. Directory structure is similar to the backend.
 
-| Module | Description        |
-| ------ | ------------------ |
-| auth   | Form hooks: signin |
+| Module | Description           |
+| ------ | --------------------- |
+| auth   | Form hooks: signin    |
+| i18n   | Internationalization  |
+| snack  | Informational dialogs |
 
 ### Storage
 

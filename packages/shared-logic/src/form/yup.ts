@@ -2,20 +2,20 @@ import * as Yup from 'yup'
 
 Yup.setLocale({
   mixed: {
-    default: () => 'Invalid',
-    required: 'Required'
+    default: () => 'field.error.invalid',
+    required: 'field.error.required'
   },
   number: {
-    max: params => `Can not be greater than ${params.max}`,
-    min: params => `Can not be lower than ${params.min}`
+    max: ({ max }) => `field.error.number.max=${max}`,
+    min: ({ min }) => `field.error.number.min=${min}`
   },
   string: {
-    email: 'Invalid e-mail address',
-    length: params => `Should be ${params.length} characters long`,
-    matches: params => `Invalid ${params.path}`,
-    max: params => `Can not be longer than ${params.max} characters`,
-    min: params => `Can not be shorter than ${params.min} characters`,
-    url: 'Invalid URL'
+    email: 'field.error.email',
+    length: ({ length }) => `field.error.string.length=${length}`,
+    matches: ({ path }) => `field.error.string.matches/${path}`,
+    max: ({ max }) => `field.error.string.max=${max}`,
+    min: ({ min }) => `field.error.string.min=${min}`,
+    url: 'field.error.url'
   }
 })
 

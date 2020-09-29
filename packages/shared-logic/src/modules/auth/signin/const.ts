@@ -29,9 +29,9 @@ export const DEFAULT_SIGNIN_VALUES: SigninUserInput = {
 export const validationSchema = Yup.object<SigninUserInput>({
   email: Yup.string().email(),
   phone: Yup.object<PhoneNumberInput>({
-    cc: Yup.string().matches(cc).required(),
-    dc: Yup.string().matches(dc).required(),
-    sn: Yup.string().matches(sn).required()
+    cc: Yup.string().matches(cc) as any,
+    dc: Yup.string().matches(dc) as any,
+    sn: Yup.string().matches(sn) as any
   }),
   password: Yup.string().min(8).required()
 })

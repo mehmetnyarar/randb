@@ -1,16 +1,17 @@
 import { Auth } from '@app/logic'
-import { ColorScheme, Theme } from '@app/ui'
+import { Theme } from '@app/ui'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useContext } from 'react'
-import { APP_COPY, APP_NAME, APP_VERSION } from '~/config'
+import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
+import { LanguageSelection } from './language'
+import { ThemeSelection } from './theme'
 
 // TODO Create the following pages
 const footerLinks: AppLink[] = [
-  { path: '/about', title: 'About' },
-  { path: '/contact', title: 'Contact' },
-  { path: '/faq', title: 'FAQ' }
+  { path: '/about', title: 'about' },
+  { path: '/contact', title: 'contact' }
 ]
 
 interface Props {
@@ -25,7 +26,8 @@ interface Props {
  * @param props Props.
  */
 export const Layout: React.FC<Props> = ({ title, children }) => {
-  const { scheme, palette, onSchemeChange } = useContext(Theme)
+  const { t } = useTranslation()
+  const { palette } = useContext(Theme)
   const { initializing, user, loading, signout } = useContext(Auth)
 
   return (
@@ -34,17 +36,21 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         <link rel='icon' href='/favicon.ico' />
-        <title>{`${title} - ${APP_NAME}`}</title>
+        <title>{`${t(title)} - ${t('app.name')}`}</title>
       </Head>
 
       <header role='banner'>
-        <h2>{APP_NAME}</h2>
+        <h2>
+          <Link href='/'>
+            <a>{t('app.name')}</a>
+          </Link>
+        </h2>
         <div className='user' data-testid='user'>
           {initializing ? (
             <span>...</span>
           ) : user ? (
             <>
-              <span>Hello {user.name.first}</span>
+              <span>{t('welcome.user', { name: user.name.first })}</span>
               <button
                 type='button'
                 onClick={() => signout()}
@@ -52,12 +58,12 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
                 className='signout'
                 data-testid='signout'
               >
-                Signout
+                {t('auth.signout')}
               </button>
             </>
           ) : (
             <Link href='/signin'>
-              <a>Signin</a>
+              <a>{t('auth.signin')}</a>
             </Link>
           )}
         </div>
@@ -68,30 +74,17 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
       <footer role='contentinfo'>
         <section>
           <div className='app-info'>
-            <span className='name'>{APP_NAME}</span>
-            <span className='copy'>©{APP_COPY}</span>
-            <span className='version'>v{APP_VERSION}</span>
+            <span className='name'>{t('app.name')}</span>
+            <span className='copy'>{t('app.copy')}</span>
+            <span className='version'>{t('app.version')}</span>
           </div>
-          <div className='app-theme'>
-            <label htmlFor='theme'>Theme</label>
-            <select
-              id='theme'
-              value={scheme}
-              onChange={e => onSchemeChange(e.target.value as ColorScheme)}
-              data-testid='theme'
-            >
-              {['light', 'dark'].map(option => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+          <ThemeSelection />
+          <LanguageSelection />
         </section>
         <nav role='navigation'>
           {footerLinks.map((link, index) => (
             <Link key={index} href={link.path}>
-              <a title={link.description}>{link.title}</a>
+              <a title={link.description}>{t(`screen.${link.title}`)}</a>
             </Link>
           ))}
         </nav>
@@ -131,7 +124,7 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 16px;
             border-top: 1px solid ${palette['outline-color']};
             background: ${palette['background-basic-color-2']};
@@ -152,22 +145,6 @@ export const Layout: React.FC<Props> = ({ title, children }) => {
           .app-info .version {
             font-size: 8px;
             font-style: italic;
-          }
-
-          .app-theme {
-            margin-top: 16px;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-          }
-          .app-theme label {
-            margin-right: 8px;
-          }
-          .app-theme select {
-            padding: 0 8px;
-            background: transparent:
-            color: ${palette['background-basic-color-2']};
           }
 
           footer nav {

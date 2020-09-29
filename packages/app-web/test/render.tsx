@@ -30,7 +30,6 @@ const render = (
           <AuthProvider origin={RequestOrigin.WEB}>{children}</AuthProvider>
         </MockedProvider>
         <SnackBar />
-        <div id='snackbar' />
       </SnackProvider>
     </ThemeProvider>
   )

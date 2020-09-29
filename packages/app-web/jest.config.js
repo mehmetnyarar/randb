@@ -36,7 +36,8 @@ module.exports = {
     '!<rootDir>/src/pages/_document.tsx',
     '!<rootDir>/src/pages/_error.tsx',
     '!<rootDir>/src/apollo.ts',
-    '!<rootDir>/src/config.ts'
+    '!<rootDir>/src/config.ts',
+    '!<rootDir>/src/i18n.ts'
   ],
   coverageThreshold: {
     global: {

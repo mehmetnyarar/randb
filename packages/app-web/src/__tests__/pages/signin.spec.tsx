@@ -2,11 +2,11 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 import React from 'react'
 import { signinUser } from 'test/mocks'
 import { render } from 'test/render'
-import SigninScreen from '~/pages/signin'
+import Screen from '~/pages/signin'
 
 describe('pages/signin', () => {
   it('should change signin method', () => {
-    const { getByTestId } = render(<SigninScreen />)
+    const { getByTestId } = render(<Screen />)
 
     const changeMethod = getByTestId('ghost-button')
     expect(changeMethod).toHaveTextContent(/phone/i)
@@ -19,7 +19,7 @@ describe('pages/signin', () => {
   })
 
   it('should signin', async () => {
-    const { container, getByTestId } = render(<SigninScreen />, {
+    const { container, getByTestId } = render(<Screen />, {
       mocks: [signinUser.success]
     })
 
@@ -39,7 +39,7 @@ describe('pages/signin', () => {
   })
 
   it('should fail to signin', async () => {
-    const { getByTestId } = render(<SigninScreen />, {
+    const { getByTestId } = render(<Screen />, {
       mocks: [signinUser.failure]
     })
 

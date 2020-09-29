@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers'
 import { useTypedController } from '@hookform/strictly-typed'
+import { merge } from 'lodash'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { CurrentUser, SigninUserInput } from '../../../graphql'
@@ -28,7 +29,7 @@ const logger = Logger.create({
 export const useSigninUserForm = (
   options: UseSigninFormOptions = {}
 ): UseSigninFormResult => {
-  const { initialValues = {}, onSuccess } = options
+  const { initialValues = DEFAULT_SIGNIN_VALUES, onSuccess } = options
   const { signin, loading, signinError: error } = useContext(Auth)
   const [result, setResult] = useState<CurrentUser | undefined>()
 
@@ -62,10 +63,7 @@ export const useSigninUserForm = (
 
   const form = useForm<SigninUserInput, {}>({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      ...DEFAULT_SIGNIN_VALUES,
-      ...initialValues
-    }
+    defaultValues: initialValues
   })
 
   const { control } = form
@@ -76,7 +74,7 @@ export const useSigninUserForm = (
   const { isDirty, isSubmitting } = form.formState
   const isDisabled = useMemo(() => {
     const isInvalid = !isDirty
-    logger.debug('isDisabled', {
+    logger.trace('isDisabled', {
       loading,
       isDirty,
       isSubmitting,
@@ -88,7 +86,8 @@ export const useSigninUserForm = (
   const onValid = useCallback<SubmitHandler<SigninUserInput>>(
     async values => {
       try {
-        const user = await signin(values)
+        const input = merge(DEFAULT_SIGNIN_VALUES, values)
+        const user = await signin(input)
 
         setResult(user)
         user && onSuccess && onSuccess(user)

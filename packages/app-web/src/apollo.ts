@@ -1,22 +1,43 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
-import { ApolloClientLocalState, isBrowser } from '@app/logic'
+import { setContext } from '@apollo/client/link/context'
+import { ApolloClientLocalState, isBrowser, Logger } from '@app/logic'
 import { useMemo } from 'react'
 import { GRAPHQL_API_URL } from '~/config'
+
+const logger = Logger.create({
+  src: 'apollo'
+})
 
 let apolloClient: ApolloClient<ApolloClientLocalState>
 
 /**
  * Creates a new ApolloClient.
+ * @param [language] Language.
+ * @returns ApolloClient.
  */
-function createApolloClient () {
+function createApolloClient (language: string) {
+  logger.debug('create', { language })
+
   // Cookie authentication
   const httpLink = createHttpLink({
     uri: GRAPHQL_API_URL, // Server URL (must be absolute),
     credentials: 'include' // Additional fetch() options like `credentials` or `headers`
   })
 
+  // Language
+  const langLink = setContext(async (_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        'accept-language': language
+      }
+    }
+  })
+
+  const link = langLink.concat(httpLink)
+
   return new ApolloClient({
-    link: httpLink,
+    link,
     cache: new InMemoryCache(),
     ssrMode: !isBrowser()
   })
@@ -24,10 +45,16 @@ function createApolloClient () {
 
 /**
  * Initializes the ApolloClient.
- * @param initialState Initial state.
+ * @param [language] Language.
+ * @param [initialState] Initial state.
+ * @returns ApolloClient.
  */
-export function initializeApollo (initialState: ApolloClientLocalState = null) {
-  const _apolloClient = apolloClient ?? createApolloClient()
+export function initializeApollo (
+  language?: string,
+  initialState?: ApolloClientLocalState
+) {
+  logger.debug('initialize', { language, initialState })
+  const _apolloClient = apolloClient ?? createApolloClient(language)
 
   // If your page has Next.js data fetching methods that use Apollo Client,
   // the initial state gets hydrated here
@@ -51,9 +78,19 @@ export function initializeApollo (initialState: ApolloClientLocalState = null) {
 /**
  * ApolloClient hook.
  * @param initialState Initial state.
+ * @param [language] Language.
+ * @param [initialState] Initial state.
  * @returns ApolloClient.
  */
-export function useApollo (initialState: ApolloClientLocalState) {
-  const store = useMemo(() => initializeApollo(initialState), [initialState])
-  return store
+export function useApollo (
+  language?: string,
+  initialState?: ApolloClientLocalState
+) {
+  logger.debug('use', { language, initialState })
+  const client = useMemo(() => initializeApollo(language, initialState), [
+    language,
+    initialState
+  ])
+
+  return client
 }

@@ -2,20 +2,22 @@ import { useWelcomeQuery } from '@app/logic'
 import React from 'react'
 import { initializeApollo } from '~/apollo'
 import { Layout } from '~/components/layout'
+import { withTranslation } from '~/i18n'
+import { NextScreen } from '~/types'
 
 /**
  * Home screen.
  */
-const HomeScreen: React.FC = () => {
+export const HomeScreen: NextScreen = ({ t }) => {
   const { loading, error, data } = useWelcomeQuery()
 
   return (
     <Layout title='Home'>
       <main role='main'>
-        <p>Welcome to the web application!</p>
+        <p>{t('welcome')}</p>
 
         {loading && <p>...</p>}
-        {error && <p data-testid='welcome-error'>{error.message}</p>}
+        {error && <p data-testid='welcome-error'>{t(error.message)}</p>}
         {data?.welcome && <p>{data.welcome}</p>}
       </main>
 
@@ -35,17 +37,15 @@ const HomeScreen: React.FC = () => {
 }
 
 /**
- * Static props.
+ * Initial props.
  */
-export async function getStaticProps () {
+HomeScreen.getInitialProps = async () => {
   const apolloClient = initializeApollo()
 
   return {
-    props: {
-      initialApolloState: apolloClient.cache.extract()
-    },
-    revalidate: 1
+    initialApolloState: apolloClient.cache.extract(),
+    namespacesRequired: ['common']
   }
 }
 
-export default HomeScreen
+export default withTranslation('common')(HomeScreen)

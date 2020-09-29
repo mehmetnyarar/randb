@@ -12,3 +12,12 @@ export interface AppError {
   type: AppErrorType
   messages: string[]
 }
+
+/**
+ * Field error.
+ */
+export interface FormFieldError {
+  message: string
+  value?: any
+  path?: string
+}

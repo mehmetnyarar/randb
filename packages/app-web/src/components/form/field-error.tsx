@@ -1,5 +1,7 @@
+import { getFieldError } from '@app/logic'
 import { Theme } from '@app/ui'
 import React, { useContext, useMemo } from 'react'
+import { useTranslation } from '~/i18n'
 
 interface Props {
   error?: any
@@ -10,13 +12,19 @@ interface Props {
  * @param props Props.
  */
 export const FieldError: React.FC<Props> = ({ error }) => {
+  const { t } = useTranslation()
   const { palette } = useContext(Theme)
+
   const message = useMemo(() => {
-    if (!error) return null
-    if (typeof error === 'string') return error
-    if (error.message) return error.message
-    return null
-  }, [error])
+    const e = getFieldError(error)
+
+    if (e) {
+      const { message: m, path: p, value } = e
+      return t(m, { value, path: p && t(p) })
+    }
+
+    return undefined
+  }, [t, error])
 
   if (!message) return null
 

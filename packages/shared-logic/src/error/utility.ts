@@ -1,6 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { GraphQLError } from 'graphql'
-import { AppCustomError, AppError } from './types'
+import { get } from 'lodash'
+import { FieldError } from 'react-hook-form'
+import { AppCustomError, AppError, FormFieldError } from './types'
 
 /**
  * Creates an application error from an exception.
@@ -79,6 +81,7 @@ export const getGraphQLError = (
   type: AppCustomError = 'nodata',
   messages?: string[]
 ): AppError => {
+  console.log('getGraphQLError', { error })
   return error
     ? Array.isArray(error)
       ? getGraphQLErrors([...error])
@@ -94,4 +97,41 @@ export const getGraphQLError = (
 export const getErrorMessage = (error?: AppError | null) => {
   if (!error) return null
   return error.messages.join('. ')
+}
+
+/**
+ * Gets the field error.
+ * @param error Error.
+ * @returns Field error.
+ */
+export const getFieldError = (error?: any) => {
+  if (!error) return undefined
+
+  // Get the error message:
+  // could be either string or FieldError
+  const message =
+    typeof error === 'string'
+      ? error
+      : get<FieldError, 'message'>(error, 'message')
+
+  // Error message should be a string
+  if (!message || typeof message !== 'string') return undefined
+
+  const e: FormFieldError = { message }
+
+  // path separator
+  const p = e.message.split('/')
+  if (p.length > 1) {
+    e.message = p[0]
+    e.path = p[1]
+  }
+
+  // value separator
+  const v = e.message.split('=')
+  if (v.length > 1) {
+    e.message = v[0]
+    e.value = v[1]
+  }
+
+  return e
 }

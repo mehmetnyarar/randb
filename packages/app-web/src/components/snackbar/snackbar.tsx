@@ -1,10 +1,9 @@
 import { Snack } from '@app/logic'
 import { Theme } from '@app/ui'
 import React, { useContext } from 'react'
-import Modal, { defaultStyles, Styles } from 'react-modal'
+import Modal, { Styles } from 'react-modal'
+import { useTranslation } from '~/i18n'
 import { getColor } from './utility'
-
-Modal.setAppElement('#snackbar')
 
 interface Props {}
 
@@ -14,13 +13,15 @@ interface Props {}
 export const SnackBar: React.FC<Props> = () => {
   const { hide, message } = useContext(Snack)
   const { palette } = useContext(Theme)
+  const { t } = useTranslation()
 
   if (!message) return null
 
   const { type, title, content } = message
   const color = getColor(palette, type)
+  const foreColor = palette['text-basic-color']
   const themedStyles: Styles = {
-    ...defaultStyles,
+    // ...defaultStyles,
     content: {
       top: '50%',
       left: '50%',
@@ -33,10 +34,9 @@ export const SnackBar: React.FC<Props> = () => {
       borderRadius: '4px',
       border: `1px solid ${color}`,
       background: palette['background-basic-color-1'],
-      color: palette['text-basic-color']
+      color: foreColor
     }
   }
-  const foreColor = palette['text-alternate-color']
 
   return (
     <>
@@ -48,18 +48,23 @@ export const SnackBar: React.FC<Props> = () => {
       >
         <div
           id='snackbar'
-          aria-labelledby='SnackBar'
-          aria-describedby='Informational dialog'
+          aria-labelledby={t('snack.a11y.label')}
+          aria-describedby={t('snack.a11y.description')}
           data-testid='snackbar'
         >
           <header className='snack-header'>
-            <h2 className='snack-title'>{title || type}</h2>
-            <button type='button' className='snack-close' onClick={hide}>
+            <h2 className='snack-title'>{title || t(`msg.${type}`)}</h2>
+            <button
+              type='button'
+              title={t('close')}
+              onClick={hide}
+              className='snack-close'
+            >
               X
             </button>
           </header>
           <div className='snack-content'>
-            {typeof content === 'string' ? content : <p>{content}</p>}
+            {typeof content === 'string' ? <p>{content}</p> : content}
           </div>
         </div>
       </Modal>

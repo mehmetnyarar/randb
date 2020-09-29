@@ -1,17 +1,35 @@
 import { ApolloProvider } from '@apollo/client'
-import { AuthProvider, RequestOrigin, SnackProvider } from '@app/logic'
+import {
+  AuthProvider,
+  isBrowser,
+  Logger,
+  RequestOrigin,
+  SnackProvider
+} from '@app/logic'
 import { ThemeProvider } from '@app/ui'
-import { AppProps } from 'next/dist/next-server/lib/router/router'
+import cookies from 'next-cookies'
+import NextApp, { AppContext, AppProps } from 'next/app'
 import React from 'react'
+import ReactModal from 'react-modal'
 import { useApollo } from '~/apollo'
 import { SnackBar } from '~/components/snackbar'
+import { appWithTranslation } from '~/i18n'
+
+const logger = Logger.create({
+  src: 'App'
+})
+
+if (isBrowser()) ReactModal.setAppElement('body')
 
 /**
  * Next application.
  * @param props Props.
  */
-const App: React.FC<AppProps> = ({ Component, pageProps }) => {
-  const apolloClient = useApollo(pageProps.initialApolloState)
+function App ({ Component, pageProps }: AppProps) {
+  const { language, initialApolloState } = pageProps
+  const apolloClient = useApollo(language, initialApolloState)
+
+  logger.debug('render', { pageProps })
 
   return (
     <ThemeProvider>
@@ -22,10 +40,26 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           </AuthProvider>
         </ApolloProvider>
         <SnackBar />
-        <div id='snackbar' />
       </SnackProvider>
     </ThemeProvider>
   )
 }
 
-export default App
+// Required for next-i18next
+// https://nextjs.org/docs/basic-features/typescript
+// https://github.com/isaachinman/next-i18next/blob/master/examples/simple/pages/_app.js
+App.getInitialProps = async (appContext: AppContext) => {
+  const language = cookies(appContext.ctx)['next-i18next']
+  const appProps = await NextApp.getInitialProps(appContext)
+  logger.debug('getInitialProps', { appProps, language })
+
+  return {
+    ...appProps,
+    pageProps: {
+      language,
+      ...appProps.pageProps
+    }
+  }
+}
+
+export default appWithTranslation(App)

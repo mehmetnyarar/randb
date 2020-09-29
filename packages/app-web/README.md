@@ -6,11 +6,12 @@ This is a web application ([Next.js](https://nextjs.org/)) which targets all use
 
 | Directory  | Description          |
 | ---------- | -------------------- |
-| apollo     | Apollo Client        |
 | components | React components     |
-| config     | Configuration        |
 | pages      | Next.js pages        |
 | types      | Interfaces and types |
+| apollo     | Apollo Client        |
+| config     | Configuration        |
+| i18n       | I18n                 |
 
 ## Apollo
 
@@ -25,9 +26,14 @@ The environment variables must be set correctly based on the settings in the ser
 
 ## Components
 
-| Component | Description |
-| --------- | ----------- |
-| layout    | Layout      |
+| Component | Description                       |
+| --------- | --------------------------------- |
+| button    | Buttons                           |
+| form      | Fields, labels, input groups, etc |
+| snackbar  | Modal dialog for messages         |
+| language  | Language selection                |
+| layout    | Layout                            |
+| theme     | Theme selection                   |
 
 ## Configuration
 
@@ -43,3 +49,10 @@ Configuration of any sort is provided via constants and environment variables.
 | \_app     | Next wrapper |
 | index     | Home page    | /       |
 | signin    | Signin page  | /signin |
+
+## I18n
+
+- [next-i18next](https://github.com/isaachinman/next-i18next)
+- [Next Cookies](https://github.com/matthewmueller/next-cookies)
+
+Translations can be found under the `public/static/locales` directory.

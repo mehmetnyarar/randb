@@ -187,6 +187,13 @@ export enum Cell4GBand {
   FDD1800MHZ20 = 'FDD1800MHZ20'
 }
 
+export enum Currency {
+  EUR = 'EUR',
+  KZT = 'KZT',
+  TRY = 'TRY',
+  USD = 'USD'
+}
+
 export type CurrentUser = {
   __typename?: 'CurrentUser'
   accessToken?: Maybe<UserToken>
@@ -246,6 +253,15 @@ export type GeoLocation = {
   y: Scalars['Float']
 }
 
+export type I18n = {
+  __typename?: 'I18n'
+  defaultCurrency: Currency
+  defaultLanguage: Language
+  name: Scalars['String']
+  supportedCurrencies: Array<Currency>
+  supportedLanguages: Array<Language>
+}
+
 export type Lac = {
   __typename?: 'Lac'
   createdAt?: Maybe<Scalars['DateTime']>
@@ -260,6 +276,13 @@ export type Lac = {
   sites: Scalars['ID']
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedBy?: Maybe<User>
+}
+
+export enum Language {
+  en = 'en',
+  kz = 'kz',
+  ru = 'ru',
+  tr = 'tr'
 }
 
 export type Log = {
