@@ -1,15 +1,26 @@
+import { UserInputError } from 'apollo-server-express'
+import { hash } from 'bcrypt'
+import { merge } from 'lodash'
 import {
   Arg,
+  Ctx,
   FieldResolver,
+  Mutation,
   ObjectType,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
 import { QueryBuilder, Repository } from '~/db'
+import { GraphQLContext } from '~/graphql'
 import { Logger } from '~/logger'
 import {
+  createUsername,
   DEFAULT_USER,
+  DeleteUserInput,
+  getDoc,
+  getLog,
+  UpsertUserInput,
   User,
   UserFilter,
   UserModel,
@@ -73,6 +84,7 @@ export class UserResolver {
   @Query(() => [User])
   async users (@Arg('filter', { nullable: true }) filter: UsersFilter = {}) {
     const query = QueryBuilder.entities<User>(UserModel, filter)
+      .regex('username', filter.username)
       .eq('name', filter.name)
       .email('email', filter.email)
       .eq('phone', filter.phone)
@@ -99,7 +111,8 @@ export class UserResolver {
     @Arg('connection', { nullable: true }) connection: ConnectionInput = {}
   ) {
     const query = QueryBuilder.entities<User>(UserModel, filter)
-      .eq('name', filter.name)
+      .regex('username', filter.username)
+      .eq('name', filter.name, 'falsy')
       .email('email', filter.email)
       .eq('phone', filter.phone)
       .in('gender', filter.gender)
@@ -123,12 +136,74 @@ export class UserResolver {
     if (filter.id) this.repo.findById(filter.id)
 
     const query = QueryBuilder.entity(UserModel, filter)
+      .regex('username', filter.username)
       .eq('email', filter.email)
       .eq('phone', filter.phone)
       .conditions()
 
     logger.debug('user', { filter, query })
     return this.repo.findOne(query)
+  }
+
+  // #endregion
+
+  // #region Mutation
+
+  /**
+   * Creates a new user or updates existing one.
+   * @param input Input.
+   * @param context GraphQL context.
+   * @returns User.
+   */
+  @Mutation(() => User)
+  async upsertUser (
+    @Arg('data') input: UpsertUserInput,
+    @Ctx() { currentUser }: GraphQLContext
+  ) {
+    logger.debug('upsertUser', { input })
+    const { id, password, ...data } = input
+
+    // require a password for new users
+    if (!id && !password) {
+      throw new UserInputError('PASSWORD_REQUIRED')
+    }
+
+    // create a username if not specified
+    const username = input.username || (await createUsername(input.name))
+    const log = getLog(input, {}, currentUser, ['password'])
+    const doc = getDoc<User, UpsertUserInput>(merge({}, data, { username }))
+    if (password) doc.password = await hash(password, 10)
+    logger.debug('upsertUser', { username, log, doc, password })
+
+    const user = id
+      ? await this.repo.updateById(id, doc, log)
+      : await this.repo.create(doc, log)
+
+    logger.debug('upsertUser', { user: user.toJSON() })
+    return user
+  }
+
+  /**
+   * Deletes a user.
+   * @param input Input.
+   * @param context GraphQL context.
+   * @returns True if the operation succeeds.
+   */
+  @Mutation(() => Boolean)
+  async deleteUser (
+    @Arg('data') input: DeleteUserInput,
+    @Ctx() { currentUser }: GraphQLContext
+  ) {
+    try {
+      await this.repo.deleteById(
+        input.id,
+        getLog(input, undefined, currentUser)
+      )
+
+      return true
+    } catch (error) {
+      return false
+    }
   }
 
   // #endregion

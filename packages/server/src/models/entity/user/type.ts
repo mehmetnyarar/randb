@@ -21,6 +21,10 @@ import { UserRole } from './enum'
 export class User extends Entity {
   // #region Profile
 
+  @Field()
+  @Prop({ required: true, unique: true })
+  username!: string
+
   @Field(() => PersonName)
   @Prop({ required: true })
   name!: PersonName

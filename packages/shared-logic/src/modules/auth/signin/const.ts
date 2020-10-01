@@ -1,19 +1,19 @@
 import { Yup } from '../../../form'
-import { PhoneNumberInput, SigninUserInput } from '../../../graphql'
+import {
+  PhoneNumberInput,
+  SigninMethod,
+  SigninUserInput
+} from '../../../graphql'
 import { phoneNumberRegex } from '../../../models'
-import { SigninMethod } from './types'
 
 const { cc, dc, sn } = phoneNumberRegex
-
-/**
- * Default signin method.
- */
-export const DEFAULT_SIGNIN_METHOD: SigninMethod = 'email'
 
 /**
  * Initial values.
  */
 export const DEFAULT_SIGNIN_VALUES: SigninUserInput = {
+  method: SigninMethod.USERNAME,
+  username: '',
   email: '',
   phone: {
     cc: '',
@@ -27,6 +27,8 @@ export const DEFAULT_SIGNIN_VALUES: SigninUserInput = {
  * Validation schema.
  */
 export const validationSchema = Yup.object<SigninUserInput>({
+  method: Yup.string().oneOf<SigninMethod>(Object.values(SigninMethod)),
+  username: Yup.string(),
   email: Yup.string().email(),
   phone: Yup.object<PhoneNumberInput>({
     cc: Yup.string().matches(cc) as any,

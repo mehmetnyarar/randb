@@ -1,44 +1,20 @@
-import { Theme } from '@app/ui'
-import React, { HTMLProps, useContext } from 'react'
-
-interface Props extends HTMLProps<HTMLButtonElement> {}
+import React from 'react'
+import { Button, ButtonProps } from './button'
 
 /**
  * Ghost button.
  * @param props Props.
  */
-export const GhostButton: React.FC<Props> = ({ children, ...props }) => {
-  const { palette } = useContext(Theme)
-
+export const GhostButton: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (
-    <>
-      <button
-        {...props}
-        type='button'
-        className='ghost'
-        data-testid='ghost-button'
-      >
-        {children}
-      </button>
-      <style jsx>
-        {`
-          .ghost {
-            border: none;
-            outline: none;
-            background: none;
-            color: ${palette['text-hint-color']};
-            align-self: flex-end;
-          }
-          .ghost:hover {
-            cursor: pointer;
-          }
-          .ghost:disabled {
-            color: ${palette['text-disabled-color']};
-            background-color: ${palette['color-basic-disabled']};
-            border: 1px solid ${palette['color-basic-disabled']};
-          }
-        `}
-      </style>
-    </>
+    <Button
+      {...props}
+      ghost
+      padding='0px'
+      textColor='text-hint-color'
+      data-testid='ghost'
+    >
+      {children}
+    </Button>
   )
 }

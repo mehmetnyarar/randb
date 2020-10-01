@@ -215,6 +215,18 @@ export type DateRangeFilter = {
   min?: Maybe<Scalars['DateTime']>
 }
 
+export type DeleteEntityInput = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
+}
+
+export type DeleteUserInput = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
+}
+
 export type EntitiesFilter = {
   agent?: Maybe<Scalars['String']>
   createdAt?: Maybe<DateRangeFilter>
@@ -354,8 +366,14 @@ export type Log = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  deleteUser: Scalars['Boolean']
   signinUser?: Maybe<CurrentUser>
   signoutUser: Scalars['Boolean']
+  upsertUser: User
+}
+
+export type MutationdeleteUserArgs = {
+  data: DeleteUserInput
 }
 
 export type MutationsigninUserArgs = {
@@ -364,6 +382,10 @@ export type MutationsigninUserArgs = {
 
 export type MutationsignoutUserArgs = {
   data?: Maybe<SignoutUserInput>
+}
+
+export type MutationupsertUserArgs = {
+  data: UpsertUserInput
 }
 
 export type PageInfo = {
@@ -407,6 +429,11 @@ export type PersonName = {
 export type PersonNameFilter = {
   first?: Maybe<Scalars['String']>
   last?: Maybe<Scalars['String']>
+}
+
+export type PersonNameInput = {
+  first: Scalars['String']
+  last: Scalars['String']
 }
 
 export type PhoneNumber = {
@@ -476,12 +503,20 @@ export enum Scenario {
   OUTDOOR = 'OUTDOOR'
 }
 
+export enum SigninMethod {
+  EMAIL = 'EMAIL',
+  PHONE = 'PHONE',
+  USERNAME = 'USERNAME'
+}
+
 export type SigninUserInput = {
   agent?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
+  method?: Maybe<SigninMethod>
   origin?: Maybe<RequestOrigin>
   password: Scalars['String']
   phone?: Maybe<PhoneNumberInput>
+  username?: Maybe<Scalars['String']>
 }
 
 export type SignoutUserInput = {
@@ -528,6 +563,20 @@ export type Tac = {
   updatedBy?: Maybe<User>
 }
 
+export type UpsertUserInput = {
+  agent?: Maybe<Scalars['String']>
+  birthday?: Maybe<Scalars['DateTime']>
+  email: Scalars['String']
+  gender: PersonGender
+  id?: Maybe<Scalars['ID']>
+  name: PersonNameInput
+  origin?: Maybe<RequestOrigin>
+  password?: Maybe<Scalars['String']>
+  phone: PhoneNumberInput
+  roles: Array<UserRole>
+  username?: Maybe<Scalars['String']>
+}
+
 export type User = {
   __typename?: 'User'
   birthday?: Maybe<Scalars['DateTime']>
@@ -547,6 +596,7 @@ export type User = {
   roles: Array<UserRole>
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedBy?: Maybe<User>
+  username: Scalars['String']
 }
 
 export type UserConnection = {
@@ -569,11 +619,24 @@ export type UserFilter = {
   id?: Maybe<Scalars['ID']>
   origin?: Maybe<RequestOrigin>
   phone?: Maybe<PhoneNumberFilter>
+  username?: Maybe<Scalars['String']>
+}
+
+export type UserProfileInput = {
+  agent?: Maybe<Scalars['String']>
+  birthday?: Maybe<Scalars['DateTime']>
+  email: Scalars['String']
+  gender: PersonGender
+  id?: Maybe<Scalars['ID']>
+  name: PersonNameInput
+  origin?: Maybe<RequestOrigin>
+  phone: PhoneNumberInput
 }
 
 export enum UserRole {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
+  SA = 'SA',
   USER = 'USER'
 }
 
@@ -593,6 +656,7 @@ export type UsersFilter = {
   roles?: Maybe<Array<UserRole>>
   updatedAt?: Maybe<DateRangeFilter>
   updatedBy?: Maybe<Scalars['ID']>
+  username?: Maybe<Scalars['String']>
 }
 
 export type UserToken = {
@@ -649,6 +713,15 @@ export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
 
+export type DeleteUserMutationVariables = Exact<{
+  data: DeleteUserInput
+}>
+
+export type DeleteUserMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'deleteUser'
+>
+
 export type PagedUsersQueryVariables = Exact<{
   filter?: Maybe<UsersFilter>
   connection?: Maybe<ConnectionInput>
@@ -663,7 +736,7 @@ export type PagedUsersQuery = { __typename?: 'Query' } & {
         { __typename?: 'UserEdge' } & Pick<UserEdge, 'cursor'> & {
             node: { __typename?: 'User' } & Pick<
               User,
-              'id' | 'email' | 'roles' | 'isMock' | 'isActive'
+              'id' | 'username' | 'email' | 'roles' | 'isMock' | 'isActive'
             > & {
                 name: { __typename?: 'PersonName' } & Pick<
                   PersonName,
@@ -687,6 +760,49 @@ export type PagedUsersQuery = { __typename?: 'Query' } & {
     }
 }
 
+export type UpsertUserMutationVariables = Exact<{
+  data: UpsertUserInput
+}>
+
+export type UpsertUserMutation = { __typename?: 'Mutation' } & {
+  upsertUser: { __typename?: 'User' } & Pick<
+    User,
+    | 'id'
+    | 'username'
+    | 'email'
+    | 'gender'
+    | 'birthday'
+    | 'roles'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'isMock'
+    | 'isActive'
+    | 'deactivatedAt'
+  > & {
+      name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
+      phone: { __typename?: 'PhoneNumber' } & Pick<
+        PhoneNumber,
+        'cc' | 'dc' | 'sn'
+      >
+      createdBy?: Maybe<
+        { __typename?: 'User' } & Pick<User, 'id'> & {
+            name: { __typename?: 'PersonName' } & Pick<
+              PersonName,
+              'first' | 'last'
+            >
+          }
+      >
+      updatedBy?: Maybe<
+        { __typename?: 'User' } & Pick<User, 'id'> & {
+            name: { __typename?: 'PersonName' } & Pick<
+              PersonName,
+              'first' | 'last'
+            >
+          }
+      >
+    }
+}
+
 export type UserQueryVariables = Exact<{
   filter: UserFilter
 }>
@@ -696,6 +812,7 @@ export type UserQuery = { __typename?: 'Query' } & {
     { __typename?: 'User' } & Pick<
       User,
       | 'id'
+      | 'username'
       | 'email'
       | 'gender'
       | 'birthday'
@@ -739,7 +856,7 @@ export type UsersQuery = { __typename?: 'Query' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'email' | 'roles' | 'isMock' | 'isActive'
+      'id' | 'username' | 'email' | 'roles' | 'isMock' | 'isActive'
     > & {
         name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
         phone: { __typename?: 'PhoneNumber' } & Pick<
@@ -968,6 +1085,52 @@ export type WelcomeQueryResult = Apollo.QueryResult<
 export function refetchWelcomeQuery (variables?: WelcomeQueryVariables) {
   return { query: WelcomeDocument, variables: variables }
 }
+export const DeleteUserDocument = gql`
+  mutation DeleteUser($data: DeleteUserInput!) {
+    deleteUser(data: $data)
+  }
+`
+export type DeleteUserMutationFn = Apollo.MutationFunction<
+  DeleteUserMutation,
+  DeleteUserMutationVariables
+>
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteUserMutation,
+    DeleteUserMutationVariables
+  >
+) {
+  return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
+    DeleteUserDocument,
+    baseOptions
+  )
+}
+export type DeleteUserMutationHookResult = ReturnType<
+  typeof useDeleteUserMutation
+>
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<
+  DeleteUserMutation,
+  DeleteUserMutationVariables
+>
 export const PagedUsersDocument = gql`
   query PagedUsers($filter: UsersFilter, $connection: ConnectionInput) {
     pagedUsers(filter: $filter, connection: $connection) {
@@ -975,6 +1138,7 @@ export const PagedUsersDocument = gql`
       edges {
         node {
           id
+          username
           name {
             first
             last
@@ -1053,10 +1217,92 @@ export type PagedUsersQueryResult = Apollo.QueryResult<
 export function refetchPagedUsersQuery (variables?: PagedUsersQueryVariables) {
   return { query: PagedUsersDocument, variables: variables }
 }
+export const UpsertUserDocument = gql`
+  mutation UpsertUser($data: UpsertUserInput!) {
+    upsertUser(data: $data) {
+      id
+      username
+      name {
+        first
+        last
+      }
+      email
+      phone {
+        cc
+        dc
+        sn
+      }
+      gender
+      birthday
+      roles
+      createdAt
+      createdBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      updatedAt
+      updatedBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      isMock
+      isActive
+      deactivatedAt
+    }
+  }
+`
+export type UpsertUserMutationFn = Apollo.MutationFunction<
+  UpsertUserMutation,
+  UpsertUserMutationVariables
+>
+
+/**
+ * __useUpsertUserMutation__
+ *
+ * To run a mutation, you first call `useUpsertUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertUserMutation, { data, loading, error }] = useUpsertUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpsertUserMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    UpsertUserMutation,
+    UpsertUserMutationVariables
+  >
+) {
+  return Apollo.useMutation<UpsertUserMutation, UpsertUserMutationVariables>(
+    UpsertUserDocument,
+    baseOptions
+  )
+}
+export type UpsertUserMutationHookResult = ReturnType<
+  typeof useUpsertUserMutation
+>
+export type UpsertUserMutationResult = Apollo.MutationResult<UpsertUserMutation>
+export type UpsertUserMutationOptions = Apollo.BaseMutationOptions<
+  UpsertUserMutation,
+  UpsertUserMutationVariables
+>
 export const UserDocument = gql`
   query User($filter: UserFilter!) {
     user(filter: $filter) {
       id
+      username
       name {
         first
         last
@@ -1135,6 +1381,7 @@ export const UsersDocument = gql`
   query Users($filter: UsersFilter) {
     users(filter: $filter) {
       id
+      username
       name {
         first
         last

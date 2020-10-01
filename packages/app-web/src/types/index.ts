@@ -3,10 +3,19 @@ import { NextPage } from 'next'
 import { TFunction } from 'next-i18next'
 
 /**
+ * Dynamic routing.
+ */
+export interface AppLinkPath<Query = {}> {
+  pathname: string
+  query: Query
+}
+
+/**
  * Application link.
  */
-export interface AppLink {
-  path: string
+export interface AppLink<Query = {}> {
+  as?: string
+  path: string | AppLinkPath<Query>
   title: string
   description?: string
 }

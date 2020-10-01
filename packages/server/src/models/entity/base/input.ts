@@ -2,15 +2,6 @@ import { Field, ID, InputType } from 'type-graphql'
 import { AnalyticsInput, DateRangeFilter } from '~/models/embed'
 
 /**
- * Entity input.
- */
-@InputType()
-export class EntityInput extends AnalyticsInput {
-  @Field(() => ID, { nullable: true })
-  id?: string
-}
-
-/**
  * Filter for finding entities.
  */
 @InputType()
@@ -44,4 +35,22 @@ export class EntitiesFilter extends AnalyticsInput {
 export class EntityFilter extends AnalyticsInput {
   @Field(() => ID, { nullable: true })
   id?: string
+}
+
+/**
+ * Entity input.
+ */
+@InputType()
+export class EntityInput extends AnalyticsInput {
+  @Field(() => ID, { nullable: true })
+  id?: string
+}
+
+/**
+ * Input to delete an entity.
+ */
+@InputType()
+export class DeleteEntityInput extends AnalyticsInput {
+  @Field(() => ID, { nullable: true })
+  id!: string
 }

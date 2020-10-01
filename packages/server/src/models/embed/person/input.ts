@@ -11,3 +11,15 @@ export class PersonNameFilter {
   @Field({ nullable: true })
   last?: string
 }
+
+/**
+ * Person name input.
+ */
+@InputType()
+export class PersonNameInput {
+  @Field()
+  first!: string
+
+  @Field()
+  last!: string
+}

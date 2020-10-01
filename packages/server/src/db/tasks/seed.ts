@@ -24,14 +24,18 @@ const logger = Logger.create({
 export const seed = async () => {
   logger.info('Start')
 
+  // To allow users to signin with their email addresses
+  const domain = DOMAIN === 'localhost' ? 'localhost.com' : DOMAIN
+
   // #region Users
 
   const userData: Partial<User>[] = [
     {
+      username: 'sa',
       name: { first: 'Super', last: 'Admin' },
-      email: `system.admin@${DOMAIN}`,
+      email: `system.admin@${domain}`,
       phone: { cc: '0', dc: '000', sn: '0000000' },
-      roles: [UserRole.ADMIN],
+      roles: [UserRole.SA],
       password: SA_PASSWORD
     }
   ]

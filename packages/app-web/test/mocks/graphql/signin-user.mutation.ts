@@ -1,6 +1,7 @@
 import { MockedResponse } from '@apollo/client/testing'
 import {
   RequestOrigin,
+  SigninMethod,
   SigninUserDocument,
   SigninUserInput,
   SigninUserMutation,
@@ -8,7 +9,9 @@ import {
 } from '@app/logic'
 
 export const successInput: SigninUserInput = {
-  email: 'test.user@myapp.com',
+  method: SigninMethod.USERNAME,
+  username: 'test-user',
+  email: '',
   phone: { cc: '', dc: '', sn: '' },
   password: '123456',
   origin: RequestOrigin.WEB
@@ -43,7 +46,9 @@ export const success: MockedResponse<SigninUserMutation> = {
 }
 
 export const failureInput: SigninUserInput = {
-  email: 'no.user@myapp.com',
+  method: SigninMethod.USERNAME,
+  username: 'no-user',
+  email: '',
   phone: { cc: '', dc: '', sn: '' },
   password: '123456',
   origin: RequestOrigin.WEB

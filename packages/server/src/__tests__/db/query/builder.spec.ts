@@ -1,8 +1,7 @@
-import { pick } from 'lodash'
 import { BetweenOptions, QueryBuilder, SANITIZE } from '~/db/query'
 import {
   DateRangeFilter,
-  PhoneNumberFilter,
+  PersonNameFilter,
   UserModel,
   UserRole
 } from '~/models'
@@ -48,23 +47,23 @@ describe('db/query', () => {
     })
 
     it('should return query (object)', () => {
-      const phone: PhoneNumberFilter = { cc: '1', dc: '111', sn: '1111111' }
-      expect(query.eq('phone', phone).conditions()).toEqual({
-        phone
+      const name: PersonNameFilter = { first: 'Test', last: 'User' }
+      expect(query.eq('name', name).conditions()).toEqual({
+        name
       })
     })
 
     it('should return query (object/falsy)', () => {
-      const phone: PhoneNumberFilter = { cc: '1', dc: '100', sn: '' }
-      expect(query.eq('phone', phone, 'falsy').conditions()).toEqual({
-        phone: pick(phone, ['cc', 'dc'])
+      const name: PersonNameFilter = { first: '', last: 'User' }
+      expect(query.eq('name', name, 'falsy').conditions()).toEqual({
+        $or: [{ 'name.last': { $regex: /User/gi } }]
       })
     })
 
     it('should return query (object/nil)', () => {
-      const phone: PhoneNumberFilter = { cc: '1', dc: '100' }
-      expect(query.eq('phone', phone, 'nil').conditions()).toEqual({
-        phone: pick(phone, ['cc', 'dc'])
+      const name: PersonNameFilter = { first: undefined, last: 'User' }
+      expect(query.eq('name', name, 'nil').conditions()).toEqual({
+        $or: [{ 'name.last': { $regex: /User/gi } }]
       })
     })
   })

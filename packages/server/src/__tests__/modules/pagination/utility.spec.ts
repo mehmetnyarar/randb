@@ -21,6 +21,7 @@ beforeAll(async () => {
     times(17, async n =>
       UserModel.create({
         ...DEFAULT_USER,
+        username: `test-user-${n}`,
         name: { first: 'Test', last: `User${n}` },
         roles: [UserRole.USER]
       })

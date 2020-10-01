@@ -1,4 +1,4 @@
-import { Auth, UserRole } from '@app/logic'
+import { Auth, isUserAuthorized, UserRole } from '@app/logic'
 import { Theme } from '@app/ui'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -36,9 +36,10 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
   const { t } = useTranslation()
   const { palette } = useContext(Theme)
   const { initializing, user, loading, signout } = useContext(Auth)
-  const isAuthorized = useMemo(() => {
-    return !roles || (user && roles.some(role => user.roles.includes(role)))
-  }, [user, roles])
+  const isAuthorized = useMemo(() => isUserAuthorized(roles, user?.roles), [
+    roles,
+    user
+  ])
 
   return (
     <>
@@ -81,7 +82,7 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
 
       {user ? (
         <div className='with-sidebar'>
-          <Sidebar />
+          <Sidebar roles={user.roles} />
           {isAuthorized ? children : <Error statusCode={401} />}
         </div>
       ) : isAuthorized ? (
@@ -94,11 +95,13 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
         <section>
           <div className='app-info'>
             <span className='name'>{t('app.name')}</span>
-            <span className='copy'>{t('app.copy')}</span>
             <span className='version'>{t('app.version')}</span>
+            <span className='copy'>{t('app.copy')}</span>
           </div>
-          <ThemeSelection />
-          <LanguageSelection />
+          <div className='app-settings'>
+            <LanguageSelection />
+            <ThemeSelection />
+          </div>
         </section>
         <nav role='navigation' aria-label='Footer Navigation'>
           {footerLinks.map((link, index) => (
@@ -116,7 +119,7 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 16px;
+            padding: 16px;
             border-bottom: 1px solid ${palette['outline-color']};
             background: ${palette['background-basic-color-2']};
           }
@@ -155,6 +158,7 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
             padding: 16px;
             border-top: 1px solid ${palette['outline-color']};
             background: ${palette['background-basic-color-2']};
+            font-size: smaller;
           }
           footer section {
             display: block;
@@ -172,6 +176,16 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
           .app-info .version {
             font-size: 8px;
             font-style: italic;
+          }
+
+          .app-settings {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+          }
+          .app-settings div:first-of-type {
+            margin-right: 16px;
           }
 
           footer nav {
@@ -217,12 +231,65 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
             flex-direction: column;
           }
 
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            margin: 0;
+          }
+
           a {
             text-decoration: none;
             color: ${palette['color-primary-default']};
           }
           a:hover {
             color: ${palette['color-primary-hover']};
+          }
+
+          section[role='form'] {
+            min-width: 480px;
+            max-width: 720px;
+            margin-top: 32px;
+            padding: 32px;
+            border-radius: 4px;
+            border: 1px solid ${palette['border-basic-color-3']};
+            background: ${palette['background-basic-color-2']};
+          }
+
+          form {
+            display: flex;
+            flex-direction: column;
+          }
+
+          label {
+            margin: 8px 0;
+          }
+
+          input,
+          select {
+            outline: none;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid ${palette['border-basic-color-5']};
+          }
+          select {
+            padding: 7px;
+          }
+          input:hover {
+            border: 1px solid ${palette['color-primary-hover-border']};
+          }
+          input:read-only,
+          input:disabled {
+            color: ${palette['text-disabled-color']};
+            background-color: ${palette['color-basic-disabled']};
+            border: 1px solid ${palette['color-basic-disabled']};
+          }
+
+          .full-width {
+            flex: 1;
+            width: 100%;
           }
         `}
       </style>

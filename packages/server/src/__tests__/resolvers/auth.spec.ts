@@ -34,6 +34,7 @@ beforeAll(async () => {
 
   user = await UserModel.create({
     ...DEFAULT_USER,
+    username: 'test-user',
     name: { first: 'Test', last: 'User' },
     email: 'test.user@myapp.com',
     phone: { cc: '1', dc: '111', sn: '1111111' },

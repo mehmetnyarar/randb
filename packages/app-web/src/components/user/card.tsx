@@ -1,22 +1,28 @@
-import { User } from '@app/logic'
-import React from 'react'
+import { User, UserRole } from '@app/logic'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 import { useTranslation } from '~/i18n'
-import { DeleteButton, EditButton } from '../button'
+import { DangerButton, InfoButton } from '../button'
 import { Card } from '../card'
 import { Info } from '../info'
 
 interface Props {
   user: User
+  onDelete: (id: string) => void | Promise<void>
+  isDisabled?: boolean
 }
 
 /**
  * User card.
  * @param props Props.
  */
-export const UserCard: React.FC<Props> = ({ user }) => {
+export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
   const { t } = useTranslation()
+  const router = useRouter()
 
   const {
+    id,
+    username,
     name,
     email,
     phone: { cc, dc, sn }
@@ -24,8 +30,10 @@ export const UserCard: React.FC<Props> = ({ user }) => {
   const title = `${name.first} ${name.last}`
   const phone = `+${cc}${dc}${sn}`
   const roles = user.roles.map(role => t(`user.role.${role}`))
-  const canEdit = false
-  const canDelete = false
+
+  const [loading, setLoading] = useState(false)
+  const canDelete = !isDisabled && !user.roles.includes(UserRole.SA) && !loading
+  const canEdit = !isDisabled && !user.roles.includes(UserRole.SA) && !loading
 
   return (
     <Card
@@ -39,8 +47,27 @@ export const UserCard: React.FC<Props> = ({ user }) => {
       }
       actions={
         <>
-          <EditButton disabled={!canEdit}>{t('edit')}</EditButton>
-          <DeleteButton disabled={!canDelete}>{t('delete')}</DeleteButton>
+          <InfoButton
+            minWidth={100}
+            onClick={() => {
+              setLoading(true)
+              router.push(`/users/${username}`)
+            }}
+            disabled={!canEdit}
+          >
+            {t('edit')}
+          </InfoButton>
+          <DangerButton
+            minWidth={100}
+            margin='0 0 0 16px'
+            onClick={async () => {
+              setLoading(true)
+              await onDelete(id)
+            }}
+            disabled={!canDelete}
+          >
+            {t('delete')}
+          </DangerButton>
         </>
       }
     />

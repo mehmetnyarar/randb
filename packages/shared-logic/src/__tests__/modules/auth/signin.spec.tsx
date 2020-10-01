@@ -3,7 +3,7 @@ import React from 'react'
 import { currentUser, signinUser } from 'test/mocks'
 import { render } from 'test/render'
 import { waitForResponse } from 'test/utils'
-import { SigninUserInput } from '~/graphql'
+import { SigninMethod, SigninUserInput } from '~/graphql'
 import { useSigninUserForm } from '~/modules/auth'
 
 // #region Setup
@@ -15,7 +15,7 @@ interface Props {
 const Component: React.FC<Props> = ({ input }) => {
   const {
     method,
-    altMethod,
+    otherMethods,
     onMethodChange,
     errors,
     onValid,
@@ -28,11 +28,11 @@ const Component: React.FC<Props> = ({ input }) => {
     <>
       <button
         data-testid='onMethodChange'
-        onClick={() => onMethodChange('phone')}
+        onClick={() => onMethodChange(SigninMethod.PHONE)}
       />
       <button data-testid='onSubmit' onClick={() => onValid(input)} />
       <span data-testid='method'>{method}</span>
-      <span data-testid='altMethod'>{altMethod}</span>
+      <span data-testid='otherMethods'>{otherMethods.join(',')}</span>
       {Object.keys(errors).length > 0 && (
         <ul data-testid='input-errors'>
           {Object.values(errors).map((e, i) => (
@@ -66,13 +66,13 @@ describe('modules/auth/signin', () => {
       { mocks: [currentUser.isNotSignedIn, signinUser.success] }
     )
 
-    expect(getByTestId('method')).toHaveTextContent(/email/)
-    expect(getByTestId('altMethod')).toHaveTextContent(/phone/)
+    expect(getByTestId('method')).toHaveTextContent(/username/i)
+    expect(getByTestId('otherMethods')).toHaveTextContent(/phone/i)
 
     const onMethodChange = getByTestId('onMethodChange')
     fireEvent.click(onMethodChange)
-    expect(getByTestId('method')).toHaveTextContent(/phone/)
-    expect(getByTestId('altMethod')).toHaveTextContent(/email/)
+    expect(getByTestId('method')).toHaveTextContent(/phone/i)
+    expect(getByTestId('otherMethods')).toHaveTextContent(/username/i)
 
     const onSubmit = getByTestId('onSubmit')
     fireEvent.click(onSubmit)

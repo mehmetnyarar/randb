@@ -7,10 +7,9 @@ describe('components/button/submit', () => {
   it('should render', async () => {
     const { container, getByTestId } = render(<SubmitButton>Test</SubmitButton>)
 
-    const component = getByTestId('submit-button')
+    const component = getByTestId('submit')
     expect(component).toBeInTheDocument()
     expect(component).toHaveAttribute('type', 'submit')
-    expect(component).toHaveAttribute('class', 'submit')
 
     const a11y = await axe(container)
     expect(a11y).toHaveNoViolations()

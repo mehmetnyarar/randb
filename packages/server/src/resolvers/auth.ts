@@ -73,14 +73,16 @@ export class AuthResolver {
     @Arg('data') input: SigninUserInput,
     @Ctx() { res }: GraphQLContext
   ) {
-    const { email, phone } = input
+    const { username, email, phone } = input
 
     // find user
-    let user = email
-      ? await UserModel.findOne({ email })
-      : !isDefaultPhoneNumber(phone)
-        ? await UserModel.findOne({ phone })
-        : undefined
+    let user = username
+      ? await UserModel.findOne({ username })
+      : email
+        ? await UserModel.findOne({ email })
+        : !isDefaultPhoneNumber(phone)
+          ? await UserModel.findOne({ phone })
+          : undefined
 
     if (!user) {
       throw new AuthError('USER_NOT_FOUND', {

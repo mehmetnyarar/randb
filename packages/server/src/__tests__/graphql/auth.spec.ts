@@ -52,6 +52,7 @@ describe('graphql/auth', () => {
 
     it('should return user roles to ignore', () => {
       expect(getIgnoredRoles(['USER', 'SUBSCRIBER', 'INVALID_ROLE'])).toEqual([
+        UserRole.SA,
         UserRole.ADMIN,
         UserRole.MANAGER
       ])

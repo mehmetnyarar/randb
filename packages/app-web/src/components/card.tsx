@@ -34,6 +34,7 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
       <style jsx>
         {`
           .card {
+            margin: 0 16px 16px 0;
             min-width: 300px;
             border-radius: 4px;
             border: 1px solid ${palette['border-basic-color-4']};
@@ -64,7 +65,10 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
 
           .card-actions {
             padding: 16px;
-            align-self: flex-end;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
           }
         `}
       </style>

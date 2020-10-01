@@ -32,6 +32,7 @@ beforeAll(async () => {
     times(17, async n =>
       UserModel.create({
         ...DEFAULT_USER,
+        username: `initial-user-${n}`,
         name: { first: 'Initial', last: `User${n}` },
         roles: [UserRole.USER]
       })
@@ -55,6 +56,7 @@ describe('db/repository', () => {
   describe('create', () => {
     it('should create an entity', async () => {
       const entity = await repo.create({
+        username: 'test-user-1',
         name: { first: 'Test', last: 'User1' },
         roles: [UserRole.ADMIN]
       })
@@ -93,6 +95,7 @@ describe('db/repository', () => {
   describe('upsert', () => {
     it('shoud upsert an entity (create)', async () => {
       const entity = await repo.upsert(null, {
+        username: 'test-user-2',
         name: { first: 'Test', last: 'User2' },
         roles: [UserRole.ADMIN]
       })
@@ -113,6 +116,7 @@ describe('db/repository', () => {
 
     it('shoud upsert an entity by id (create)', async () => {
       const entity = await repo.upsertById(null, {
+        username: 'test-user-3',
         name: { first: 'Test', last: 'User3' },
         roles: [UserRole.ADMIN]
       })

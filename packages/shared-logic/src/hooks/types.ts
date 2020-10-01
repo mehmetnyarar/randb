@@ -25,11 +25,26 @@ export type FindFn<Filter> = (filter?: Filter) => void | Promise<void>
 export type NextFn = (connection?: ConnectionInput) => void | Promise<void>
 
 /**
+ * Search hook.
+ */
+export interface SearchHookResult<Filter, Search, SearchBy> {
+  updateFilter: (value: Filter) => void
+  filter: Filter
+  search: Search
+  onSearchByChange: (value: SearchBy) => void
+  onSearchTextChange: (value: string) => void
+  advanceSearch: boolean
+  toggleAdvanceSearch: () => void
+  autofind: () => void | Promise<void>
+}
+
+/**
  * Paging hook result.
  */
 export interface PagedHookResult<Result, Filter> extends HookResult<Result> {
   find: FindFn<Filter>
   next: NextFn
+  onDelete: (id: string) => void | Promise<void>
 }
 
 /**

@@ -4,6 +4,7 @@ export const query = gql`
   query Users($filter: UsersFilter) {
     users(filter: $filter) {
       id
+      username
       name {
         first
         last

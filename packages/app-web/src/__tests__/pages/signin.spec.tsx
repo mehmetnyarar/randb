@@ -5,17 +5,20 @@ import { render } from 'test/render'
 import Screen from '~/pages/signin'
 
 describe('pages/signin', () => {
+  // eslint-disable-next-line jest/expect-expect
   it('should change signin method', () => {
-    const { getByTestId } = render(<Screen />)
+    const { getByText, queryByText } = render(<Screen />)
 
-    const changeMethod = getByTestId('ghost-button')
-    expect(changeMethod).toHaveTextContent(/phone/i)
+    expect(queryByText('auth.signin.method.USERNAME')).not.toBeInTheDocument()
+    expect(queryByText('auth.signin.method.EMAIL')).toBeInTheDocument()
+    expect(queryByText('auth.signin.method.PHONE')).toBeInTheDocument()
 
-    fireEvent.click(changeMethod)
-    expect(changeMethod).toHaveTextContent(/email/i)
+    const toPhone = getByText('auth.signin.method.PHONE')
+    fireEvent.click(toPhone)
 
-    fireEvent.click(changeMethod)
-    expect(changeMethod).toHaveTextContent(/phone/i)
+    expect(queryByText('auth.signin.method.USERNAME')).toBeInTheDocument()
+    expect(queryByText('auth.signin.method.EMAIL')).toBeInTheDocument()
+    expect(queryByText('auth.signin.method.PHONE')).not.toBeInTheDocument()
   })
 
   it('should signin', async () => {
@@ -23,14 +26,14 @@ describe('pages/signin', () => {
       mocks: [signinUser.success]
     })
 
-    const email = getByTestId('email')
-    expect(email).toBeInTheDocument()
-    fireEvent.change(email, { target: 'test.user@myapp.com' })
+    const username = getByTestId('username')
+    expect(username).toBeInTheDocument()
+    fireEvent.change(username, { target: 'test-user' })
 
     const password = getByTestId('password')
     fireEvent.change(password, { target: '123456' })
 
-    const submit = getByTestId('submit-button')
+    const submit = getByTestId('submit')
     fireEvent.click(submit)
 
     waitFor(() => {
@@ -43,14 +46,14 @@ describe('pages/signin', () => {
       mocks: [signinUser.failure]
     })
 
-    const email = getByTestId('email')
-    expect(email).toBeInTheDocument()
-    fireEvent.change(email, { target: 'no.user@myapp.com' })
+    const username = getByTestId('username')
+    expect(username).toBeInTheDocument()
+    fireEvent.change(username, { target: 'no-user' })
 
     const password = getByTestId('password')
     fireEvent.change(password, { target: '123456' })
 
-    const submit = getByTestId('submit-button')
+    const submit = getByTestId('submit')
     fireEvent.click(submit)
 
     waitFor(() => {

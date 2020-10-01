@@ -1,10 +1,5 @@
-import { CurrentUser, SigninUserInput } from '../../../graphql'
+import { CurrentUser, SigninMethod, SigninUserInput } from '../../../graphql'
 import { FormHookOptions, FormHookResult } from '../../../hooks'
-
-/**
- * Indicates how the user prefers to signin.
- */
-export type SigninMethod = 'email' | 'phone'
 
 /**
  * Hook options.
@@ -18,8 +13,8 @@ export interface UseSigninFormOptions
 export interface UseSigninFormResult
   extends FormHookResult<SigninUserInput, CurrentUser> {
   method: SigninMethod
-  altMethod: SigninMethod
-  onMethodChange: (method?: SigninMethod) => void
+  otherMethods: SigninMethod[]
+  onMethodChange: (value: SigninMethod) => void
   isPasswordVisible: boolean
   onTogglePasswordVisibility: () => void
 }

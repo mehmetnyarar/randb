@@ -35,6 +35,7 @@
     "chalk": "^4.1.0",
     "date-fns": "^2.16.1",
     "formik": "^2.1.5",
+    "generate-password": "^1.5.1",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "lodash": "^4.17.20",

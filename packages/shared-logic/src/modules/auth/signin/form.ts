@@ -3,20 +3,12 @@ import { useTypedController } from '@hookform/strictly-typed'
 import { merge } from 'lodash'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
-import { CurrentUser, SigninUserInput } from '../../../graphql'
+import { CurrentUser, SigninMethod, SigninUserInput } from '../../../graphql'
 import { Logger } from '../../../logger'
 import { storage } from '../../../storage'
 import { Auth } from '../context'
-import {
-  DEFAULT_SIGNIN_METHOD,
-  DEFAULT_SIGNIN_VALUES,
-  validationSchema
-} from './const'
-import {
-  SigninMethod,
-  UseSigninFormOptions,
-  UseSigninFormResult
-} from './types'
+import { DEFAULT_SIGNIN_VALUES, validationSchema } from './const'
+import { UseSigninFormOptions, UseSigninFormResult } from './types'
 
 const logger = Logger.create({
   src: 'auth/signin'
@@ -31,22 +23,27 @@ export const useSigninUserForm = (
 ): UseSigninFormResult => {
   const { initialValues = DEFAULT_SIGNIN_VALUES, onSuccess } = options
   const { signin, loading, signinError: error } = useContext(Auth)
-  const [result, setResult] = useState<CurrentUser | undefined>()
+  const [result, setResult] = useState<CurrentUser>()
 
   // #region Signin Method
 
-  const [method, setMethod] = useState<SigninMethod>(DEFAULT_SIGNIN_METHOD)
-  const altMethod = useMemo<SigninMethod>(
-    () => (method === 'email' ? 'phone' : 'email'),
-    [method]
+  const [method, setMethod] = useState<SigninMethod>(
+    initialValues.method || SigninMethod.USERNAME
   )
-  const onMethodChange = useCallback(
-    async (value = altMethod) => {
-      setMethod(value)
-      await storage.set('signin-method', value)
-    },
-    [altMethod]
-  )
+  const otherMethods = useMemo(() => {
+    return Object.values(SigninMethod).filter(m => m !== method)
+  }, [method])
+  const onMethodChange = useCallback(async (value: SigninMethod) => {
+    setMethod(value)
+    await storage.set('signin-method', value)
+  }, [])
+
+  logger.debug('method', {
+    method,
+    otherMethods,
+    initialValues,
+    DEFAULT_SIGNIN_VALUES
+  })
 
   // #endregion
 
@@ -117,7 +114,7 @@ export const useSigninUserForm = (
 
   return {
     method,
-    altMethod,
+    otherMethods,
     onMethodChange,
     isPasswordVisible,
     onTogglePasswordVisibility,

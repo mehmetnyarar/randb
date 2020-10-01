@@ -14,7 +14,6 @@ describe('components/form/label', () => {
 
     const component = getByTestId('label')
     expect(component).toBeInTheDocument()
-    expect(component).toHaveAttribute('class', 'label')
     expect(component).toHaveTextContent(/test/i)
 
     const a11y = await axe(container)

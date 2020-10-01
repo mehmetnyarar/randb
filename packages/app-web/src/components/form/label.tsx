@@ -9,16 +9,9 @@ interface Props extends HTMLProps<HTMLLabelElement> {}
 export const Label: React.FC<Props> = ({ children, ...props }) => {
   return (
     <>
-      <label {...props} className='label' data-testid='label'>
+      <label {...props} data-testid='label'>
         {children}
       </label>
-      <style jsx>
-        {`
-          .label {
-            margin: 8px 0;
-          }
-        `}
-      </style>
     </>
   )
 }

@@ -9,7 +9,7 @@ interface Props {}
  */
 export const ThemeSelection: React.FC<Props> = () => {
   const { t } = useTranslation()
-  const { scheme, palette, onSchemeChange } = useContext(Theme)
+  const { scheme, onSchemeChange } = useContext(Theme)
 
   return (
     <>
@@ -31,20 +31,18 @@ export const ThemeSelection: React.FC<Props> = () => {
 
       <style jsx>
         {`
-        .app-theme {
+          .app-theme {
             margin-top: 16px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
+            margin-right: 8px;
           }
           .app-theme label {
             margin-right: 8px;
           }
           .app-theme select {
-            padding: 0 8px;
-            background: transparent:
-            color: ${palette['background-basic-color-2']};
           }
         `}
       </style>

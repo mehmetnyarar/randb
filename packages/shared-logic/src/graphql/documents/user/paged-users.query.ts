@@ -7,6 +7,7 @@ export const query = gql`
       edges {
         node {
           id
+          username
           name {
             first
             last

@@ -1,80 +1,100 @@
-import { UserRole } from '@app/logic'
+import { isUserAuthorized, UserRole } from '@app/logic'
 import { Theme } from '@app/ui'
 import Link from 'next/link'
-import React, { Fragment, useContext } from 'react'
+import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
+import { Divider } from './divider'
 
 interface SidebarItem extends AppLink {
-  section?: string
-  roles: UserRole[]
-  hasSeparator?: boolean
+  roles?: UserRole[]
 }
 
-const SIDEBAR: SidebarItem[] = [
+interface SidebarSection {
+  label: string
+  roles: UserRole[]
+  items: SidebarItem[]
+}
+
+const sections: SidebarSection[] = [
   {
-    section: 'manage.users',
-    path: '/users',
-    title: 'screen.users',
-    description: 'screen.users.description',
-    roles: [UserRole.ADMIN],
-    hasSeparator: false
+    label: 'network',
+    roles: Object.values(UserRole),
+    items: [
+      {
+        path: '/sites',
+        title: 'screen.sites',
+        description: 'screen.sites.description'
+      },
+      {
+        path: '/cells',
+        title: 'screen.cells',
+        description: 'screen.sites.description'
+      }
+    ]
   },
   {
-    path: '/users/new',
-    title: 'screen.users.new',
-    description: 'screen.users.new.description',
-    roles: [UserRole.ADMIN],
-    hasSeparator: true
+    label: 'manage.network',
+    roles: [UserRole.SA, UserRole.ADMIN, UserRole.MANAGER],
+    items: [
+      {
+        path: '/import',
+        title: 'screen.import',
+        description: 'screen.import.description'
+      }
+    ]
   },
   {
-    section: 'manage.network',
-    path: '/sites',
-    title: 'screen.sites',
-    description: 'screen.sites.description',
-    roles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.USER],
-    hasSeparator: false
-  },
-  {
-    path: '/cells',
-    title: 'screen.cells',
-    description: 'screen.sites.description',
-    roles: [UserRole.ADMIN, UserRole.MANAGER, UserRole.USER],
-    hasSeparator: false
-  },
-  {
-    path: '/import',
-    title: 'screen.import',
-    description: 'screen.import.description',
-    roles: [UserRole.ADMIN, UserRole.MANAGER],
-    hasSeparator: false
+    label: 'manage.users',
+    roles: [UserRole.SA, UserRole.ADMIN],
+    items: [
+      {
+        path: '/users',
+        title: 'screen.users',
+        description: 'screen.users.description'
+      },
+      {
+        as: '/users/new',
+        path: { pathname: '/users/[username]', query: { username: 'new' } },
+        title: 'screen.user.new',
+        description: 'screen.user.new.description'
+      }
+    ]
   }
 ]
 
-interface Props {}
+interface Props {
+  roles: UserRole[]
+}
 
 /**
  * Sidebar.
  */
-export const Sidebar: React.FC<Props> = () => {
+export const Sidebar: React.FC<Props> = ({ roles }) => {
   const { t } = useTranslation()
   const { palette } = useContext(Theme)
 
   return (
     <>
-      <section id='sidebar' className='sidebar'>
+      <aside id='sidebar' className='sidebar'>
         <nav role='navigation' aria-label='Sidebar Navigation'>
-          {SIDEBAR.map((item, i) => (
-            <Fragment key={i}>
-              {item.section && <h3 className='section'>{t(item.section)}</h3>}
-              <Link key={i} href={item.path}>
-                <a title={item.description}>{t(item.title)}</a>
-              </Link>
-              {item.hasSeparator && <div className='separator' />}
-            </Fragment>
-          ))}
+          {sections.map((section, sectionIndex) => {
+            return isUserAuthorized(section.roles, roles) ? (
+              <section key={sectionIndex} className='sidebar-section'>
+                <h3>{t(section.label)}</h3>
+                {section.items.map((item, itemIndex) => {
+                  return isUserAuthorized(item.roles, roles) ? (
+                    <Link key={itemIndex} href={item.path} as={item.as}>
+                      <a title={t(item.description)}>{t(item.title)}</a>
+                    </Link>
+                  ) : null
+                })}
+                <Divider />
+              </section>
+            ) : null
+          })}
         </nav>
-      </section>
+      </aside>
 
       <style jsx>
         {`
@@ -85,22 +105,23 @@ export const Sidebar: React.FC<Props> = () => {
             border-right: 1px solid ${palette['background-basic-color-4']};
           }
           .sidebar nav {
-            padding: 0;
+          }
+          .sidebar-section {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
           }
-          .sidebar nav a {
-            padding: 4px 16px;
-          }
-
-          .section {
+          .sidebar-section h3 {
             font-size: 12px;
-            padding: 4px 16px;
+            margin: 8px 0;
+            padding: 4px 8px;
             padding-bottom: 0;
             color: ${palette['text-hint-color']};
             font-weight: bold;
+          }
+          .sidebar nav a {
+            padding: 4px 16px;
           }
           .separator {
             height: 1px;

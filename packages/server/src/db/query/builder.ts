@@ -1,5 +1,5 @@
 import { DocumentType, ModelType } from '@typegoose/typegoose/lib/types'
-import { isNil, isPlainObject, isRegExp, isUndefined, pick } from 'lodash'
+import { isNil, isObject, isPlainObject, isRegExp, isUndefined } from 'lodash'
 import { DocumentQuery, Types } from 'mongoose'
 import { isProduction, Phase } from '~/config'
 import {
@@ -74,19 +74,30 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    */
   public eq<U = any> (path?: keyof T, value?: U, omitKeys?: 'falsy' | 'nil') {
     if (!isUndefined(value)) {
-      let eq: any = value
+      const isObj = isObject(value)
+      const isPlObj = isPlainObject(value)
+      console.log('eq', { path, value, omitKeys, isObj, isPlObj })
 
-      if (omitKeys && isPlainObject(value)) {
+      if (omitKeys && isObj) {
         const obj: Record<string, any> = value
-        eq = pick(
-          obj,
-          Object.keys(obj).filter(key =>
-            omitKeys === 'falsy' ? Boolean(obj[key]) : !isNil(obj[key])
-          )
-        )
-      }
+        const or = Object.keys(obj).reduce((arr, key) => {
+          const v = obj[key]
 
-      this.query = this.query.where(path, eq)
+          if (omitKeys === 'falsy' && !v) return arr
+          else if (omitKeys === 'nil' && isNil(v)) return arr
+
+          const filterValue =
+            typeof v === 'string' ? { $regex: new RegExp(v, 'gi') } : { $eq: v }
+          const filter = { [`${path}.${key}`]: filterValue }
+          console.log({ key, v, filterValue, filter })
+
+          return arr.concat(filter)
+        }, [] as any[])
+        console.log('eq', { or })
+        if (or.length) this.query = this.query.or(or)
+      } else {
+        this.query = this.query.where(path, value)
+      }
     }
 
     return this
@@ -208,6 +219,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    */
   public and (conditions?: any[]) {
     if (conditions && conditions.length) {
+      const current = this.query.getFilter()
       const queries = conditions.reduce((arr, condition) => {
         return arr.concat(
           Object.keys(condition).map(key => ({
@@ -215,10 +227,37 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
           }))
         )
       }, [] as any[])
-      const current = this.query.getFilter()
+
       this.query = current.$and
         ? this.query.and([...current.$and, ...queries])
         : this.query.and(queries)
+    }
+
+    return this
+  }
+
+  /**
+   * Specifies arguments for a $and condition.
+   * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
+   * @param conditions Query conditions.
+   * @returns QueryBuilder.
+   * @see https://mongoosejs.com/docs/api/query.html#query_Query-and
+   * @see https://docs.mongodb.com/manual/reference/operator/query/and/
+   */
+  public or (conditions?: any[]) {
+    if (conditions && conditions.length) {
+      const current = this.query.getFilter()
+      const queries = conditions.reduce((arr, condition) => {
+        return arr.concat(
+          Object.keys(condition).map(key => ({
+            [key]: condition[key as keyof T]
+          }))
+        )
+      }, [] as any[])
+
+      this.query = current.$or
+        ? this.query.or([...current.$or, ...queries])
+        : this.query.or(queries)
     }
 
     return this

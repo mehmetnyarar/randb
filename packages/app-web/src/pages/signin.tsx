@@ -1,9 +1,10 @@
-import { Logger, Snack, useSigninUserForm } from '@app/logic'
-import { Theme } from '@app/ui'
+import { Logger, SigninMethod, Snack, useSigninUserForm } from '@app/logic'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect } from 'react'
+import React, { Fragment, useContext, useEffect } from 'react'
+import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { initializeApollo } from '~/apollo'
-import { GhostButton, SubmitButton } from '~/components/button'
+import { BasicButton, GhostButton, SubmitButton } from '~/components/button'
+import { Divider } from '~/components/divider'
 import {
   Field,
   FieldError,
@@ -24,14 +25,13 @@ const logger = Logger.create({
  */
 export const SigninScreen: NextScreen = ({ t }) => {
   const { push } = useRouter()
-  const { palette } = useContext(Theme)
 
   const {
     method,
-    altMethod,
+    otherMethods,
     onMethodChange,
     isPasswordVisible,
-    // onTogglePasswordVisibility,
+    onTogglePasswordVisibility,
     TypedController,
     isDisabled,
     handleSubmit,
@@ -65,12 +65,34 @@ export const SigninScreen: NextScreen = ({ t }) => {
   return (
     <Layout title={t('auth.signin')}>
       <main role='main'>
-        <h1>{t('auth.signin')}</h1>
+        <h2>{t('auth.signin')}</h2>
         <section role='form'>
           <form onSubmit={handleSubmit(onValid)}>
-            {method === 'email' && (
+            {method === SigninMethod.USERNAME && (
               <Field>
-                <Label htmlFor='e-mail'>{t('email')}</Label>
+                <Label htmlFor='username'>{t('username')}</Label>
+                <TypedController
+                  name='username'
+                  render={({ value, onChange, onBlur }: any) => (
+                    <input
+                      type='text'
+                      value={value}
+                      onChange={value => onChange(value)}
+                      onBlur={onBlur}
+                      className='full-width'
+                      placeholder={t('username.placeholder')}
+                      autoCapitalize='none'
+                      autoComplete='username'
+                      data-testid='username'
+                    />
+                  )}
+                />
+                <FieldError error={errors.username?.message} />
+              </Field>
+            )}
+            {method === SigninMethod.EMAIL && (
+              <Field>
+                <Label htmlFor='email'>{t('email')}</Label>
                 <TypedController
                   name='email'
                   render={({ value, onChange, onBlur }: any) => (
@@ -79,6 +101,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                       value={value}
                       onChange={value => onChange(value)}
                       onBlur={onBlur}
+                      className='full-width'
                       placeholder={t('email.placeholder')}
                       autoCapitalize='none'
                       autoComplete='email'
@@ -89,7 +112,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                 <FieldError error={errors.email?.message} />
               </Field>
             )}
-            {method === 'phone' && (
+            {method === SigninMethod.PHONE && (
               <Field>
                 <Label>{t('phone')}</Label>
                 <InputGroup>
@@ -101,9 +124,9 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         value={value}
                         onChange={value => onChange(value)}
                         onBlur={onBlur}
+                        className='full-width'
                         placeholder={t('phone.cc')}
                         autoComplete='tel-country-code'
-                        className='phone-cc'
                       />
                     )}
                   />
@@ -115,9 +138,9 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         value={value}
                         onChange={value => onChange(value)}
                         onBlur={onBlur}
+                        className='phone-dc full-width'
                         placeholder={t('phone.dc')}
                         autoComplete='tel-area-code'
-                        className='phone-dc'
                       />
                     )}
                   />
@@ -129,9 +152,9 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         value={value}
                         onChange={value => onChange(value)}
                         onBlur={onBlur}
+                        className='full-width'
                         placeholder={t('phone.sn')}
                         autoComplete='tel-local'
-                        className='phone-sn'
                       />
                     )}
                   />
@@ -141,31 +164,48 @@ export const SigninScreen: NextScreen = ({ t }) => {
             )}
             <Field>
               <Label>{t('password')}</Label>
-              <TypedController
-                name='password'
-                render={({ value, onChange, onBlur }: any) => (
-                  <input
-                    type={isPasswordVisible ? 'text' : 'password'}
-                    value={value}
-                    onChange={value => onChange(value)}
-                    onBlur={onBlur}
-                    autoComplete='current-password'
-                    data-testid='password'
-                  />
-                )}
-              />
+              <InputGroup>
+                <TypedController
+                  name='password'
+                  render={({ value, onChange, onBlur }: any) => (
+                    <input
+                      type={isPasswordVisible ? 'text' : 'password'}
+                      value={value}
+                      onChange={value => onChange(value)}
+                      onBlur={onBlur}
+                      className='full-width'
+                      autoComplete='current-password'
+                      data-testid='password'
+                    />
+                  )}
+                />
+                <BasicButton
+                  margin='0 0 0 8px'
+                  onClick={onTogglePasswordVisibility}
+                >
+                  {isPasswordVisible ? <FiEye /> : <FiEyeOff />}
+                </BasicButton>
+              </InputGroup>
               <FieldError error={errors.password} />
             </Field>
-
-            <SubmitButton disabled={isDisabled}>
+            <SubmitButton disabled={isDisabled} data-testid='signin'>
               {t('auth.signin')}
             </SubmitButton>
           </form>
 
-          <aside className='helpers'>
-            <GhostButton onClick={() => onMethodChange()}>
-              {t('auth.signin.with', { method: t(altMethod) })}
-            </GhostButton>
+          <aside className='signin-methods' data-testid='signin-methods'>
+            <span>{t('auth.signin.method')}</span>
+            {otherMethods.map((m, i) => (
+              <Fragment key={i}>
+                {i > 0 && <Divider vertical />}
+                <GhostButton
+                  onClick={() => onMethodChange(m)}
+                  data-testid={`onMethodChange-${m}`}
+                >
+                  {t(`auth.signin.method.${m}`)}
+                </GhostButton>
+              </Fragment>
+            ))}
           </aside>
         </section>
       </main>
@@ -180,46 +220,20 @@ export const SigninScreen: NextScreen = ({ t }) => {
             align-items: center;
           }
 
-          section[role='form'] {
-            min-width: 480px;
-            max-width: 720px;
-            padding: 32px;
-            border: 1px solid ${palette['text-hint-color']};
-            border-radius: 4px;
-          }
-
-          form {
-            display: flex;
-            flex-direction: column;
-          }
-
-          input[type='email'],
-          input[type='number'],
-          input[type='password'],
-          input[type='text'] {
-            width: 100%;
-            outline: none;
-            padding: 8px;
-            border: 1px solid ${palette['border-primary-color-1']};
-            border-radius: 4px;
-          }
-          input:hover {
-            border: 1px solid ${palette['color-primary-hover-border']};
-          }
-
-          .phone-cc {
-            flex: 1;
-          }
           .phone-dc {
-            flex: 2;
-            margin: 0 4px;
-          }
-          .phone-sn {
-            flex: 3;
+            margin: 0 8px;
           }
 
-          aside {
-            margin-top: 16px;
+          .signin-methods {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: smaller;
+          }
+          .signin-methods span {
+            margin-right: 8px;
           }
         `}
       </style>

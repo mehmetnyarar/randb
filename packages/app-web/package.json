@@ -39,6 +39,7 @@
     "next-cookies": "^2.0.3",
     "next-i18next": "^6.0.2",
     "next-transpile-modules": "^4.1.0",
+    "react-icons": "^3.11.0",
     "react-modal": "^3.11.2",
     "subscriptions-transport-ws": "^0.9.18",
     "ts-node": "^9.0.0",
