@@ -4,8 +4,9 @@ import { registerEnumType } from 'type-graphql'
  * Cell scenario.
  */
 export enum Scenario {
-  INDOOR = 'Indoor',
-  OUTDOOR = 'Outdoor'
+  NONE = 'NONE',
+  INDOOR = 'INDOOR',
+  OUTDOOR = 'OUTDOOR'
 }
 
 registerEnumType(Scenario, { name: 'Scenario' })

@@ -3,17 +3,17 @@ import { Repository } from '~/db'
 import { Logger } from '~/logger'
 import {
   AntennaModel,
-  Cell4GBand,
-  Cell4GModel,
+  CellModel,
   DEFAULT_ANTENNA,
   DEFAULT_CELL4G,
-  DEFAULT_PARENT,
   DEFAULT_SITE,
-  GeometryType,
-  GeoPoint,
-  Scenario,
+  DEFAULT_TAC,
+  exists,
   SiteModel,
   TacModel,
+  to4GBand,
+  toGeoPoint,
+  toScenario,
   User
 } from '~/models'
 import { EntityOrDocument } from '~/types'
@@ -23,9 +23,15 @@ import { sheet } from '../import'
 import { CELL_NAME_RULES, VALIDATION_RULES } from './const'
 import { Item } from './types'
 
+// Log guide
+// : what
+// = value
+// > to
+// @ at
 const logger = Logger.create({
   src: 'modules/fs/import/excel/g4',
-  file: 'info'
+  file: 'info',
+  memory: 'debug'
 })
 
 /**
@@ -39,13 +45,13 @@ export const from = async (
   user?: EntityOrDocument<User>,
   sheetName?: string
 ) => {
-  logger.info('Start')
+  logger.info('IMPORT_START:4G')
 
   const data = sheet<Item>(path, sheetName)
-  const tacs = new Repository(TacModel, DEFAULT_PARENT)
+  const tacs = new Repository(TacModel, DEFAULT_TAC)
   const antennas = new Repository(AntennaModel, DEFAULT_ANTENNA)
   const sites = new Repository(SiteModel, DEFAULT_SITE)
-  const cells = new Repository(Cell4GModel, DEFAULT_CELL4G)
+  const cells = new Repository(CellModel, DEFAULT_CELL4G)
 
   let index = 1
   for (const item of data) {
@@ -59,12 +65,11 @@ export const from = async (
       const siteName = toString(item['Site Name'])
       const cellId = toString(item['Cell ID'])
       const cellName = toString(item['Cell Name'])
-      const scenario = item.Scenario as Scenario
       const antennaType = toString(item['Antenna Type'])
-      const location: GeoPoint = {
-        type: GeometryType.Point,
-        coordinates: [toFloat(item.Latitude), toFloat(item.Longitude)]
-      }
+      const location = toGeoPoint(
+        toFloat(item.Longitude),
+        toFloat(item.Latitude)
+      )
 
       // #endregion
 
@@ -76,9 +81,8 @@ export const from = async (
         { createdBy: user?._id }
       )
 
-      if (tac && !tac.updatedAt) {
-        logger.success(`tac: ${tac.name}`)
-      }
+      if (tac.updatedAt) logger.success(`IMPORT_UPDATE:TAC=${tac.name}`)
+      else logger.success(`IMPORT_CREATE:TAC=${tac.name}`)
 
       // #endregion
 
@@ -95,11 +99,13 @@ export const from = async (
         { createdBy: user?._id }
       )
 
-      if (!site.updatedAt) {
-        tac.sites.push(site._id)
-        await tac.save()
+      if (site.updatedAt) logger.success(`IMPORT_UPDATE:SITE=${site.name}`)
+      else logger.success(`IMPORT_CREATE:SITE=${site.name}`)
 
-        logger.success(`site: ${site.name}`)
+      if (!exists(site._id, tac.children)) {
+        tac.children.push(site._id)
+        await tac.save()
+        logger.success(`IMPORT_ADD:SITE=${site.name}>TAC=${tac.name}`)
       }
 
       // #endregion
@@ -114,8 +120,10 @@ export const from = async (
         )
         : undefined
 
-      if (antenna && !antenna.updatedAt) {
-        logger.success(`antenna: ${antenna.name}`)
+      if (antenna) {
+        if (antenna.updatedAt) {
+          logger.success(`IMPORT_UPDATE:ANTENNA=${antenna.name}`)
+        } else logger.success(`IMPORT_CREATE:ANTENNA=${antenna.name}`)
       }
 
       // #endregion
@@ -128,6 +136,7 @@ export const from = async (
         {
           tac: tac._id,
           site: site._id,
+          location,
           sector: info.sector,
           ID: cellId,
           name: cellName,
@@ -136,34 +145,40 @@ export const from = async (
           azimuth: toInt(item.Azimuth),
           mechanicalTilt: toFloat(item['Mechanical Downtilt']),
           electricalTilt: toFloat(item['Electrical Downtilt']),
-          pci: toInt(item.PCI),
-          band: toString(item['Frequency Band']) as Cell4GBand,
-          dlEarfcn: toInt(item.DlEarfcn),
-          dlBandwith: toInt(item['DlBandwidth(MHz)']),
-          channelIndex: toInt(item['Channel Index']),
-          maxPower: toFloat(item['Max Power(dBm)']),
-          rsPower: toFloat(item['RS Power(dBm)']),
-          scenario: scenario || Scenario.OUTDOOR,
-          isActive: item.Active || true
+          scenario: toScenario(item.Scenario),
+          isActive: item.Active || true,
+          g4: {
+            pci: toInt(item.PCI),
+            band: to4GBand(item['Frequency Band']),
+            dlEarfcn: toInt(item.DlEarfcn),
+            dlBandwith: toInt(item['DlBandwidth(MHz)']),
+            channelIndex: toInt(item['Channel Index']),
+            maxPower: toFloat(item['Max Power(dBm)']),
+            rsPower: toFloat(item['RS Power(dBm)'])
+          }
         },
         { createdBy: user?._id }
       )
 
-      if (!cell.updatedAt) {
-        site.cells4g.push(cell._id)
-        await site.save()
+      if (cell.updatedAt) logger.success(`IMPORT_UPDATE:CELL=${cell.name}`)
+      else logger.success(`IMPORT_CREATE:CELL=${cell.name}`)
 
-        logger.success(`cell: ${cell.name}`)
+      if (!exists(cell._id, site.children)) {
+        site.g4.push(cell._id)
+        site.children.push(cell._id)
+        await site.save()
+        logger.success(`IMPORT_ADD:CELL=${cell.name}>SITE=${site.name}`)
       }
 
       // #endregion
     } else {
-      if (missing) logger.warn(`missing values at ${index}: ${missing}`)
-      if (invalid) logger.warn(`invalid values at ${index}: ${invalid}`)
+      if (missing) logger.warn(`IMPORT_ERROR_MISSING@${index}=${missing}`)
+      if (invalid) logger.warn(`IMPORT_ERROR_INVALID@${index}=${invalid}`)
     }
 
     index += 1
   }
 
-  logger.info('Done')
+  logger.info('IMPORT_FINISH:4G')
+  return logger.entries
 }

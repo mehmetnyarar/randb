@@ -1,13 +1,10 @@
 export * from './antenna' // Entity
-export * from './base' // Base model
+export * from './base' // Base model for all entities
 export * from './bsc' // Entity
-export * from './cell' // Base model
-export * from './cell2g' // Entity
-export * from './cell3g' // Entity
-export * from './cell4g' // Entity
+export * from './cell' // Base model for cells
 export * from './lac' // Entity
 export * from './log' // Entity
-export * from './parent' // Base model
+export * from './ne' // Base model for network elements
 export * from './rnc' // Entity
 export * from './site' // Entity
 export * from './tac' // Entity

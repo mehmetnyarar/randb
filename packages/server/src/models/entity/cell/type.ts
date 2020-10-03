@@ -1,17 +1,37 @@
 import { Prop, Ref } from '@typegoose/typegoose'
 import { Field, Float, Int, ObjectType } from 'type-graphql'
+import { GeoLocation, Geometry } from '~/models/embed'
 import { Antenna } from '../antenna'
-import { Entity } from '../base'
+import { Bsc } from '../bsc'
 import { Lac } from '../lac'
+import { NetworkElement } from '../ne'
+import { EntityModel } from '../options'
+import { Rnc } from '../rnc'
 import { Site } from '../site'
-import { User } from '../user'
+import { Tac } from '../tac'
 import { Scenario } from './enum'
+import { Cell2G } from './g2'
+import { Cell3G } from './g3'
+import { Cell4G } from './g4'
 
 /**
  * Cell.
  */
 @ObjectType()
-export class Cell extends Entity {
+@EntityModel('cells')
+export class Cell extends NetworkElement {
+  @Field(() => Bsc, { nullable: true })
+  @Prop({ ref: 'Bsc' })
+  bsc?: Ref<Bsc>
+
+  @Field(() => Rnc, { nullable: true })
+  @Prop({ ref: 'Rnc' })
+  rnc?: Ref<Rnc>
+
+  @Field(() => Tac, { nullable: true })
+  @Prop({ ref: 'Tac' })
+  tac?: Ref<Tac>
+
   @Field(() => Lac, { nullable: true })
   @Prop({ ref: 'Lac' })
   lac?: Ref<Lac>
@@ -20,17 +40,13 @@ export class Cell extends Entity {
   @Prop({ ref: 'Site', required: true })
   site!: Ref<Site>
 
+  @Field(() => GeoLocation)
+  @Prop({ required: true })
+  location!: Geometry
+
   @Field()
   @Prop({ default: '' })
   sector!: string
-
-  @Field()
-  @Prop({ required: true, unique: true })
-  ID!: string
-
-  @Field()
-  @Prop({ required: true, unique: true })
-  name!: string
 
   @Field(() => Float)
   @Prop({ default: 0 })
@@ -56,13 +72,15 @@ export class Cell extends Entity {
   @Prop({ enum: Scenario, type: String })
   scenario!: Scenario
 
-  // #region Entity
+  @Field(() => Cell2G, { nullable: true })
+  @Prop()
+  g2?: Cell2G
 
-  @Field(() => User, { nullable: true })
-  createdBy?: Ref<User>
+  @Field(() => Cell3G, { nullable: true })
+  @Prop()
+  g3?: Cell3G
 
-  @Field(() => User, { nullable: true })
-  updatedBy?: Ref<User>
-
-  // #endregion
+  @Field(() => Cell4G, { nullable: true })
+  @Prop()
+  g4?: Cell4G
 }

@@ -4,17 +4,18 @@ import { Logger } from '~/logger'
 import {
   AntennaModel,
   BscModel,
-  Cell2GBand,
-  Cell2GModel,
+  CellModel,
   DEFAULT_ANTENNA,
+  DEFAULT_BSC,
   DEFAULT_CELL2G,
-  DEFAULT_PARENT,
+  DEFAULT_LAC,
   DEFAULT_SITE,
-  GeometryType,
-  GeoPoint,
+  exists,
   LacModel,
-  Scenario,
   SiteModel,
+  to2GBand,
+  toGeoPoint,
+  toScenario,
   User
 } from '~/models'
 import { EntityOrDocument } from '~/types'
@@ -24,9 +25,15 @@ import { sheet } from '../import'
 import { CELL_NAME_RULES, VALIDATION_RULES } from './const'
 import { Item } from './types'
 
+// Log guide
+// : what
+// = value
+// > to
+// @ at
 const logger = Logger.create({
   src: 'modules/fs/import/excel/g2',
-  file: 'info'
+  file: 'info',
+  memory: 'debug'
 })
 
 /**
@@ -40,14 +47,14 @@ export const from = async (
   user?: EntityOrDocument<User>,
   sheetName?: string
 ) => {
-  logger.info('Start')
+  logger.info('IMPORT_START:2G')
 
   const data = sheet<Item>(path, sheetName)
-  const bscs = new Repository(BscModel, DEFAULT_PARENT)
-  const lacs = new Repository(LacModel, DEFAULT_PARENT)
+  const bscs = new Repository(BscModel, DEFAULT_BSC)
+  const lacs = new Repository(LacModel, DEFAULT_LAC)
   const antennas = new Repository(AntennaModel, DEFAULT_ANTENNA)
   const sites = new Repository(SiteModel, DEFAULT_SITE)
-  const cells = new Repository(Cell2GModel, DEFAULT_CELL2G)
+  const cells = new Repository(CellModel, DEFAULT_CELL2G)
 
   let index = 1
   for (const item of data) {
@@ -63,12 +70,11 @@ export const from = async (
       const siteName = toString(item['Site Name'])
       const cellId = toString(item.CI)
       const cellName = toString(item['Cell Name'])
-      const scenario = item['Scenario（Indoor or Outdoor）'] as Scenario
       const antennaType = toString(item['Antenna Type'])
-      const location: GeoPoint = {
-        type: GeometryType.Point,
-        coordinates: [toFloat(item.Latitude), toFloat(item.Longitude)]
-      }
+      const location = toGeoPoint(
+        toFloat(item.Longitude),
+        toFloat(item.Latitude)
+      )
 
       // #endregion
 
@@ -80,9 +86,8 @@ export const from = async (
         { createdBy: user?._id }
       )
 
-      if (!bsc.updatedAt) {
-        logger.success(`bsc: ${bsc.name}`)
-      }
+      if (bsc.updatedAt) logger.success(`IMPORT_UPDATE:BSC=${bsc.name}`)
+      else logger.success(`IMPORT_CREATE:BSC=${bsc.name}`)
 
       // #endregion
 
@@ -96,8 +101,9 @@ export const from = async (
         )
         : undefined
 
-      if (lac && !lac.updatedAt) {
-        logger.success(`lac: ${lac.name}`)
+      if (lac) {
+        if (lac.updatedAt) logger.success(`IMPORT_UPDATE:LAC=${lac.name}`)
+        else logger.success(`IMPORT_CREATE:LAC=${lac.name}`)
       }
 
       // #endregion
@@ -116,16 +122,19 @@ export const from = async (
         { createdBy: user?._id }
       )
 
-      if (!site.updatedAt) {
-        bsc.sites.push(site._id)
+      if (site.updatedAt) logger.success(`IMPORT_UPDATE:SITE=${site.name}`)
+      else logger.success(`IMPORT_CREATE:SITE=${site.name}`)
+
+      if (!exists(site._id, bsc.children)) {
+        bsc.children.push(site._id)
         await bsc.save()
+        logger.success(`IMPORT_ADD:SITE=${site.name}>BSC=${bsc.name}`)
+      }
 
-        if (lac) {
-          lac.sites.push(site._id)
-          await lac.save()
-        }
-
-        logger.success(`site: ${site.name}`)
+      if (lac && !exists(site._id, lac.children)) {
+        lac.children.push(site._id)
+        await lac.save()
+        logger.success(`IMPORT_ADD:SITE=${site.name}>LAC=${lac.name}`)
       }
 
       // #endregion
@@ -140,8 +149,10 @@ export const from = async (
         )
         : undefined
 
-      if (antenna && !antenna.updatedAt) {
-        logger.success(`antenna: ${antenna.name}`)
+      if (antenna) {
+        if (antenna.updatedAt) {
+          logger.success(`IMPORT_UPDATE:ANTENNA=${antenna.name}`)
+        } else logger.success(`IMPORT_CREATE:ANTENNA=${antenna.name}`)
       }
 
       // #endregion
@@ -155,42 +166,50 @@ export const from = async (
           bsc: bsc._id,
           lac: lac?._id,
           site: site._id,
-          sector: info.sector,
+          location,
           ID: cellId,
           name: cellName,
+          sector: info.sector,
           antenna: antenna?._id,
           height: toFloat(item.Height),
           azimuth: toInt(item.Azimuth),
           mechanicalTilt: toFloat(item['Mechanical Downtilt']),
           electricalTilt: toFloat(item['Electrical Downtilt']),
-          mcc: toInt(item.MCC),
-          mnc: toInt(item.MNC),
-          ncc: toInt(item.NCC),
-          bcc: toInt(item.BCC),
-          band: toString(item['Frequency Band']) as Cell2GBand,
-          bcch: toInt(item.BCCH),
-          trxNumber: toInt(item['TRX Number']),
-          trxPower: toFloat(item['TRX Power(dBm']),
-          scenario: scenario || Scenario.OUTDOOR
+          scenario: toScenario(item['Scenario（Indoor or Outdoor）']),
+          isActive: true, // there is no field to import
+          g2: {
+            mcc: toInt(item.MCC),
+            mnc: toInt(item.MNC),
+            ncc: toInt(item.NCC),
+            bcc: toInt(item.BCC),
+            band: to2GBand(item['Frequency Band']),
+            bcch: toInt(item.BCCH),
+            trxNumber: toInt(item['TRX Number']),
+            trxPower: toFloat(item['TRX Power(dBm'])
+          }
         },
         { createdBy: user?._id }
       )
 
-      if (!cell.updatedAt) {
-        site.cells2g.push(cell._id)
-        await site.save()
+      if (cell.updatedAt) logger.success(`IMPORT_UPDATE:CELL=${cell.name}`)
+      else logger.success(`IMPORT_CREATE:CELL=${cell.name}`)
 
-        logger.success(`cell: ${cell.name}`)
+      if (!exists(cell._id, site.children)) {
+        site.g2.push(cell._id)
+        site.children.push(cell._id)
+        await site.save()
+        logger.success(`IMPORT_ADD:CELL=${cell.name}>SITE=${site.name}`)
       }
 
       // #endregion
     } else {
-      if (missing) logger.warn(`missing values at ${index}: ${missing}`)
-      if (invalid) logger.warn(`invalid values at ${index}: ${invalid}`)
+      if (missing) logger.warn(`IMPORT_ERROR_MISSING@${index}=${missing}`)
+      if (invalid) logger.warn(`IMPORT_ERROR_INVALID@${index}=${invalid}`)
     }
 
     index += 1
   }
 
-  logger.info('Done')
+  logger.info('IMPORT_FINISH:2G')
+  return logger.entries
 }

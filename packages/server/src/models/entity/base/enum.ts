@@ -11,13 +11,11 @@ export enum EntityType {
   // Network Entities
   ANTENNA = 'ANTENNA',
   BSC = 'BSC',
-  CELL2G = 'CELL2G',
-  CELL3G = 'CELL3G',
-  CELL4G = 'CELL4G',
-  LAC = 'LAC',
   RNC = 'RNC',
+  TAC = 'TAC',
+  LAC = 'LAC',
   SITE = 'SITE',
-  TAC = 'TAC'
+  CELL = 'CELL'
 }
 
 registerEnumType(EntityType, { name: 'EntityType' })

@@ -1,4 +1,3 @@
-import { Cell2GBand, Scenario } from '~/models'
 import { CellNameRule, ValidationRules } from '../../types'
 import { Item } from './types'
 
@@ -24,11 +23,11 @@ export const VALIDATION_RULES: ValidationRules<Item> = {
   MNC: 'numeric',
   NCC: 'numeric',
   BCC: 'numeric',
-  'Frequency Band': { oneOf: Object.values(Cell2GBand) },
+  'Frequency Band': undefined, // oneOf rule could be applied
   BCCH: 'numeric',
   'TRX Number': 'numeric',
   'TRX Power(dBm': 'numeric',
-  'Scenario（Indoor or Outdoor）': { oneOf: Object.values(Scenario) }
+  'Scenario（Indoor or Outdoor）': undefined // oneOf rule could be applied
 }
 
 /**

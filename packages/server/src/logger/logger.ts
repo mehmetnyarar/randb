@@ -7,6 +7,7 @@ import { isProduction, LOGS_DIR, Phase } from '~/config'
 import { levels, styles } from './const'
 import {
   CreateLoggerOptions,
+  LogEntry,
   LoggerOptions,
   LogLevel,
   LogMeta,
@@ -31,6 +32,11 @@ export class Logger {
   readonly level: LogLevel
 
   /**
+   * Entries.
+   */
+  readonly entries: LogEntry[]
+
+  /**
    * Storages.
    */
   readonly storages: LogStorage[]
@@ -47,6 +53,7 @@ export class Logger {
   constructor (options: LoggerOptions = {}, phase?: Phase) {
     this.src = options.src || 'common'
     this.level = options.level || (isProduction(phase) ? 'warn' : 'debug')
+    this.entries = []
     this.storages = options.storages || []
   }
 
@@ -245,7 +252,7 @@ export class Logger {
    * @returns Logger.
    */
   static create (options: CreateLoggerOptions = {}) {
-    const { db, file, remote, ...base } = options
+    const { db, file, remote, memory, ...base } = options
     const logger = new Logger(base)
 
     // Add db storage
@@ -294,6 +301,17 @@ export class Logger {
         level: remote,
         fn: () => {
           throw new Error('Remote storage is not implemented!')
+        }
+      })
+    }
+
+    // Add memory storage
+    if (memory) {
+      logger.storages.push({
+        type: 'memory',
+        level: memory,
+        fn: entry => {
+          logger.entries.push(entry)
         }
       })
     }

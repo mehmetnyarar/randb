@@ -3,9 +3,7 @@ import { Logger } from '~/logger'
 import {
   AntennaModel,
   BscModel,
-  Cell2GModel,
-  Cell3GModel,
-  Cell4GModel,
+  CellModel,
   LacModel,
   LogModel,
   RncModel,
@@ -19,28 +17,38 @@ const logger = Logger.create({
   file: 'info'
 })
 
+const DROP_COLLECTIONS = false
+const CREATE_COLLECTIONS = false
+
 /**
  * Drops the existing database and creates a new one.
  * @param db Database.
  */
 export const reset = async (db: Mongoose) => {
-  await db.connection.dropCollection('logs')
-  await db.connection.dropCollection('users')
+  if (DROP_COLLECTIONS) {
+    const collections = Object.keys(db.connection.collections)
+    await Promise.all(
+      collections.map(async name => {
+        logger.debug(`Drop collection: ${name}`)
+        await db.connection.dropCollection(name)
+      })
+    )
+    logger.success('Drop collections')
+  }
+
   await db.connection.dropDatabase()
   logger.success('Drop database')
 
-  await LogModel.createCollection()
-  await UserModel.createCollection()
-
-  await AntennaModel.createCollection()
-  await BscModel.createCollection()
-  await Cell2GModel.createCollection()
-  await Cell3GModel.createCollection()
-  await Cell4GModel.createCollection()
-  await LacModel.createCollection()
-  await RncModel.createCollection()
-  await SiteModel.createCollection()
-  await TacModel.createCollection()
-
-  logger.success('Create collections')
+  if (CREATE_COLLECTIONS) {
+    await LogModel.createCollection()
+    await UserModel.createCollection()
+    await AntennaModel.createCollection()
+    await BscModel.createCollection()
+    await RncModel.createCollection()
+    await TacModel.createCollection()
+    await LacModel.createCollection()
+    await SiteModel.createCollection()
+    await CellModel.createCollection()
+    logger.success('Create collections')
+  }
 }

@@ -1,4 +1,3 @@
-import { Cell3GBand, Scenario } from '~/models'
 import { CellNameRule, ValidationRules } from '../../types'
 import { Item } from './types'
 
@@ -22,11 +21,11 @@ export const VALIDATION_RULES: ValidationRules<Item> = {
   'Mechanical Downtilt': 'numeric',
   'Electrical Downtilt': 'numeric',
   PSC: 'numeric',
-  'Frequency Band': { oneOf: Object.values(Cell3GBand) },
+  'Frequency Band': undefined, // oneOf rule could be applied
   ARFCN: 'numeric',
   'Total Power(dBm)': 'numeric',
   'Pilot Power(dBm)': 'numeric',
-  'Scenario（Indoor or Outdoor）': { oneOf: Object.values(Scenario) },
+  'Scenario（Indoor or Outdoor）': undefined, // oneOf rule could be applied
   Active: undefined
 }
 

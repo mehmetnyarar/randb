@@ -2,13 +2,7 @@ import { sample, times } from 'lodash'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Mongoose } from 'mongoose'
 import { connect } from '~/db'
-import {
-  Cell4GBand,
-  Cell4GModel,
-  Scenario,
-  SiteModel,
-  TacModel
-} from '~/models'
+import { Cell4GBand, CellModel, Scenario, SiteModel, TacModel } from '~/models'
 import { excel } from '~/modules/fs/import'
 
 // #region Setup
@@ -101,7 +95,7 @@ describe('modules/fs/import/excel/g4', () => {
 
     expect(await TacModel.find()).toHaveLength(1)
     expect(await SiteModel.find()).toHaveLength(4)
-    expect(await Cell4GModel.find()).toHaveLength(12)
+    expect(await CellModel.find()).toHaveLength(12)
   })
 
   test.todo('Create a test for invalid item')

@@ -29,7 +29,7 @@ import {
 import { ConnectionInput, edge, paginate, response } from '~/modules'
 
 const logger = Logger.create({
-  src: 'resolver/auth'
+  src: 'resolver/user'
 })
 
 // #region Pagination
@@ -84,7 +84,7 @@ export class UserResolver {
   @Query(() => [User])
   async users (@Arg('filter', { nullable: true }) filter: UsersFilter = {}) {
     const query = QueryBuilder.entities<User>(UserModel, filter)
-      .regex('username', filter.username)
+      .re('username', filter.username)
       .eq('name', filter.name)
       .email('email', filter.email)
       .eq('phone', filter.phone)
@@ -111,7 +111,7 @@ export class UserResolver {
     @Arg('connection', { nullable: true }) connection: ConnectionInput = {}
   ) {
     const query = QueryBuilder.entities<User>(UserModel, filter)
-      .regex('username', filter.username)
+      .re('username', filter.username)
       .eq('name', filter.name, 'falsy')
       .email('email', filter.email)
       .eq('phone', filter.phone)
@@ -136,7 +136,7 @@ export class UserResolver {
     if (filter.id) this.repo.findById(filter.id)
 
     const query = QueryBuilder.entity(UserModel, filter)
-      .regex('username', filter.username)
+      .re('username', filter.username)
       .eq('email', filter.email)
       .eq('phone', filter.phone)
       .conditions()

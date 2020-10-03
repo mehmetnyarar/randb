@@ -4,7 +4,7 @@ import { Mongoose } from 'mongoose'
 import { connect } from '~/db'
 import {
   Cell3GBand,
-  Cell3GModel,
+  CellModel,
   LacModel,
   RncModel,
   Scenario,
@@ -106,7 +106,7 @@ describe('modules/fs/import/excel/g3', () => {
     expect(await RncModel.find()).toHaveLength(1)
     expect(await LacModel.find()).toHaveLength(2)
     expect(await SiteModel.find()).toHaveLength(4)
-    expect(await Cell3GModel.find()).toHaveLength(12)
+    expect(await CellModel.find()).toHaveLength(12)
   })
 
   test.todo('Create a test for invalid item')

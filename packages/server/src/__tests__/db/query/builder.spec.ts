@@ -213,11 +213,11 @@ describe('db/query', () => {
 
   describe('regex', () => {
     it('should return empty query', () => {
-      expect(query.regex('email').conditions()).toEqual({})
+      expect(query.re('email').conditions()).toEqual({})
     })
 
     it('should return query (remove=default)', () => {
-      expect(query.regex('email', 'test@myapp.com').conditions()).toEqual({
+      expect(query.re('email', 'test@myapp.com').conditions()).toEqual({
         email: { $regex: /test@myapp.com/gi }
       })
     })
@@ -225,7 +225,7 @@ describe('db/query', () => {
     it('should return query (remove=email)', () => {
       expect(
         query
-          .regex('email', 'test!@myapp.com', { remove: SANITIZE.email })
+          .re('email', 'test!@myapp.com', { remove: SANITIZE.email })
           .conditions()
       ).toEqual({
         email: { $regex: /test@myapp.com/gi }

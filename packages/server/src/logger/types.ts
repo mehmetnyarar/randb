@@ -53,7 +53,7 @@ export interface LogEntry {
 /**
  * Type of storage.
  */
-export type LogStorageType = 'db' | 'file' | 'remote'
+export type LogStorageType = 'db' | 'file' | 'remote' | 'memory'
 
 /**
  * Storage function.
@@ -123,6 +123,11 @@ export interface CreateLoggerOptions extends LoggerOptions {
    * Max log level for remote storage.
    */
   remote?: LogLevel
+
+  /**
+   * Max log level for memory storage.
+   */
+  memory?: LogLevel
 }
 
 /**

@@ -5,7 +5,7 @@ import { connect } from '~/db'
 import {
   BscModel,
   Cell2GBand,
-  Cell2GModel,
+  CellModel,
   LacModel,
   Scenario,
   SiteModel
@@ -103,7 +103,7 @@ describe('modules/fs/import/excel/g2', () => {
     expect(await BscModel.find()).toHaveLength(1)
     expect(await LacModel.find()).toHaveLength(2)
     expect(await SiteModel.find()).toHaveLength(4)
-    expect(await Cell2GModel.find()).toHaveLength(12)
+    expect(await CellModel.find()).toHaveLength(12)
   })
 
   test.todo('Create a test for invalid item')

@@ -280,7 +280,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    * @see https://mongoosejs.com/docs/api/query.html#query_Query-regex
    * @see https://docs.mongodb.com/manual/reference/operator/query/regex/
    */
-  public regex (path: keyof T, value?: string, options: RegExOptions = {}) {
+  public re (path: keyof T, value?: string, options: RegExOptions = {}) {
     if (value) {
       const { remove, flags = 'gi' } = options
       const regex = remove
@@ -341,7 +341,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    * @returns QueryBuilder.
    */
   public email (path: keyof T, value?: string) {
-    return this.regex(path, value, { remove: SANITIZE.email })
+    return this.re(path, value, { remove: SANITIZE.email })
   }
 
   /**
