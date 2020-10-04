@@ -38,153 +38,185 @@ export type Antenna = {
 
 export type Bsc = {
   __typename?: 'Bsc'
+  children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
-  ID?: Maybe<Scalars['String']>
+  ID: Scalars['String']
   isActive: Scalars['Boolean']
   isMock?: Maybe<Scalars['Boolean']>
   logs?: Maybe<Array<Scalars['ID']>>
   name: Scalars['String']
-  sites: Scalars['ID']
+  network?: Maybe<NetworkType>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
 }
 
 export type Cell = {
   __typename?: 'Cell'
   antenna: Antenna
   azimuth: Scalars['Int']
+  bsc?: Maybe<Bsc>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
   electricalTilt: Scalars['Float']
+  g2?: Maybe<Cell2G>
+  g3?: Maybe<Cell3G>
+  g4?: Maybe<Cell4G>
   height: Scalars['Float']
   id: Scalars['ID']
   ID: Scalars['String']
   isActive: Scalars['Boolean']
   isMock?: Maybe<Scalars['Boolean']>
   lac?: Maybe<Lac>
+  location: GeoLocation
   logs?: Maybe<Array<Scalars['ID']>>
   mechanicalTilt: Scalars['Float']
   name: Scalars['String']
+  network?: Maybe<NetworkType>
+  rnc?: Maybe<Rnc>
   scenario: Scenario
   sector: Scalars['String']
   site: Site
+  tac?: Maybe<Tac>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
 }
 
 export type Cell2G = {
   __typename?: 'Cell2G'
-  antenna: Antenna
-  azimuth: Scalars['Int']
   band: Cell2GBand
   bcc: Scalars['Int']
   bcch: Scalars['Int']
-  bsc: Bsc
-  createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
-  deactivatedAt?: Maybe<Scalars['DateTime']>
-  electricalTilt: Scalars['Float']
-  height: Scalars['Float']
-  id: Scalars['ID']
-  ID: Scalars['String']
-  isActive: Scalars['Boolean']
-  isMock?: Maybe<Scalars['Boolean']>
-  lac?: Maybe<Lac>
-  logs?: Maybe<Array<Scalars['ID']>>
   mcc: Scalars['Int']
-  mechanicalTilt: Scalars['Float']
   mnc: Scalars['Int']
-  name: Scalars['String']
   ncc: Scalars['Int']
-  scenario: Scenario
-  sector: Scalars['String']
-  site: Site
   trxNumber: Scalars['Int']
   trxPower: Scalars['Float']
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
 }
 
 export enum Cell2GBand {
   DCS1800 = 'DCS1800',
-  GSM900 = 'GSM900'
+  GSM900 = 'GSM900',
+  NONE = 'NONE'
 }
 
 export type Cell3G = {
   __typename?: 'Cell3G'
-  antenna: Antenna
   arfcn: Scalars['Int']
-  azimuth: Scalars['Int']
   band: Cell3GBand
-  createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
-  deactivatedAt?: Maybe<Scalars['DateTime']>
-  electricalTilt: Scalars['Float']
-  height: Scalars['Float']
-  id: Scalars['ID']
-  ID: Scalars['String']
-  isActive: Scalars['Boolean']
-  isMock?: Maybe<Scalars['Boolean']>
-  lac?: Maybe<Lac>
-  logs?: Maybe<Array<Scalars['ID']>>
-  mechanicalTilt: Scalars['Float']
-  name: Scalars['String']
   pilotPower: Scalars['Float']
   psc: Scalars['Int']
-  rnc: Rnc
-  scenario: Scenario
-  sector: Scalars['String']
-  site: Site
   totalPower: Scalars['Float']
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
 }
 
 export enum Cell3GBand {
+  NONE = 'NONE',
   UMTS2100 = 'UMTS2100',
   UMTS900 = 'UMTS900'
 }
 
 export type Cell4G = {
   __typename?: 'Cell4G'
-  antenna: Antenna
-  azimuth: Scalars['Int']
   band: Cell4GBand
   channelIndex: Scalars['Int']
-  createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
-  deactivatedAt?: Maybe<Scalars['DateTime']>
   dlBandwith: Scalars['Int']
   dlEarfcn: Scalars['Int']
-  electricalTilt: Scalars['Float']
-  height: Scalars['Float']
-  id: Scalars['ID']
-  ID: Scalars['String']
-  isActive: Scalars['Boolean']
-  isMock?: Maybe<Scalars['Boolean']>
-  lac?: Maybe<Lac>
-  logs?: Maybe<Array<Scalars['ID']>>
   maxPower: Scalars['Float']
-  mechanicalTilt: Scalars['Float']
-  name: Scalars['String']
   pci: Scalars['Int']
   rsPower: Scalars['Float']
-  scenario: Scenario
-  sector: Scalars['String']
-  site: Site
-  tac: Tac
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
 }
 
 export enum Cell4GBand {
   FDD1800MHZ10 = 'FDD1800MHZ10',
   FDD1800MHZ15 = 'FDD1800MHZ15',
-  FDD1800MHZ20 = 'FDD1800MHZ20'
+  FDD1800MHZ20 = 'FDD1800MHZ20',
+  NONE = 'NONE'
+}
+
+export type CellConnection = {
+  __typename?: 'CellConnection'
+  edges: Array<CellEdge>
+  pageInfo: PageInfo
+  pages: Scalars['Int']
+  total: Scalars['Int']
+}
+
+export type CellEdge = {
+  __typename?: 'CellEdge'
+  cursor: Scalars['ID']
+  node: Cell
+}
+
+export type CellFilter = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  origin?: Maybe<RequestOrigin>
+}
+
+export type Cells2GFilter = {
+  bands?: Maybe<Array<Cell2GBand>>
+  bcc?: Maybe<Scalars['Int']>
+  bcchs?: Maybe<Array<Scalars['Int']>>
+  mcc?: Maybe<Scalars['Int']>
+  mnc?: Maybe<Scalars['Int']>
+  ncc?: Maybe<Scalars['Int']>
+  trxNumber?: Maybe<FloatRangeFilter>
+  trxPower?: Maybe<FloatRangeFilter>
+}
+
+export type Cells3GFilter = {
+  arfcns?: Maybe<Array<Scalars['Int']>>
+  bands?: Maybe<Array<Cell3GBand>>
+  pilotPower?: Maybe<FloatRangeFilter>
+  pscs?: Maybe<Array<Scalars['Int']>>
+  totalPower?: Maybe<FloatRangeFilter>
+}
+
+export type Cells4GFilter = {
+  bands?: Maybe<Array<Cell4GBand>>
+  dlBandwiths?: Maybe<Array<Scalars['Int']>>
+  dlEarfcns?: Maybe<Array<Scalars['Int']>>
+  maxPower?: Maybe<FloatRangeFilter>
+  pcis?: Maybe<Array<Scalars['Int']>>
+  rsPower?: Maybe<FloatRangeFilter>
+}
+
+export type CellsFilter = {
+  agent?: Maybe<Scalars['String']>
+  antennas?: Maybe<Array<Scalars['ID']>>
+  bscs?: Maybe<Array<Scalars['ID']>>
+  createdAt?: Maybe<DateRangeFilter>
+  createdBy?: Maybe<Scalars['ID']>
+  electricalTilt?: Maybe<FloatRangeFilter>
+  g2?: Maybe<Cells2GFilter>
+  g3?: Maybe<Cells3GFilter>
+  g4?: Maybe<Cells4GFilter>
+  height?: Maybe<FloatRangeFilter>
+  ids?: Maybe<Array<Scalars['ID']>>
+  isActive?: Maybe<Scalars['Boolean']>
+  isMock?: Maybe<Scalars['Boolean']>
+  lacs?: Maybe<Array<Scalars['ID']>>
+  mechanicalTilt?: Maybe<FloatRangeFilter>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  networks?: Maybe<Array<NetworkType>>
+  origin?: Maybe<RequestOrigin>
+  rncs?: Maybe<Array<Scalars['ID']>>
+  scenarios?: Maybe<Array<Scenario>>
+  sectors?: Maybe<Array<Scalars['String']>>
+  site?: Maybe<Scalars['ID']>
+  tacs?: Maybe<Array<Scalars['ID']>>
+  type?: Maybe<ElementType>
+  types?: Maybe<Array<ElementType>>
+  updatedAt?: Maybe<DateRangeFilter>
+  updatedBy?: Maybe<Scalars['ID']>
 }
 
 export type ConnectionInput = {
@@ -227,6 +259,15 @@ export type DeleteUserInput = {
   origin?: Maybe<RequestOrigin>
 }
 
+export enum ElementType {
+  BSC = 'BSC',
+  CELL = 'CELL',
+  LAC = 'LAC',
+  RNC = 'RNC',
+  SITE = 'SITE',
+  TAC = 'TAC'
+}
+
 export type EntitiesFilter = {
   agent?: Maybe<Scalars['String']>
   createdAt?: Maybe<DateRangeFilter>
@@ -265,9 +306,7 @@ export type EntityInput = {
 export enum EntityType {
   ANTENNA = 'ANTENNA',
   BSC = 'BSC',
-  CELL2G = 'CELL2G',
-  CELL3G = 'CELL3G',
-  CELL4G = 'CELL4G',
+  CELL = 'CELL',
   LAC = 'LAC',
   LOG = 'LOG',
   RNC = 'RNC',
@@ -322,18 +361,20 @@ export type IntRangeFilter = {
 
 export type Lac = {
   __typename?: 'Lac'
+  children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
-  ID?: Maybe<Scalars['String']>
+  ID: Scalars['String']
   isActive: Scalars['Boolean']
   isMock?: Maybe<Scalars['Boolean']>
   logs?: Maybe<Array<Scalars['ID']>>
   name: Scalars['String']
-  sites: Scalars['ID']
+  network?: Maybe<NetworkType>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
 }
 
 export enum Language {
@@ -388,6 +429,54 @@ export type MutationupsertUserArgs = {
   data: UpsertUserInput
 }
 
+export type NetworkElement = {
+  __typename?: 'NetworkElement'
+  createdAt?: Maybe<Scalars['DateTime']>
+  createdBy?: Maybe<User>
+  deactivatedAt?: Maybe<Scalars['DateTime']>
+  id: Scalars['ID']
+  ID: Scalars['String']
+  isActive: Scalars['Boolean']
+  isMock?: Maybe<Scalars['Boolean']>
+  logs?: Maybe<Array<Scalars['ID']>>
+  name: Scalars['String']
+  network?: Maybe<NetworkType>
+  type: ElementType
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedBy?: Maybe<User>
+}
+
+export type NetworkElementFilter = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  origin?: Maybe<RequestOrigin>
+}
+
+export type NetworkElementsFilter = {
+  agent?: Maybe<Scalars['String']>
+  createdAt?: Maybe<DateRangeFilter>
+  createdBy?: Maybe<Scalars['ID']>
+  ids?: Maybe<Array<Scalars['ID']>>
+  isActive?: Maybe<Scalars['Boolean']>
+  isMock?: Maybe<Scalars['Boolean']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  networks?: Maybe<Array<NetworkType>>
+  origin?: Maybe<RequestOrigin>
+  type?: Maybe<ElementType>
+  types?: Maybe<Array<ElementType>>
+  updatedAt?: Maybe<DateRangeFilter>
+  updatedBy?: Maybe<Scalars['ID']>
+}
+
+export enum NetworkType {
+  G2 = 'G2',
+  G3 = 'G3',
+  G4 = 'G4'
+}
+
 export type PageInfo = {
   __typename?: 'PageInfo'
   currentPage: Scalars['Int']
@@ -395,22 +484,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean']
   hasPreviousPage: Scalars['Boolean']
   startCursor: Scalars['ID']
-}
-
-export type Parent = {
-  __typename?: 'Parent'
-  createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
-  deactivatedAt?: Maybe<Scalars['DateTime']>
-  id: Scalars['ID']
-  ID?: Maybe<Scalars['String']>
-  isActive: Scalars['Boolean']
-  isMock?: Maybe<Scalars['Boolean']>
-  logs?: Maybe<Array<Scalars['ID']>>
-  name: Scalars['String']
-  sites: Scalars['ID']
-  updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
 }
 
 export enum PersonGender {
@@ -457,16 +530,88 @@ export type PhoneNumberInput = {
 
 export type Query = {
   __typename?: 'Query'
+  bsc?: Maybe<Bsc>
+  bscs: Array<Bsc>
+  cell?: Maybe<Cell>
+  cells: Array<Cell>
   currentUser?: Maybe<CurrentUser>
+  lac?: Maybe<Lac>
+  lacs: Array<Lac>
+  pagedCells: CellConnection
+  pagedSites: SiteConnection
   pagedUsers: UserConnection
+  rnc?: Maybe<Rnc>
+  rncs: Array<Rnc>
+  site?: Maybe<Site>
+  sites: Array<Site>
+  tac?: Maybe<Tac>
+  tacs: Array<Tac>
   user?: Maybe<User>
   users: Array<User>
   welcome: Scalars['String']
 }
 
+export type QuerybscArgs = {
+  filter: NetworkElementFilter
+}
+
+export type QuerybscsArgs = {
+  filter?: Maybe<NetworkElementsFilter>
+}
+
+export type QuerycellArgs = {
+  filter: CellFilter
+}
+
+export type QuerycellsArgs = {
+  filter?: Maybe<CellsFilter>
+}
+
+export type QuerylacArgs = {
+  filter: NetworkElementFilter
+}
+
+export type QuerylacsArgs = {
+  filter?: Maybe<NetworkElementsFilter>
+}
+
+export type QuerypagedCellsArgs = {
+  connection?: Maybe<ConnectionInput>
+  filter?: Maybe<CellsFilter>
+}
+
+export type QuerypagedSitesArgs = {
+  connection?: Maybe<ConnectionInput>
+  filter?: Maybe<SitesFilter>
+}
+
 export type QuerypagedUsersArgs = {
   connection?: Maybe<ConnectionInput>
   filter?: Maybe<UsersFilter>
+}
+
+export type QueryrncArgs = {
+  filter: NetworkElementFilter
+}
+
+export type QueryrncsArgs = {
+  filter?: Maybe<NetworkElementsFilter>
+}
+
+export type QuerysiteArgs = {
+  filter: SiteFilter
+}
+
+export type QuerysitesArgs = {
+  filter?: Maybe<SitesFilter>
+}
+
+export type QuerytacArgs = {
+  filter: NetworkElementFilter
+}
+
+export type QuerytacsArgs = {
+  filter?: Maybe<NetworkElementsFilter>
 }
 
 export type QueryuserArgs = {
@@ -484,22 +629,25 @@ export enum RequestOrigin {
 
 export type Rnc = {
   __typename?: 'Rnc'
+  children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
-  ID?: Maybe<Scalars['String']>
+  ID: Scalars['String']
   isActive: Scalars['Boolean']
   isMock?: Maybe<Scalars['Boolean']>
   logs?: Maybe<Array<Scalars['ID']>>
   name: Scalars['String']
-  sites: Scalars['ID']
+  network?: Maybe<NetworkType>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
 }
 
 export enum Scenario {
   INDOOR = 'INDOOR',
+  NONE = 'NONE',
   OUTDOOR = 'OUTDOOR'
 }
 
@@ -527,12 +675,13 @@ export type SignoutUserInput = {
 export type Site = {
   __typename?: 'Site'
   bsc?: Maybe<Bsc>
-  cells2g: Array<Scalars['ID']>
-  cells3g: Array<Scalars['ID']>
-  cells4g: Array<Scalars['ID']>
+  children: Array<Cell>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
+  g2: Array<Scalars['ID']>
+  g3: Array<Scalars['ID']>
+  g4: Array<Scalars['ID']>
   id: Scalars['ID']
   ID: Scalars['String']
   isActive: Scalars['Boolean']
@@ -541,26 +690,73 @@ export type Site = {
   location: GeoLocation
   logs?: Maybe<Array<Scalars['ID']>>
   name: Scalars['String']
+  network?: Maybe<NetworkType>
   rnc?: Maybe<Rnc>
   tac?: Maybe<Tac>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
+}
+
+export type SiteConnection = {
+  __typename?: 'SiteConnection'
+  edges: Array<SiteEdge>
+  pageInfo: PageInfo
+  pages: Scalars['Int']
+  total: Scalars['Int']
+}
+
+export type SiteEdge = {
+  __typename?: 'SiteEdge'
+  cursor: Scalars['ID']
+  node: Site
+}
+
+export type SiteFilter = {
+  agent?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['ID']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  origin?: Maybe<RequestOrigin>
+}
+
+export type SitesFilter = {
+  agent?: Maybe<Scalars['String']>
+  bscs?: Maybe<Scalars['ID']>
+  createdAt?: Maybe<DateRangeFilter>
+  createdBy?: Maybe<Scalars['ID']>
+  ids?: Maybe<Array<Scalars['ID']>>
+  isActive?: Maybe<Scalars['Boolean']>
+  isMock?: Maybe<Scalars['Boolean']>
+  lacs?: Maybe<Scalars['ID']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  networks?: Maybe<Array<NetworkType>>
+  origin?: Maybe<RequestOrigin>
+  rncs?: Maybe<Scalars['ID']>
+  tacs?: Maybe<Scalars['ID']>
+  type?: Maybe<ElementType>
+  types?: Maybe<Array<ElementType>>
+  updatedAt?: Maybe<DateRangeFilter>
+  updatedBy?: Maybe<Scalars['ID']>
 }
 
 export type Tac = {
   __typename?: 'Tac'
+  children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy?: Maybe<User>
+  createdBy: User
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
-  ID?: Maybe<Scalars['String']>
+  ID: Scalars['String']
   isActive: Scalars['Boolean']
   isMock?: Maybe<Scalars['Boolean']>
   logs?: Maybe<Array<Scalars['ID']>>
   name: Scalars['String']
-  sites: Scalars['ID']
+  network?: Maybe<NetworkType>
+  type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy?: Maybe<User>
+  updatedBy: User
 }
 
 export type UpsertUserInput = {
@@ -709,9 +905,90 @@ export type SignoutUserMutation = { __typename?: 'Mutation' } & Pick<
   'signoutUser'
 >
 
+export type BSCsQueryVariables = Exact<{
+  filter?: Maybe<NetworkElementsFilter>
+}>
+
+export type BSCsQuery = { __typename?: 'Query' } & {
+  bscs: Array<
+    { __typename?: 'Bsc' } & Pick<
+      Bsc,
+      'id' | 'name' | 'type' | 'network' | 'isActive'
+    > & {
+        children: Array<
+          { __typename?: 'Site' } & Pick<
+            Site,
+            'id' | 'name' | 'type' | 'network' | 'isActive'
+          > & {
+              children: Array<
+                { __typename?: 'Cell' } & Pick<
+                  Cell,
+                  'id' | 'name' | 'type' | 'network' | 'isActive'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
+
+export type RNCsQueryVariables = Exact<{
+  filter?: Maybe<NetworkElementsFilter>
+}>
+
+export type RNCsQuery = { __typename?: 'Query' } & {
+  rncs: Array<
+    { __typename?: 'Rnc' } & Pick<
+      Rnc,
+      'id' | 'name' | 'type' | 'network' | 'isActive'
+    > & {
+        children: Array<
+          { __typename?: 'Site' } & Pick<
+            Site,
+            'id' | 'name' | 'type' | 'network' | 'isActive'
+          > & {
+              children: Array<
+                { __typename?: 'Cell' } & Pick<
+                  Cell,
+                  'id' | 'name' | 'type' | 'network' | 'isActive'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type TACsQueryVariables = Exact<{
+  filter?: Maybe<NetworkElementsFilter>
+}>
+
+export type TACsQuery = { __typename?: 'Query' } & {
+  tacs: Array<
+    { __typename?: 'Tac' } & Pick<
+      Tac,
+      'id' | 'name' | 'type' | 'network' | 'isActive'
+    > & {
+        children: Array<
+          { __typename?: 'Site' } & Pick<
+            Site,
+            'id' | 'name' | 'type' | 'network' | 'isActive'
+          > & {
+              children: Array<
+                { __typename?: 'Cell' } & Pick<
+                  Cell,
+                  'id' | 'name' | 'type' | 'network' | 'isActive'
+                >
+              >
+            }
+        >
+      }
+  >
+}
 
 export type DeleteUserMutationVariables = Exact<{
   data: DeleteUserInput
@@ -1039,6 +1316,70 @@ export type SignoutUserMutationOptions = Apollo.BaseMutationOptions<
   SignoutUserMutation,
   SignoutUserMutationVariables
 >
+export const BSCsDocument = gql`
+  query BSCs($filter: NetworkElementsFilter) {
+    bscs(filter: $filter) {
+      id
+      name
+      type
+      network
+      isActive
+      children {
+        id
+        name
+        type
+        network
+        isActive
+        children {
+          id
+          name
+          type
+          network
+          isActive
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useBSCsQuery__
+ *
+ * To run a query within a React component, call `useBSCsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBSCsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBSCsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useBSCsQuery (
+  baseOptions?: Apollo.QueryHookOptions<BSCsQuery, BSCsQueryVariables>
+) {
+  return Apollo.useQuery<BSCsQuery, BSCsQueryVariables>(
+    BSCsDocument,
+    baseOptions
+  )
+}
+export function useBSCsLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<BSCsQuery, BSCsQueryVariables>
+) {
+  return Apollo.useLazyQuery<BSCsQuery, BSCsQueryVariables>(
+    BSCsDocument,
+    baseOptions
+  )
+}
+export type BSCsQueryHookResult = ReturnType<typeof useBSCsQuery>
+export type BSCsLazyQueryHookResult = ReturnType<typeof useBSCsLazyQuery>
+export type BSCsQueryResult = Apollo.QueryResult<BSCsQuery, BSCsQueryVariables>
+export function refetchBSCsQuery (variables?: BSCsQueryVariables) {
+  return { query: BSCsDocument, variables: variables }
+}
 export const WelcomeDocument = gql`
   query Welcome {
     welcome
@@ -1084,6 +1425,134 @@ export type WelcomeQueryResult = Apollo.QueryResult<
 >
 export function refetchWelcomeQuery (variables?: WelcomeQueryVariables) {
   return { query: WelcomeDocument, variables: variables }
+}
+export const RNCsDocument = gql`
+  query RNCs($filter: NetworkElementsFilter) {
+    rncs(filter: $filter) {
+      id
+      name
+      type
+      network
+      isActive
+      children {
+        id
+        name
+        type
+        network
+        isActive
+        children {
+          id
+          name
+          type
+          network
+          isActive
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useRNCsQuery__
+ *
+ * To run a query within a React component, call `useRNCsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRNCsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRNCsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useRNCsQuery (
+  baseOptions?: Apollo.QueryHookOptions<RNCsQuery, RNCsQueryVariables>
+) {
+  return Apollo.useQuery<RNCsQuery, RNCsQueryVariables>(
+    RNCsDocument,
+    baseOptions
+  )
+}
+export function useRNCsLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<RNCsQuery, RNCsQueryVariables>
+) {
+  return Apollo.useLazyQuery<RNCsQuery, RNCsQueryVariables>(
+    RNCsDocument,
+    baseOptions
+  )
+}
+export type RNCsQueryHookResult = ReturnType<typeof useRNCsQuery>
+export type RNCsLazyQueryHookResult = ReturnType<typeof useRNCsLazyQuery>
+export type RNCsQueryResult = Apollo.QueryResult<RNCsQuery, RNCsQueryVariables>
+export function refetchRNCsQuery (variables?: RNCsQueryVariables) {
+  return { query: RNCsDocument, variables: variables }
+}
+export const TACsDocument = gql`
+  query TACs($filter: NetworkElementsFilter) {
+    tacs(filter: $filter) {
+      id
+      name
+      type
+      network
+      isActive
+      children {
+        id
+        name
+        type
+        network
+        isActive
+        children {
+          id
+          name
+          type
+          network
+          isActive
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useTACsQuery__
+ *
+ * To run a query within a React component, call `useTACsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTACsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTACsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useTACsQuery (
+  baseOptions?: Apollo.QueryHookOptions<TACsQuery, TACsQueryVariables>
+) {
+  return Apollo.useQuery<TACsQuery, TACsQueryVariables>(
+    TACsDocument,
+    baseOptions
+  )
+}
+export function useTACsLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<TACsQuery, TACsQueryVariables>
+) {
+  return Apollo.useLazyQuery<TACsQuery, TACsQueryVariables>(
+    TACsDocument,
+    baseOptions
+  )
+}
+export type TACsQueryHookResult = ReturnType<typeof useTACsQuery>
+export type TACsLazyQueryHookResult = ReturnType<typeof useTACsLazyQuery>
+export type TACsQueryResult = Apollo.QueryResult<TACsQuery, TACsQueryVariables>
+export function refetchTACsQuery (variables?: TACsQueryVariables) {
+  return { query: TACsDocument, variables: variables }
 }
 export const DeleteUserDocument = gql`
   mutation DeleteUser($data: DeleteUserInput!) {

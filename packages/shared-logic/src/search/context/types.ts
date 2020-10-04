@@ -1,4 +1,4 @@
-import { UsersFilter } from '../../graphql'
+import { NetworkElementsFilter, UsersFilter } from '../../graphql'
 
 /**
  * Search context.
@@ -6,4 +6,6 @@ import { UsersFilter } from '../../graphql'
 export interface SearchContext {
   users: UsersFilter
   setUsers: (filter: UsersFilter) => void
+  network: NetworkElementsFilter
+  setNetwork: (filter: NetworkElementsFilter) => void
 }

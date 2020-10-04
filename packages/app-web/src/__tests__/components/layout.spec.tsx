@@ -1,10 +1,11 @@
 import { fireEvent, waitFor } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import React from 'react'
-import { currentUser, signoutUser } from 'test/mocks'
+import { bscs, currentUser, signoutUser } from 'test/mocks'
 import { render } from 'test/render'
-import { waitForResponse } from 'test/utils'
 import { Layout } from '~/components/layout'
+
+// FIXME Test fails: No more mocked responses for the query: query BSCs($filter: NetworkElementsFilter)
 
 delete window.location
 window.location = { ...window.location, reload: jest.fn() }
@@ -25,22 +26,24 @@ describe('components/layout', () => {
         mocks: [
           currentUser.isSignedIn,
           signoutUser.success,
+          bscs.success,
           currentUser.isNotSignedIn
         ]
       }
     )
 
-    await waitFor(() => {
-      expect(queryByTestId('signout')).toBeInTheDocument()
-    })
-
     expect(getByRole('banner')).toBeInTheDocument()
     expect(getByRole('main')).toBeInTheDocument()
     expect(getByRole('contentinfo')).toBeInTheDocument()
-    expect(getAllByRole('navigation')).toHaveLength(2)
+    expect(getAllByRole('navigation')).toHaveLength(1)
 
     const a11y = await axe(container)
     expect(a11y).toHaveNoViolations()
+
+    await waitFor(() => {
+      expect(queryByTestId('signout')).toBeInTheDocument()
+    })
+    expect(getAllByRole('navigation')).toHaveLength(2)
 
     const signout = getByTestId('signout')
     await waitFor(() => {
@@ -48,7 +51,6 @@ describe('components/layout', () => {
     })
 
     fireEvent.click(signout)
-    await waitForResponse()
     await waitFor(() => {
       expect(queryByTestId('signout')).not.toBeInTheDocument()
       expect(getAllByRole('navigation')).toHaveLength(1)

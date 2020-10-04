@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { UsersFilter } from '~/graphql'
-import { DEFAULT_USERS_FILTER } from './const'
+import { NetworkElementsFilter, UsersFilter } from '~/graphql'
+import { DEFAULT_NETWORK_FILTER, DEFAULT_USERS_FILTER } from './const'
 import { SearchContext } from './types'
 
 /**
@@ -8,9 +8,14 @@ import { SearchContext } from './types'
  */
 export const useSearch = (): SearchContext => {
   const [users, setUsers] = useState<UsersFilter>(DEFAULT_USERS_FILTER)
+  const [network, setNetwork] = useState<NetworkElementsFilter>(
+    DEFAULT_NETWORK_FILTER
+  )
 
   return {
     users,
-    setUsers
+    setUsers,
+    network,
+    setNetwork
   }
 }

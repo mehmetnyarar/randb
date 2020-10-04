@@ -35,10 +35,21 @@ function createApolloClient (language: string) {
   })
 
   const link = langLink.concat(httpLink)
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Site: {
+        fields: {
+          children: {
+            merge: false
+          }
+        }
+      }
+    }
+  })
 
   return new ApolloClient({
     link,
-    cache: new InMemoryCache(),
+    cache,
     ssrMode: !isBrowser()
   })
 }

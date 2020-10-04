@@ -148,6 +148,7 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
             flex-direction: row;
             justify-content: flex-start;
             align-items: flex-start;
+            overflow: hidden;
           }
 
           footer {
@@ -205,22 +206,21 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
 
       <style jsx global>
         {`
+          *,
+          *:before,
+          *:after {
+            box-sizing: border-box;
+          }
+
           html,
           body {
-            margin: 0;
-            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
               Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
               sans-serif;
           }
 
-          * {
-            box-sizing: border-box;
-          }
-
           body {
             display: flex;
-            min-height: 100vh;
             background: ${palette['background-basic-color-1']};
             color: ${palette['text-basic-color']};
           }
@@ -231,6 +231,15 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
             flex-direction: column;
           }
 
+          html,
+          body,
+          #__next {
+            flex: 1;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+          }
+
           h1,
           h2,
           h3,
@@ -238,6 +247,12 @@ export const Layout: React.FC<Props> = ({ title, roles, children }) => {
           h5,
           h6 {
             margin: 0;
+          }
+
+          ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
           }
 
           a {

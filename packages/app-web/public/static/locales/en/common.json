@@ -1,4 +1,7 @@
 {
+  "network.G2": "2G",
+  "network.G3": "3G",
+  "network.G4": "4G",
   "ENTITY_CREATE_ERROR": "An error occured while creating this item.",
   "ENTITY_DELETE_ERROR": "An error occured while deleting this item.",
   "ENTITY_UPDATE_ERROR": "An error occured while updating this item.",
