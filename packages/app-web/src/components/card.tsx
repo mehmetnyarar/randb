@@ -37,8 +37,8 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
             margin: 0 16px 16px 0;
             min-width: 300px;
             border-radius: 4px;
-            border: 1px solid ${palette['border-basic-color-4']};
-            background: ${palette['background-basic-color-2']};
+            border: 1px solid ${palette['border-basic-color-3']};
+            background: ${palette['background-basic-color-1']};
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -51,6 +51,7 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            background: ${palette['background-basic-color-2']};
           }
           .card-title h4 {
             margin: 0;
@@ -69,6 +70,7 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
             flex-direction: row;
             justify-content: flex-end;
             align-items: center;
+            background: ${palette['background-basic-color-2']};
           }
         `}
       </style>

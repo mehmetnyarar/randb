@@ -56,7 +56,7 @@ export class Cell extends NetworkElement {
   @Prop({ default: 0 })
   azimuth!: number
 
-  @Field(() => Antenna)
+  @Field(() => Antenna, { nullable: true })
   @Prop({ ref: 'Antenna' })
   antenna?: Ref<Antenna>
 

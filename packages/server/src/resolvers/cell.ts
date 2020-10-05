@@ -9,6 +9,7 @@ import {
 import { QueryBuilder } from '~/db'
 import { Logger } from '~/logger'
 import {
+  AntennaModel,
   BscModel,
   Cell,
   CellFilter,
@@ -17,6 +18,7 @@ import {
   DEFAULT_CELL,
   LacModel,
   RncModel,
+  SiteModel,
   TacModel,
   toGeoLocation
 } from '~/models'
@@ -43,28 +45,38 @@ export class CellResolver extends BaseResolver {
   // #region Field
 
   @FieldResolver()
-  async bsc (@Root() entity: Cell) {
-    return entity.bsc && (await BscModel.findById(entity.bsc))
+  async bsc (@Root() cell: Cell) {
+    return cell.bsc && (await BscModel.findById(cell.bsc))
   }
 
   @FieldResolver()
-  async rnc (@Root() entity: Cell) {
-    return entity.rnc && (await RncModel.findById(entity.rnc))
+  async rnc (@Root() cell: Cell) {
+    return cell.rnc && (await RncModel.findById(cell.rnc))
   }
 
   @FieldResolver()
-  async tac (@Root() entity: Cell) {
-    return entity.tac && (await TacModel.findById(entity.tac))
+  async tac (@Root() cell: Cell) {
+    return cell.tac && (await TacModel.findById(cell.tac))
   }
 
   @FieldResolver()
-  async lac (@Root() entity: Cell) {
-    return entity.lac && (await LacModel.findById(entity.lac))
+  async lac (@Root() cell: Cell) {
+    return cell.lac && (await LacModel.findById(cell.lac))
   }
 
   @FieldResolver()
-  location (@Root() entity: Cell) {
-    return toGeoLocation(entity.location)
+  async site (@Root() cell: Cell) {
+    return SiteModel.findById(cell.site)
+  }
+
+  @FieldResolver()
+  async antenna (@Root() cell: Cell) {
+    return cell.antenna && (await AntennaModel.findById(cell.antenna))
+  }
+
+  @FieldResolver()
+  location (@Root() cell: Cell) {
+    return toGeoLocation(cell.location)
   }
 
   // #endregion

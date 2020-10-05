@@ -1,6 +1,7 @@
 import { Theme } from '@app/ui'
 import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
+import { Divider } from './divider'
 
 interface Props {
   statusCode?: number
@@ -20,7 +21,7 @@ export const Error: React.FC<Props> = ({ statusCode }) => {
           {statusCode && (
             <>
               <span className='error-code'>{statusCode}</span>
-              <div className='divider' />
+              <Divider vertical margin={16} />
             </>
           )}
           <span className='error-message'>
@@ -49,12 +50,6 @@ export const Error: React.FC<Props> = ({ statusCode }) => {
           .error-code {
             font-size: 32px;
             color: ${palette['text-hint-color']};
-          }
-          .divider {
-            margin: 0 16px;
-            width: 0;
-            height: 48px;
-            border-right: 1px solid ${palette['text-hint-color']};
           }
           .error-message {
             color: ${palette['text-hint-color']};

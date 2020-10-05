@@ -1,5 +1,11 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
-import { AuthProvider, RequestOrigin, SnackProvider } from '@app/logic'
+import {
+  AuthProvider,
+  NetworkProvider,
+  RequestOrigin,
+  SearchProvider,
+  SnackProvider
+} from '@app/logic'
 import { ThemeProvider } from '@app/ui'
 import { render as rtlRender, RenderOptions } from '@testing-library/react'
 import React from 'react'
@@ -27,7 +33,11 @@ const render = (
     <ThemeProvider>
       <SnackProvider>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <AuthProvider origin={RequestOrigin.WEB}>{children}</AuthProvider>
+          <AuthProvider origin={RequestOrigin.WEB}>
+            <SearchProvider>
+              <NetworkProvider>{children}</NetworkProvider>
+            </SearchProvider>
+          </AuthProvider>
         </MockedProvider>
         <SnackBar />
       </SnackProvider>

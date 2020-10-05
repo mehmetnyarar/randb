@@ -23,12 +23,12 @@ export function createEntityResolver<T extends Entity> (
       this.repo = repo || new Repository<T>(Model, defaults)
     }
 
-    @FieldResolver(() => User)
+    @FieldResolver(() => User, { nullable: true })
     async createdBy (@Root() entity: Entity) {
       return entity.createdBy && UserModel.findById(entity.createdBy)
     }
 
-    @FieldResolver(() => User)
+    @FieldResolver(() => User, { nullable: true })
     async updatedBy (@Root() entity: Entity) {
       return entity.updatedBy && UserModel.findById(entity.updatedBy)
     }

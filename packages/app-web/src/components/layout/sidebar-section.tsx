@@ -5,18 +5,16 @@ import { Divider } from '../divider'
 interface Props {
   flex?: number
   title: string
-  hasDivider?: boolean
-  overflow?: boolean
+  divider?: boolean
 }
 
 /**
  * Sidebar section.
  */
-export const Section: React.FC<Props> = ({
+export const SidebarSection: React.FC<Props> = ({
   flex,
-  overflow,
   title,
-  hasDivider,
+  divider,
   children
 }) => {
   const { palette } = useContext(Theme)
@@ -26,7 +24,7 @@ export const Section: React.FC<Props> = ({
       <section className='sidebar-section'>
         <h3>{title}</h3>
         {children}
-        {hasDivider && <Divider />}
+        {divider && <Divider />}
       </section>
 
       <style jsx>
@@ -35,9 +33,8 @@ export const Section: React.FC<Props> = ({
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            align-items: flex-start;
+            align-items: stretch;
             flex: ${flex || 'unset'};
-            overflow-y: ${overflow ? 'hidden' : 'unset'};
           }
           .sidebar-section h3 {
             margin: 16px 0 8px;

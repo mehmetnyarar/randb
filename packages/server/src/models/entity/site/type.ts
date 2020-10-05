@@ -1,5 +1,5 @@
 import { Index, Prop, Ref } from '@typegoose/typegoose'
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import { GeoLocation, Geometry } from '~/models/embed'
 import { Bsc } from '../bsc'
 import { Cell } from '../cell'
@@ -40,15 +40,15 @@ export class Site extends NetworkElement {
   @Prop({ ref: 'Cell', default: [] })
   children!: Ref<Cell>[]
 
-  @Field(() => [ID])
+  @Field(() => [Cell])
   @Prop()
   g2!: Ref<Cell>[]
 
-  @Field(() => [ID])
+  @Field(() => [Cell])
   @Prop()
   g3!: Ref<Cell>[]
 
-  @Field(() => [ID])
+  @Field(() => [Cell])
   @Prop()
   g4!: Ref<Cell>[]
 }

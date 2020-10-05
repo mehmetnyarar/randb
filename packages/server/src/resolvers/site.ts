@@ -14,6 +14,7 @@ import {
   CellModel,
   DEFAULT_SITE,
   LacModel,
+  refsToObjIds,
   RncModel,
   Site,
   SiteFilter,
@@ -73,6 +74,24 @@ export class SiteResolver extends BaseResolver {
   @FieldResolver()
   location (@Root() entity: Site) {
     return toGeoLocation(entity.location)
+  }
+
+  @FieldResolver()
+  async g2 (@Root() entity: Site) {
+    if (!entity.g2 || !entity.g2.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(entity.g2) } })
+  }
+
+  @FieldResolver()
+  async g3 (@Root() entity: Site) {
+    if (!entity.g3 || !entity.g3.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(entity.g3) } })
+  }
+
+  @FieldResolver()
+  async g4 (@Root() entity: Site) {
+    if (!entity.g4 || !entity.g4.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(entity.g4) } })
   }
 
   // #endregion

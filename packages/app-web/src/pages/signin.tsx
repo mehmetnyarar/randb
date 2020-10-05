@@ -1,4 +1,10 @@
-import { Logger, SigninMethod, Snack, useSigninUserForm } from '@app/logic'
+import {
+  Auth,
+  Logger,
+  SigninMethod,
+  Snack,
+  useSigninUserForm
+} from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { Fragment, useContext, useEffect } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
@@ -26,6 +32,7 @@ const logger = Logger.create({
 export const SigninScreen: NextScreen = ({ t }) => {
   const { push } = useRouter()
 
+  const { user } = useContext(Auth)
   const {
     method,
     otherMethods,
@@ -43,10 +50,10 @@ export const SigninScreen: NextScreen = ({ t }) => {
   } = useSigninUserForm()
 
   useEffect(() => {
-    if (result) {
+    if (user || result) {
       push('/')
     }
-  }, [result, push])
+  }, [user, result, push])
 
   const { show } = useContext(Snack)
   useEffect(() => {

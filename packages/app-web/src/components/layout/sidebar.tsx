@@ -5,39 +5,25 @@ import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
 import { AppLink } from '~/types'
 import { TopologyView } from '../network'
-import { Section } from './section'
+import { SidebarSection as Section } from './sidebar-section'
 
-interface SidebarItem extends AppLink {
+interface SidebarLink extends AppLink {
   roles?: UserRole[]
 }
 
-interface SidebarSection {
+interface SidebarNavSection {
   label: string
   roles: UserRole[]
-  items: SidebarItem[]
+  links: SidebarLink[]
 }
 
-const sections: SidebarSection[] = [
-  // {
-  //   label: 'network',
-  //   roles: Object.values(UserRole),
-  //   items: [
-  //     {
-  //       path: '/sites',
-  //       title: 'screen.sites',
-  //       description: 'screen.sites.description'
-  //     },
-  //     {
-  //       path: '/cells',
-  //       title: 'screen.cells',
-  //       description: 'screen.sites.description'
-  //     }
-  //   ]
-  // },
+type SidebarNav = SidebarNavSection[]
+
+const nav: SidebarNav = [
   {
     label: 'manage.network',
     roles: [UserRole.SA, UserRole.ADMIN, UserRole.MANAGER],
-    items: [
+    links: [
       {
         path: '/import',
         title: 'screen.import',
@@ -48,7 +34,7 @@ const sections: SidebarSection[] = [
   {
     label: 'manage.users',
     roles: [UserRole.SA, UserRole.ADMIN],
-    items: [
+    links: [
       {
         path: '/users',
         title: 'screen.users',
@@ -78,14 +64,14 @@ export const Sidebar: React.FC<Props> = ({ roles }) => {
   return (
     <>
       <aside id='sidebar' className='sidebar'>
-        <Section title={t('network')} flex={1} overflow>
+        <Section title={t('network')}>
           <TopologyView />
         </Section>
         <nav role='navigation' aria-label='Sidebar Navigation'>
-          {sections.map((section, sectionIndex) => {
+          {nav.map((section, sectionIndex) => {
             return isUserAuthorized(section.roles, roles) ? (
               <Section key={sectionIndex} title={t(section.label)}>
-                {section.items.map((item, itemIndex) => {
+                {section.links.map((item, itemIndex) => {
                   return isUserAuthorized(item.roles, roles) ? (
                     <Link key={itemIndex} href={item.path} as={item.as}>
                       <a title={t(item.description)}>{t(item.title)}</a>
@@ -105,12 +91,11 @@ export const Sidebar: React.FC<Props> = ({ roles }) => {
             min-width: 200px;
             align-self: stretch;
             background: ${palette['background-basic-color-2']};
-            border-right: 1px solid ${palette['background-basic-color-4']};
+            border-right: 1px solid ${palette['border-basic-color-3']};
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
-            overflow: hidden;
           }
 
           .sidebar nav {

@@ -3,6 +3,7 @@ import {
   AuthProvider,
   isBrowser,
   Logger,
+  NetworkProvider,
   RequestOrigin,
   SearchProvider,
   SnackProvider
@@ -38,7 +39,9 @@ function App ({ Component, pageProps }: AppProps) {
         <ApolloProvider client={apolloClient}>
           <AuthProvider origin={RequestOrigin.WEB}>
             <SearchProvider>
-              <Component {...pageProps} />
+              <NetworkProvider>
+                <Component {...pageProps} />
+              </NetworkProvider>
             </SearchProvider>
           </AuthProvider>
         </ApolloProvider>

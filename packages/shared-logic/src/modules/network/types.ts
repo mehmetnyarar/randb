@@ -1,9 +1,4 @@
-import { Bsc, ElementType, NetworkType, Rnc, Tac } from '../../graphql'
-
-/**
- * Type of parent network element.
- */
-export type ParentNe = Bsc | Rnc | Tac
+import { ElementType, NetworkType } from '../../graphql'
 
 /**
  * Network element.

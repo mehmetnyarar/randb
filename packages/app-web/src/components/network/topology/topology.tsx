@@ -1,7 +1,7 @@
-import { Ne, NetworkType, useTopology } from '@app/logic'
-import React, { useState } from 'react'
+import { Network, NetworkType } from '@app/logic'
+import { Theme } from '@app/ui'
+import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
-import { InfoButton } from '../button'
 import { ElementView } from './element'
 
 interface Props {}
@@ -11,6 +11,7 @@ interface Props {}
  */
 export const TopologyView: React.FC<Props> = () => {
   const { t } = useTranslation()
+  const { palette } = useContext(Theme)
   const {
     network,
     loading,
@@ -18,13 +19,7 @@ export const TopologyView: React.FC<Props> = () => {
     onNetworkChange,
     query,
     onQueryChange
-  } = useTopology({
-    // FIXME Lazy queries don't return results after the first time
-    // Instead of "keepFresh" option, "reload" fn could be used
-    keepFresh: false
-  })
-
-  const [current, setCurrent] = useState<Ne>()
+  } = useContext(Network)
 
   return (
     <>
@@ -33,9 +28,8 @@ export const TopologyView: React.FC<Props> = () => {
           type='search'
           value={query}
           onChange={e => onQueryChange(e.target.value)}
-          aria-label={t('search')}
+          aria-label='Network Search'
         />
-        <InfoButton>{t('search')}</InfoButton>
       </div>
 
       <ul className='ne-network'>
@@ -65,12 +59,7 @@ export const TopologyView: React.FC<Props> = () => {
 
       <ul className='ne-list'>
         {result.map((ne, i) => (
-          <ElementView
-            key={i}
-            element={ne}
-            onSelect={setCurrent}
-            current={current}
-          />
+          <ElementView key={i} element={ne} />
         ))}
       </ul>
 
@@ -84,11 +73,9 @@ export const TopologyView: React.FC<Props> = () => {
           }
           .ne-search input {
             flex: 1;
-            margin-right: 8px;
           }
 
           .ne-network {
-            width: 100%;
             margin: 16px 0;
             display: flex;
             flex-direction: row;
@@ -104,8 +91,10 @@ export const TopologyView: React.FC<Props> = () => {
           }
 
           .ne-list {
-            width: 100%;
+            height: 400px;
             overflow-y: auto;
+            border-radius: 4px;
+            border: 1px solid ${palette['border-basic-color-3']};
           }
         `}
       </style>

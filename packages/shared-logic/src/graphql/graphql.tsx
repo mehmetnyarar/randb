@@ -40,7 +40,7 @@ export type Bsc = {
   __typename?: 'Bsc'
   children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
   ID: Scalars['String']
@@ -51,16 +51,16 @@ export type Bsc = {
   network?: Maybe<NetworkType>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export type Cell = {
   __typename?: 'Cell'
-  antenna: Antenna
+  antenna?: Maybe<Antenna>
   azimuth: Scalars['Int']
   bsc?: Maybe<Bsc>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
   electricalTilt: Scalars['Float']
   g2?: Maybe<Cell2G>
@@ -84,7 +84,7 @@ export type Cell = {
   tac?: Maybe<Tac>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export type Cell2G = {
@@ -363,7 +363,7 @@ export type Lac = {
   __typename?: 'Lac'
   children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
   ID: Scalars['String']
@@ -374,7 +374,7 @@ export type Lac = {
   network?: Maybe<NetworkType>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export enum Language {
@@ -631,7 +631,7 @@ export type Rnc = {
   __typename?: 'Rnc'
   children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
   ID: Scalars['String']
@@ -642,7 +642,7 @@ export type Rnc = {
   network?: Maybe<NetworkType>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export enum Scenario {
@@ -677,11 +677,11 @@ export type Site = {
   bsc?: Maybe<Bsc>
   children: Array<Cell>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
-  g2: Array<Scalars['ID']>
-  g3: Array<Scalars['ID']>
-  g4: Array<Scalars['ID']>
+  g2: Array<Cell>
+  g3: Array<Cell>
+  g4: Array<Cell>
   id: Scalars['ID']
   ID: Scalars['String']
   isActive: Scalars['Boolean']
@@ -695,7 +695,7 @@ export type Site = {
   tac?: Maybe<Tac>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export type SiteConnection = {
@@ -745,7 +745,7 @@ export type Tac = {
   __typename?: 'Tac'
   children: Array<Site>
   createdAt?: Maybe<Scalars['DateTime']>
-  createdBy: User
+  createdBy?: Maybe<User>
   deactivatedAt?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
   ID: Scalars['String']
@@ -756,7 +756,7 @@ export type Tac = {
   network?: Maybe<NetworkType>
   type: ElementType
   updatedAt?: Maybe<Scalars['DateTime']>
-  updatedBy: User
+  updatedBy?: Maybe<User>
 }
 
 export type UpsertUserInput = {
@@ -932,6 +932,90 @@ export type BSCsQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type CellQueryVariables = Exact<{
+  filter: CellFilter
+}>
+
+export type CellQuery = { __typename?: 'Query' } & {
+  cell?: Maybe<
+    { __typename?: 'Cell' } & Pick<
+      Cell,
+      | 'id'
+      | 'ID'
+      | 'name'
+      | 'type'
+      | 'network'
+      | 'scenario'
+      | 'sector'
+      | 'height'
+      | 'azimuth'
+      | 'electricalTilt'
+      | 'mechanicalTilt'
+      | 'isActive'
+      | 'deactivatedAt'
+      | 'createdAt'
+      | 'updatedAt'
+    > & {
+        location: { __typename?: 'GeoLocation' } & Pick<GeoLocation, 'x' | 'y'>
+        bsc?: Maybe<{ __typename?: 'Bsc' } & Pick<Bsc, 'id' | 'name'>>
+        rnc?: Maybe<{ __typename?: 'Rnc' } & Pick<Rnc, 'id' | 'name'>>
+        tac?: Maybe<{ __typename?: 'Tac' } & Pick<Tac, 'id' | 'name'>>
+        lac?: Maybe<{ __typename?: 'Lac' } & Pick<Lac, 'id' | 'name'>>
+        site: { __typename?: 'Site' } & Pick<Site, 'id' | 'name'>
+        antenna?: Maybe<
+          { __typename?: 'Antenna' } & Pick<Antenna, 'id' | 'name'>
+        >
+        g2?: Maybe<
+          { __typename?: 'Cell2G' } & Pick<
+            Cell2G,
+            | 'mcc'
+            | 'mnc'
+            | 'ncc'
+            | 'bcc'
+            | 'band'
+            | 'bcch'
+            | 'trxNumber'
+            | 'trxPower'
+          >
+        >
+        g3?: Maybe<
+          { __typename?: 'Cell3G' } & Pick<
+            Cell3G,
+            'psc' | 'band' | 'arfcn' | 'totalPower' | 'pilotPower'
+          >
+        >
+        g4?: Maybe<
+          { __typename?: 'Cell4G' } & Pick<
+            Cell4G,
+            | 'pci'
+            | 'band'
+            | 'dlEarfcn'
+            | 'dlBandwith'
+            | 'channelIndex'
+            | 'maxPower'
+            | 'rsPower'
+          >
+        >
+        createdBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
+              >
+            }
+        >
+        updatedBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
+              >
+            }
+        >
+      }
+  >
+}
+
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
@@ -956,6 +1040,58 @@ export type RNCsQuery = { __typename?: 'Query' } & {
                   Cell,
                   'id' | 'name' | 'type' | 'network' | 'isActive'
                 >
+              >
+            }
+        >
+      }
+  >
+}
+
+export type SiteQueryVariables = Exact<{
+  filter: SiteFilter
+}>
+
+export type SiteQuery = { __typename?: 'Query' } & {
+  site?: Maybe<
+    { __typename?: 'Site' } & Pick<
+      Site,
+      | 'id'
+      | 'ID'
+      | 'name'
+      | 'type'
+      | 'network'
+      | 'isActive'
+      | 'deactivatedAt'
+      | 'createdAt'
+      | 'updatedAt'
+    > & {
+        location: { __typename?: 'GeoLocation' } & Pick<GeoLocation, 'x' | 'y'>
+        bsc?: Maybe<{ __typename?: 'Bsc' } & Pick<Bsc, 'id' | 'name'>>
+        rnc?: Maybe<{ __typename?: 'Rnc' } & Pick<Rnc, 'id' | 'name'>>
+        tac?: Maybe<{ __typename?: 'Tac' } & Pick<Tac, 'id' | 'name'>>
+        lac?: Maybe<{ __typename?: 'Lac' } & Pick<Lac, 'id' | 'name'>>
+        g2: Array<
+          { __typename?: 'Cell' } & Pick<Cell, 'id' | 'name' | 'isActive'>
+        >
+        g3: Array<
+          { __typename?: 'Cell' } & Pick<Cell, 'id' | 'name' | 'isActive'>
+        >
+        g4: Array<
+          { __typename?: 'Cell' } & Pick<Cell, 'id' | 'name' | 'isActive'>
+        >
+        createdBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
+              >
+            }
+        >
+        updatedBy?: Maybe<
+          { __typename?: 'User' } & Pick<User, 'id'> & {
+              name: { __typename?: 'PersonName' } & Pick<
+                PersonName,
+                'first' | 'last'
               >
             }
         >
@@ -1380,6 +1516,134 @@ export type BSCsQueryResult = Apollo.QueryResult<BSCsQuery, BSCsQueryVariables>
 export function refetchBSCsQuery (variables?: BSCsQueryVariables) {
   return { query: BSCsDocument, variables: variables }
 }
+export const CellDocument = gql`
+  query Cell($filter: CellFilter!) {
+    cell(filter: $filter) {
+      id
+      ID
+      name
+      type
+      network
+      location {
+        x
+        y
+      }
+      bsc {
+        id
+        name
+      }
+      rnc {
+        id
+        name
+      }
+      tac {
+        id
+        name
+      }
+      lac {
+        id
+        name
+      }
+      site {
+        id
+        name
+      }
+      scenario
+      sector
+      height
+      azimuth
+      antenna {
+        id
+        name
+      }
+      electricalTilt
+      mechanicalTilt
+      g2 {
+        mcc
+        mnc
+        ncc
+        bcc
+        band
+        bcch
+        trxNumber
+        trxPower
+      }
+      g3 {
+        psc
+        band
+        arfcn
+        totalPower
+        pilotPower
+      }
+      g4 {
+        pci
+        band
+        dlEarfcn
+        dlBandwith
+        channelIndex
+        maxPower
+        rsPower
+      }
+      isActive
+      deactivatedAt
+      createdAt
+      createdBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      updatedAt
+      updatedBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useCellQuery__
+ *
+ * To run a query within a React component, call `useCellQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCellQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCellQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useCellQuery (
+  baseOptions?: Apollo.QueryHookOptions<CellQuery, CellQueryVariables>
+) {
+  return Apollo.useQuery<CellQuery, CellQueryVariables>(
+    CellDocument,
+    baseOptions
+  )
+}
+export function useCellLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<CellQuery, CellQueryVariables>
+) {
+  return Apollo.useLazyQuery<CellQuery, CellQueryVariables>(
+    CellDocument,
+    baseOptions
+  )
+}
+export type CellQueryHookResult = ReturnType<typeof useCellQuery>
+export type CellLazyQueryHookResult = ReturnType<typeof useCellLazyQuery>
+export type CellQueryResult = Apollo.QueryResult<CellQuery, CellQueryVariables>
+export function refetchCellQuery (variables?: CellQueryVariables) {
+  return { query: CellDocument, variables: variables }
+}
 export const WelcomeDocument = gql`
   query Welcome {
     welcome
@@ -1489,6 +1753,109 @@ export type RNCsLazyQueryHookResult = ReturnType<typeof useRNCsLazyQuery>
 export type RNCsQueryResult = Apollo.QueryResult<RNCsQuery, RNCsQueryVariables>
 export function refetchRNCsQuery (variables?: RNCsQueryVariables) {
   return { query: RNCsDocument, variables: variables }
+}
+export const SiteDocument = gql`
+  query Site($filter: SiteFilter!) {
+    site(filter: $filter) {
+      id
+      ID
+      name
+      type
+      network
+      location {
+        x
+        y
+      }
+      bsc {
+        id
+        name
+      }
+      rnc {
+        id
+        name
+      }
+      tac {
+        id
+        name
+      }
+      lac {
+        id
+        name
+      }
+      g2 {
+        id
+        name
+        isActive
+      }
+      g3 {
+        id
+        name
+        isActive
+      }
+      g4 {
+        id
+        name
+        isActive
+      }
+      isActive
+      deactivatedAt
+      createdAt
+      createdBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+      updatedAt
+      updatedBy {
+        id
+        name {
+          first
+          last
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useSiteQuery__
+ *
+ * To run a query within a React component, call `useSiteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSiteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSiteQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useSiteQuery (
+  baseOptions?: Apollo.QueryHookOptions<SiteQuery, SiteQueryVariables>
+) {
+  return Apollo.useQuery<SiteQuery, SiteQueryVariables>(
+    SiteDocument,
+    baseOptions
+  )
+}
+export function useSiteLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<SiteQuery, SiteQueryVariables>
+) {
+  return Apollo.useLazyQuery<SiteQuery, SiteQueryVariables>(
+    SiteDocument,
+    baseOptions
+  )
+}
+export type SiteQueryHookResult = ReturnType<typeof useSiteQuery>
+export type SiteLazyQueryHookResult = ReturnType<typeof useSiteLazyQuery>
+export type SiteQueryResult = Apollo.QueryResult<SiteQuery, SiteQueryVariables>
+export function refetchSiteQuery (variables?: SiteQueryVariables) {
+  return { query: SiteDocument, variables: variables }
 }
 export const TACsDocument = gql`
   query TACs($filter: NetworkElementsFilter) {

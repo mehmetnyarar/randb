@@ -1,10 +1,10 @@
-import { User, UserRole } from '@app/logic'
+import { stringify, User, UserRole } from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from '~/i18n'
 import { DangerButton, InfoButton } from '../button'
 import { Card } from '../card'
-import { Info } from '../info'
+import { InfoTable } from '../info'
 
 interface Props {
   user: User
@@ -20,16 +20,7 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
   const { t } = useTranslation()
   const router = useRouter()
 
-  const {
-    id,
-    username,
-    name,
-    email,
-    phone: { cc, dc, sn }
-  } = user
-  const title = `${name.first} ${name.last}`
-  const phone = `+${cc}${dc}${sn}`
-  const roles = user.roles.map(role => t(`user.role.${role}`))
+  const { id, username, name, email, phone } = user
 
   const [loading, setLoading] = useState(false)
   const canDelete = !isDisabled && !user.roles.includes(UserRole.SA) && !loading
@@ -37,13 +28,20 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
 
   return (
     <Card
-      title={title}
+      title={stringify.personName(name)}
       content={
-        <>
-          <Info label={t('email')} value={email} />
-          <Info label={t('phone')} value={phone} />
-          <Info label={t('user.roles')} values={roles} />
-        </>
+        <InfoTable
+          records={[
+            { label: t('email'), value: email },
+            { label: t('phone'), value: stringify.phoneNo(phone) },
+            {
+              label: t('user.roles'),
+              value: user.roles.map(role => ({
+                value: t(`user.role.${role}`) as string
+              }))
+            }
+          ]}
+        />
       }
       actions={
         <>
