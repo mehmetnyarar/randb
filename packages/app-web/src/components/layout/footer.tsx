@@ -55,6 +55,10 @@ export const Footer: React.FC<Props> = () => {
             border-top: 1px solid ${palette['border-basic-color-3']};
             background: ${palette['background-basic-color-2']};
             font-size: smaller;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
           }
 
           .app-footer section {

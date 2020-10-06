@@ -11,7 +11,7 @@ import {
 } from '../../../graphql'
 import { Logger } from '../../../logger'
 import { Ne } from '../types'
-import { getNe } from '../utility'
+import { getNe, getNeList } from '../utility'
 import { NetworkContext } from './types'
 
 const logger = Logger.create({
@@ -27,15 +27,45 @@ export const useNetwork = (): NetworkContext => {
   const [loading, setLoading] = useState(false)
 
   const [query, setQuery] = useState('')
+  const [current, setCurrent] = useState<Ne>()
+  const [selected, setSelected] = useState<Ne[]>([])
+
   const onQueryChange = useCallback(
     (value = '') => {
       setQuery(value)
 
       if (result.length) {
-        setResult(result.map(item => getNe(item as Ne, value)))
+        setResult(
+          result.map(item =>
+            getNe(item as Ne, {
+              query: value,
+              current,
+              selected
+            })
+          )
+        )
       }
     },
-    [result]
+    [result, current, selected]
+  )
+
+  const onSelectItem = useCallback(
+    (value: Ne, checked?: Boolean) => {
+      const _current = checked ? value : undefined
+      const _selected = _current
+        ? [_current, ...selected]
+        : selected.filter(e => e.id !== value.id)
+      const _result = getNeList(result, {
+        query,
+        current: _current,
+        selected: _selected
+      })
+
+      setResult(_result)
+      setCurrent(_current)
+      setSelected(_selected)
+    },
+    [result, query, selected]
   )
 
   const [bscs, setBscs] = useState<Bsc[]>([])
@@ -51,7 +81,7 @@ export const useNetwork = (): NetworkContext => {
       if (data && data.bscs) {
         const items = data.bscs as Bsc[]
         setBscs(items)
-        setResult(items.map(item => getNe(item as Ne)))
+        setResult(getNeList(items, { current, selected }))
       } else setError(getCustomError('nodata'))
       setLoading(false)
     }
@@ -70,7 +100,7 @@ export const useNetwork = (): NetworkContext => {
       if (data && data.rncs) {
         const items = data.rncs as Rnc[]
         setRncs(items)
-        setResult(items.map(item => getNe(item as Ne)))
+        setResult(getNeList(items, { current, selected }))
       } else setError(getCustomError('nodata'))
       setLoading(false)
     }
@@ -89,7 +119,7 @@ export const useNetwork = (): NetworkContext => {
       if (data && data.tacs) {
         const items = data.tacs as Tac[]
         setTacs(items)
-        setResult(items.map(item => getNe(item as Ne)))
+        setResult(getNeList(items, { current, selected }))
       } else setError(getCustomError('nodata'))
       setLoading(false)
     }
@@ -127,23 +157,21 @@ export const useNetwork = (): NetworkContext => {
       logger.debug('onNetworkChange', { value, bscs, rncs, tacs })
 
       if (value === NetworkType.G2) {
-        if (bscs.length) setResult(bscs.map(item => getNe(item as Ne)))
-        else reload(NetworkType.G2)
+        if (bscs.length) {
+          setResult(getNeList(bscs, { current, selected }))
+        } else reload(NetworkType.G2)
       } else if (value === NetworkType.G3) {
-        if (rncs.length) setResult(rncs.map(item => getNe(item as Ne)))
-        else reload(NetworkType.G3)
+        if (rncs.length) {
+          setResult(getNeList(rncs, { current, selected }))
+        } else reload(NetworkType.G3)
       } else if (value === NetworkType.G4) {
-        if (tacs.length) setResult(tacs.map(item => getNe(item as Ne)))
-        else reload(NetworkType.G4)
+        if (tacs.length) {
+          setResult(getNeList(tacs, { current, selected }))
+        } else reload(NetworkType.G4)
       }
     },
-    [bscs, rncs, tacs, reload]
+    [reload, bscs, rncs, tacs, current, selected]
   )
-
-  const [selectedItem, setSelectedItem] = useState<Ne>()
-  const onSelectItem = useCallback((value: Ne) => {
-    setSelectedItem(value)
-  }, [])
 
   useEffect(reload, [reload])
 
@@ -153,10 +181,12 @@ export const useNetwork = (): NetworkContext => {
     loading,
     network,
     onNetworkChange,
+    reload,
     query,
     onQueryChange,
-    reload,
-    selectedItem,
+    current,
+    setCurrent,
+    selected,
     onSelectItem
   }
 }

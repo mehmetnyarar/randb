@@ -1,5 +1,6 @@
 import { Theme } from '@app/ui'
-import React, { useContext } from 'react'
+import { useRouter } from 'next/router'
+import React, { useContext, useEffect } from 'react'
 import { useTranslation } from '~/i18n'
 import { Divider } from './divider'
 
@@ -13,6 +14,13 @@ interface Props {
 export const Error: React.FC<Props> = ({ statusCode }) => {
   const { t } = useTranslation()
   const { palette } = useContext(Theme)
+  const { replace, asPath } = useRouter()
+
+  useEffect(() => {
+    if (statusCode === 401) {
+      replace(`/signin?returnUrl=${asPath}`)
+    }
+  }, [statusCode, replace, asPath])
 
   return (
     <>

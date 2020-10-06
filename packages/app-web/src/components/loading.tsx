@@ -29,7 +29,7 @@ export const Loading: React.FC<Props> = ({ icon, spin, text }) => {
           }
 
           .loading span {
-            margin-left: 16px;
+            margin-left: 8px;
           }
         `}
       </style>

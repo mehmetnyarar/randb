@@ -86,6 +86,7 @@ export const useAuth = (options: AuthOptions = {}): AuthContext => {
 
           // update user
           setUser(omit(currentUser, ['accessToken', 'refreshToken']))
+          setSigninError(undefined)
         }
 
         setLoading(false)

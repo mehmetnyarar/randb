@@ -1,5 +1,6 @@
+import { SelectState } from '../../form'
 import { ElementType } from '../../graphql'
-import { Ne } from './types'
+import { Ne, NeOptions } from './types'
 
 /**
  * Determines the level of the network element.
@@ -33,27 +34,119 @@ export const isNeVisible = (name: string, query?: string) => {
 }
 
 /**
+ * Determines the selection state of an NE
+ * based on whether it is in the selected list or not.
+ * @param id ID.
+ * @param selected Selection.
+ * @returns Selection state.
+ */
+const getSelfState = (id: string, selected: Ne[]) => {
+  const ne = selected.find(e => id === e.id)
+  return ne ? SelectState.SELECTED : SelectState.UNSELECTED
+}
+
+/**
+ * Determines the selection state of an NE
+ * based on the states of its children.
+ * @param children Children.
+ * @returns Selection state.
+ */
+const getStateFromChildren = (children: Ne[]) => {
+  const selected = children.filter(e => e.state !== SelectState.UNSELECTED)
+
+  if (selected.length === children.length) return SelectState.SELECTED
+  return selected.length > 0
+    ? SelectState.INDETERMINATE
+    : SelectState.UNSELECTED
+}
+
+/**
+ * Determines the state of an NE
+ * based on its self state and the state from its children.
+ * @param self Self state.
+ * @param children State from children.
+ * @returns Selection state.
+ */
+const getNeState = (self: SelectState, children: SelectState) => {
+  if (self === SelectState.SELECTED) {
+    return children === SelectState.SELECTED
+      ? SelectState.SELECTED
+      : SelectState.INDETERMINATE
+  }
+
+  return children
+}
+
+/**
  * Creates NE from a parent network element.
  * @param element Network element.
+ * @param [options] Options.
  * @returns NE.
  */
-export const getNe = (element: Ne, query?: string): Ne => {
-  const level = getNeLevel(element.type)
-  const children =
-    element.children && element.children.map(e => getNe(e, query))
-  const visibleChildren = children && children.filter(e => e.isVisible === true)
-  const areChildrenVisible = Boolean(visibleChildren?.length)
-  const isSelfVisible = isNeVisible(element.name, query)
-  const isVisible = isSelfVisible || areChildrenVisible
+export const getNe = (element: Ne, options: NeOptions = {}) => {
+  const { query, current, selected = [] } = options
+  const { id, name, type } = element
 
-  return {
+  const level = getNeLevel(type)
+  const isCurrent = id === current?.id
+  const selfState = getSelfState(id, selected)
+  const selfVisible = isNeVisible(name, query)
+
+  let state = selfState
+  const children = element.children
+    ? element.children.map(e => getNe(e, options))
+    : undefined
+
+  let visibleChildren = 0
+  let areChildrenVisible = false
+
+  if (children) {
+    const stateFormChildren = getStateFromChildren(children)
+    state = getNeState(selfState, stateFormChildren)
+    visibleChildren = children.filter(e => e.isVisible === true).length
+    areChildrenVisible =
+      visibleChildren > 0 && selfState !== SelectState.UNSELECTED
+  }
+
+  const isVisible = selfVisible || visibleChildren > 0
+  const title = visibleChildren ? `${name} (${visibleChildren})` : name
+  const ne: Ne = {
     level,
+    title,
     id: element.id,
     name: element.name,
     type: element.type,
     network: element.network,
     isActive: element.isActive,
     children,
-    isVisible
+    state,
+    isCurrent,
+    isVisible,
+    areChildrenVisible
   }
+
+  // console.log('ne', {
+  //   level,
+  //   isCurrent,
+  //   selfState,
+  //   selfVisible,
+  //   state,
+  //   visibleChildren,
+  //   areChildrenVisible,
+  //   isVisible,
+  //   title,
+  //   ne
+  // })
+
+  return ne
+}
+
+/**
+ * Creates a NE list.
+ * @params elements Network elements.
+ * @params [options] Options.
+ * @returns NE list.
+ */
+export const getNeList = (elements: Ne[], options: NeOptions = {}) => {
+  return elements.map(element => getNe(element as Ne, options))
 }

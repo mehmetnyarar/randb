@@ -27,6 +27,8 @@ export const Content: React.FC<Props> = ({ roles, children }) => {
               flex-direction: row;
               justify-content: flex-start;
               align-items: flex-start;
+              padding-top: 65px;
+              padding-bottom: 98px;
             }
           `}
         </style>

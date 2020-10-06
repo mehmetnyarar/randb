@@ -53,6 +53,10 @@ export const Header: React.FC<Props> = () => {
             padding: 16px;
             border-bottom: 1px solid ${palette['border-basic-color-3']};
             background: ${palette['background-basic-color-2']};
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
           }
           .app-header h2 {
             font-variant: petite-caps;

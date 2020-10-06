@@ -6,7 +6,7 @@ import {
   useSigninUserForm
 } from '@app/logic'
 import { useRouter } from 'next/router'
-import React, { Fragment, useContext, useEffect } from 'react'
+import React, { Fragment, useContext, useEffect, useMemo } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { initializeApollo } from '~/apollo'
 import { BasicButton, GhostButton, SubmitButton } from '~/components/button'
@@ -30,7 +30,8 @@ const logger = Logger.create({
  * Screen for user signin.
  */
 export const SigninScreen: NextScreen = ({ t }) => {
-  const { push } = useRouter()
+  const { replace, query } = useRouter()
+  const returnUrl = useMemo(() => (query.returnUrl as string) || '/', [query])
 
   const { user } = useContext(Auth)
   const {
@@ -51,9 +52,9 @@ export const SigninScreen: NextScreen = ({ t }) => {
 
   useEffect(() => {
     if (user || result) {
-      push('/')
+      replace(returnUrl)
     }
-  }, [user, result, push])
+  }, [user, result, replace, returnUrl])
 
   const { show } = useContext(Snack)
   useEffect(() => {

@@ -1,13 +1,7 @@
 import { ElementType, Ne, Network } from '@app/logic'
 import { Theme } from '@app/ui'
 import Link from 'next/link'
-import React, {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useMemo,
-  useState
-} from 'react'
+import React, { ChangeEvent, useCallback, useContext, useMemo } from 'react'
 import {
   RiBaseStationLine,
   RiInformationFill,
@@ -15,7 +9,7 @@ import {
   RiStackLine
 } from 'react-icons/ri'
 import { AnchorLink } from '~/components/button'
-import { CheckBox, CheckBoxState } from '~/components/input'
+import { Check } from '~/components/input'
 
 interface Props {
   element: Ne
@@ -25,17 +19,24 @@ interface Props {
  * Network element.
  */
 export const ElementView: React.FC<Props> = ({ element }) => {
-  const { level, id, name, type, children, isVisible } = element
+  const {
+    level,
+    title,
+    name,
+    type,
+    children,
+    state,
+    isCurrent,
+    isVisible,
+    areChildrenVisible
+  } = element
 
   const { palette } = useContext(Theme)
-  const { selectedItem, onSelectItem } = useContext(Network)
+  const { onSelectItem } = useContext(Network)
 
-  const [state, setState] = useState(CheckBoxState.UNCHECKED)
   const onChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked
-      if (checked) onSelectItem(element)
-      setState(checked ? CheckBoxState.CHECKED : CheckBoxState.UNCHECKED)
+      onSelectItem(element, event.target.checked)
     },
     [element, onSelectItem]
   )
@@ -51,17 +52,6 @@ export const ElementView: React.FC<Props> = ({ element }) => {
     }
   }, [level])
 
-  const label = useMemo(() => {
-    return children && children.length ? `${name} (${children.length})` : name
-  }, [name, children])
-
-  const selectedId = selectedItem?.id
-  const isSelected = useMemo(() => id === selectedId, [id, selectedId])
-
-  const showChildren = useMemo(() => {
-    return children && children.length > 0 && state !== CheckBoxState.UNCHECKED
-  }, [state, children])
-
   const route = useMemo(() => {
     switch (type) {
       case ElementType.CELL:
@@ -76,15 +66,15 @@ export const ElementView: React.FC<Props> = ({ element }) => {
   return (
     <>
       <li className={isVisible ? 'ne-item' : 'ne-item hidden'}>
-        <div className={isSelected ? 'ne selected' : 'ne'}>
-          <CheckBox
+        <div className={isCurrent ? 'ne selected' : 'ne'}>
+          <Check
             icon={<Icon />}
-            label={label}
+            label={title}
             labelFor={name}
             value={state}
             onChange={onChange}
             padding={level * 8}
-            isInputHidden
+            hidden={false}
           />
           {level > 0 && (
             <div className='ne-tools'>
@@ -105,7 +95,7 @@ export const ElementView: React.FC<Props> = ({ element }) => {
           )}
         </div>
 
-        {showChildren ? (
+        {areChildrenVisible ? (
           <ul className='ne-list'>
             {children.map((e, i) => (
               <ElementView key={i} element={e} />
