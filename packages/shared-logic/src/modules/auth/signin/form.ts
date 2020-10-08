@@ -83,7 +83,7 @@ export const useSigninUserForm = (
   const onValid = useCallback<SubmitHandler<SigninUserInput>>(
     async values => {
       try {
-        const input = merge(DEFAULT_SIGNIN_VALUES, values)
+        const input = merge({}, DEFAULT_SIGNIN_VALUES, values)
         const user = await signin(input)
 
         setResult(user)

@@ -1,8 +1,23 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  createHttpLink,
+  from,
+  InMemoryCache,
+  split
+} from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { ApolloClientLocalState, isBrowser, Logger } from '@app/logic'
+import { onError } from '@apollo/client/link/error'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import {
+  ApolloClientLocalState,
+  isBrowser,
+  isSubscription,
+  isUpload,
+  Logger
+} from '@app/logic'
+import { createUploadLink } from 'apollo-upload-client'
 import { useMemo } from 'react'
-import { GRAPHQL_API_URL } from '~/config'
+import { GRAPHQL_API_URL, GRAPHQL_SUBSCRIPTIONS_URL } from '~/config'
 
 const logger = Logger.create({
   src: 'apollo'
@@ -16,13 +31,44 @@ let apolloClient: ApolloClient<ApolloClientLocalState>
  * @returns ApolloClient.
  */
 function createApolloClient (language: string) {
-  logger.debug('create', { language })
+  const browser = isBrowser()
+  logger.debug('create', { language, browser })
 
   // Cookie authentication
   const httpLink = createHttpLink({
     uri: GRAPHQL_API_URL, // Server URL (must be absolute),
     credentials: 'include' // Additional fetch() options like `credentials` or `headers`
   })
+
+  let terminatingLink = httpLink
+  if (browser) {
+    // Subscriptions
+    const wsLink = new WebSocketLink({
+      uri: GRAPHQL_SUBSCRIPTIONS_URL,
+      options: {
+        lazy: true,
+        reconnect: true,
+        connectionParams: () => {
+          return {
+            language,
+            'accept-language': language
+          }
+        }
+      }
+    })
+
+    // Uploads
+    const uploadLink = createUploadLink({
+      uri: GRAPHQL_API_URL
+    }) as any
+
+    // Terminating link
+    terminatingLink = split(
+      isSubscription,
+      wsLink,
+      split(isUpload, uploadLink, httpLink)
+    )
+  }
 
   // Language
   const langLink = setContext(async (_, { headers }) => {
@@ -34,7 +80,35 @@ function createApolloClient (language: string) {
     }
   })
 
-  const link = langLink.concat(httpLink)
+  // Error
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      const headers = operation.getContext().headers
+      logger.debug('errorLink', { graphQLErrors, networkError, headers })
+
+      if (graphQLErrors) {
+        for (const err of graphQLErrors) {
+          switch (err.extensions.code) {
+            case 'UNAUTHENTICATED':
+              operation.setContext({
+                headers: {
+                  ...headers,
+                  'accept-language': language
+                }
+              })
+              return forward(operation)
+          }
+        }
+      }
+    }
+  )
+
+  // Retry
+  // https://www.apollographql.com/docs/react/api/link/apollo-link-retry/
+  // import { RetryLink } from "@apollo/client/link/retry"
+  // const retryLink = new RetryLink()
+
+  const link = from([langLink, errorLink, terminatingLink])
   const cache = new InMemoryCache({
     typePolicies: {
       Site: {
@@ -50,7 +124,8 @@ function createApolloClient (language: string) {
   return new ApolloClient({
     link,
     cache,
-    ssrMode: !isBrowser()
+    ssrMode: !browser,
+    connectToDevTools: browser
   })
 }
 

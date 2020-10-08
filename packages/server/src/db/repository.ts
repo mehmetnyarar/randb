@@ -1,5 +1,5 @@
 import { DocumentType, ModelType } from '@typegoose/typegoose/lib/types'
-import equal from 'fast-deep-equal/es6'
+import equals from 'fast-deep-equal/es6'
 import { toUpper } from 'lodash'
 import { CreateQuery, FilterQuery } from 'mongoose'
 import { Logger } from '~/logger'
@@ -195,6 +195,7 @@ export class Repository<T extends Entity> {
       }
     }
 
+    entity.event = EventType.ENTITY_CREATE
     return entity
   }
 
@@ -224,7 +225,7 @@ export class Repository<T extends Entity> {
       const oldValue = entity[key]
 
       // REVIEW This equality check
-      return equal(newValue, oldValue)
+      return equals(newValue, oldValue)
         ? changes
         : {
           ...changes,
@@ -232,11 +233,9 @@ export class Repository<T extends Entity> {
         }
     }, {} as Partial<T>)
 
-    // For debugging
-    // if (!Object.keys(values).length) {
-    //   this.logger.info('no changes detected')
-    //   return entity
-    // }
+    if (!Object.keys(values).length) {
+      return entity
+    }
 
     try {
       entity.set({
@@ -261,6 +260,8 @@ export class Repository<T extends Entity> {
       })
 
       await entity.save()
+
+      entity.event = EventType.ENTITY_UPDATE
       return entity
     } catch (error) {
       this.logger.error('update', { error })

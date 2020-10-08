@@ -1,6 +1,8 @@
 import { Network, NetworkType } from '@app/logic'
 import { Theme } from '@app/ui'
 import React, { useContext } from 'react'
+import { GhostButton } from '~/components/button'
+import { Loading } from '~/components/loading'
 import { useTranslation } from '~/i18n'
 import { ElementView } from './element'
 
@@ -18,7 +20,8 @@ export const TopologyView: React.FC<Props> = () => {
     result,
     onNetworkChange,
     query,
-    onQueryChange
+    onQueryChange,
+    reload
   } = useContext(Network)
 
   return (
@@ -54,7 +57,9 @@ export const TopologyView: React.FC<Props> = () => {
             </li>
           )
         })}
-        {loading && <span>...</span>}
+        <GhostButton onClick={() => reload(network)} disabled={loading}>
+          <Loading icon spin={loading} />
+        </GhostButton>
       </ul>
 
       <ul className='ne-list'>

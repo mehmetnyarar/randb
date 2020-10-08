@@ -1,5 +1,6 @@
 export * from './analytics'
 export * from './date'
+export * from './file'
 export * from './geo'
 export * from './number'
 export * from './options'

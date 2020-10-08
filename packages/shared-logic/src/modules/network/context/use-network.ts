@@ -10,8 +10,8 @@ import {
   useTACsLazyQuery
 } from '../../../graphql'
 import { Logger } from '../../../logger'
+import { getNe, getNeList } from '../topology'
 import { Ne } from '../types'
-import { getNe, getNeList } from '../utility'
 import { NetworkContext } from './types'
 
 const logger = Logger.create({
@@ -70,7 +70,7 @@ export const useNetwork = (): NetworkContext => {
 
   const [bscs, setBscs] = useState<Bsc[]>([])
   const [getBscs] = useBSCsLazyQuery({
-    nextFetchPolicy: 'network-only',
+    fetchPolicy: 'network-only',
     onError: e => {
       logger.debug('getBscs/onError', { e })
       setError(getGraphQLError(e))
@@ -89,7 +89,7 @@ export const useNetwork = (): NetworkContext => {
 
   const [rncs, setRncs] = useState<Rnc[]>([])
   const [getRncs] = useRNCsLazyQuery({
-    nextFetchPolicy: 'network-only',
+    fetchPolicy: 'network-only',
     onError: e => {
       logger.debug('getRncs/onError', { e })
       setError(getGraphQLError(e))
@@ -108,7 +108,7 @@ export const useNetwork = (): NetworkContext => {
 
   const [tacs, setTacs] = useState<Tac[]>([])
   const [getTacs] = useTACsLazyQuery({
-    nextFetchPolicy: 'network-only',
+    fetchPolicy: 'network-only',
     onError: e => {
       logger.debug('getTacs/onError', { e })
       setError(getGraphQLError(e))
@@ -128,26 +128,22 @@ export const useNetwork = (): NetworkContext => {
   const [network, setNetwork] = useState(NetworkType.G2)
 
   const reload = useCallback(
-    (value?: NetworkType) => {
-      const type = value || network
+    (value: NetworkType) => {
+      setNetwork(value)
       setLoading(true)
 
-      switch (type) {
+      switch (value) {
         case NetworkType.G2:
-          getBscs()
-          break
+          return getBscs()
         case NetworkType.G3:
-          getRncs()
-          break
+          return getRncs()
         case NetworkType.G4:
-          getTacs()
-          break
+          return getTacs()
         default:
-          setLoading(false)
-          break
+          return () => setLoading(false)
       }
     },
-    [network, getBscs, getRncs, getTacs]
+    [getBscs, getRncs, getTacs]
   )
 
   const onNetworkChange = useCallback(
@@ -173,7 +169,7 @@ export const useNetwork = (): NetworkContext => {
     [reload, bscs, rncs, tacs, current, selected]
   )
 
-  useEffect(reload, [reload])
+  useEffect(() => reload(network), [reload, network])
 
   return {
     error,

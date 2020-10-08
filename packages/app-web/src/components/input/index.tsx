@@ -1,2 +1,2 @@
 export * from './check'
-export * from './checkbox'
+export * from './upload'

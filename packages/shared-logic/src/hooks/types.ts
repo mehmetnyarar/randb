@@ -66,4 +66,5 @@ export interface FormHookResult<Values extends AnalyticsInput, Result>
   isDisabled: boolean
   onInvalid: SubmitErrorHandler<Values>
   onValid: SubmitHandler<Values>
+  refresh?: () => void
 }

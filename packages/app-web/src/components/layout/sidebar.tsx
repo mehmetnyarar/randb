@@ -25,9 +25,9 @@ const nav: SidebarNav = [
     roles: [UserRole.SA, UserRole.ADMIN, UserRole.MANAGER],
     links: [
       {
-        path: '/import',
-        title: 'screen.import',
-        description: 'screen.import.description'
+        path: '/network/import',
+        title: 'screen.network.import',
+        description: 'screen.network.import.description'
       }
     ]
   },

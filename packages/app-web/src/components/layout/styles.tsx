@@ -60,7 +60,8 @@ export const GlobalStyles: React.FC = () => {
         article,
         section,
         aside,
-        div {
+        div,
+        p {
           margin: 0;
           padding: 0;
         }
@@ -123,7 +124,7 @@ export const GlobalStyles: React.FC = () => {
           border: 1px solid ${palette['border-basic-color-3']};
         }
         table > caption {
-          margin-bottom: 32px;
+          margin-bottom: 16px;
           text-align: left;
         }
 
@@ -133,9 +134,30 @@ export const GlobalStyles: React.FC = () => {
           border: 1px solid ${palette['border-basic-color-3']};
         }
 
+        .no-border: {
+          border: none;
+        }
+
+        .flex-row {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+        }
+        .flex-column {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: stretch;
+        }
+
         .full-width {
           flex: 1;
           width: 100%;
+        }
+
+        .mr-16 {
+          margin-right: 16px;
         }
 
         .text-left {
@@ -146,6 +168,9 @@ export const GlobalStyles: React.FC = () => {
         }
         .text-right {
           text-align: right;
+        }
+        .text-break {
+          word-break: break-word;
         }
 
         .icon-spin {

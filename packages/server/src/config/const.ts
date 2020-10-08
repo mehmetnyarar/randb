@@ -17,4 +17,14 @@ export const LOGS_DIR = join(ROOT_DIR, 'logs')
  */
 export const LOCALES_DIR = join(ROOT_DIR, 'src/locales')
 
+/**
+ * Name of the directory for file uploads.
+ */
+export const UPLOADS_DIR_NAME = 'media'
+
+/**
+ * Directory for file uploads.
+ */
+export const UPLOADS_DIR = join(ROOT_DIR, UPLOADS_DIR_NAME)
+
 // #endregion

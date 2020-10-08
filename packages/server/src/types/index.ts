@@ -10,3 +10,8 @@ export type EntityOrDocument<T extends Entity> = T | DocumentType<T>
  * Nullable.
  */
 export type Nullable<T> = T | null | undefined
+
+/**
+ * Value or Promise.
+ */
+export type Promisable<T> = T | Promise<T>

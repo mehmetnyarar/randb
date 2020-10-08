@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NetworkElementsFilter, UsersFilter } from '~/graphql'
+import { NetworkElementsFilter, UsersFilter } from '../../graphql'
 import { DEFAULT_NETWORK_FILTER, DEFAULT_USERS_FILTER } from './const'
 import { SearchContext } from './types'
 

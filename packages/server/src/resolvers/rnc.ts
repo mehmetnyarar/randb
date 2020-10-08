@@ -1,4 +1,4 @@
-import { Arg, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Query, Resolver } from 'type-graphql'
 import { QueryBuilder } from '~/db'
 import { Logger } from '~/logger'
 import {
@@ -10,6 +10,7 @@ import {
   Site,
   SiteModel
 } from '~/models'
+import { Authorize } from '~/modules'
 import { createNetworkElementResolver } from './base'
 
 export const logger = Logger.create({
@@ -36,6 +37,7 @@ export class RncResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns RNC.
    */
+  @Authorized(Authorize.any)
   @Query(() => [Rnc])
   async rncs (
     @Arg('filter', { nullable: true }) filter: NetworkElementsFilter = {}
@@ -60,6 +62,7 @@ export class RncResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns RNC.
    */
+  @Authorized(Authorize.any)
   @Query(() => Rnc, { nullable: true })
   async rnc (@Arg('filter') filter: NetworkElementFilter) {
     if (filter.id) this.repo.findById(filter.id)

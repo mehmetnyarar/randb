@@ -115,7 +115,7 @@ export const usePagedUsers = (): UsePagedUsersResult => {
     getItems({
       variables: {
         filter,
-        connection: merge(DEFAULT_CONNECTION, {
+        connection: merge({}, DEFAULT_CONNECTION, {
           after: endCursor
         })
       }

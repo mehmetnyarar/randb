@@ -43,4 +43,6 @@ export class Entity extends Base {
   @Field({ nullable: true })
   @Prop()
   deactivatedAt?: Date
+
+  event?: any // EventType for network imports/exports
 }

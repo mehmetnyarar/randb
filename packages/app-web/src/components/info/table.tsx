@@ -5,16 +5,17 @@ import { InfoRecord } from './types'
 interface Props {
   title?: string
   records: InfoRecord[]
+  className?: string
 }
 
 /**
  * Info table.
  */
 export const InfoTable: React.FC<Props> = props => {
-  const { title, records } = props
+  const { title, records, className } = props
 
   return (
-    <table>
+    <table className={className}>
       {title && <caption>{title}</caption>}
       <tbody>
         {records.map((record, i) => (

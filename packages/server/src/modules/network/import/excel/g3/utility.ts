@@ -1,0 +1,261 @@
+import { toString } from 'lodash'
+import { Repository } from '~/db'
+import {
+  AntennaModel,
+  CellModel,
+  DEFAULT_ANTENNA,
+  DEFAULT_CELL3G,
+  DEFAULT_LAC,
+  DEFAULT_RNC,
+  DEFAULT_SITE,
+  EntityType,
+  EventType,
+  exists,
+  getId,
+  LacModel,
+  NetworkType,
+  RncModel,
+  SiteModel,
+  to3GBand,
+  toGeoPoint,
+  toScenario
+} from '~/models'
+import { CurrentUser, NetworkReporter, sheet } from '~/modules'
+import { toFloat, toInt } from '~/utility'
+import { getCellNameInfo, validate } from '../../utility'
+import { CELL_NAME_RULES, VALIDATION_RULES } from './const'
+import { Item } from './types'
+
+/**
+ * Imports 3G data from Excel.
+ * @param path File path.
+ * @param [user] Current user.
+ * @param [sheetName] Sheet name.
+ */
+export const from = async (
+  path: string,
+  user?: CurrentUser,
+  sheetName?: string
+) => {
+  const data = sheet<Item>(path, sheetName)
+  if (typeof data === 'string') {
+    return NetworkReporter.reportXlsxError(NetworkType.G3, data)
+  }
+
+  const reporter = new NetworkReporter(NetworkType.G3)
+  reporter.report({ event: EventType.IMPORT_START })
+
+  const createdBy = getId(user?.id)
+  const rncs = new Repository(RncModel, DEFAULT_RNC)
+  const lacs = new Repository(LacModel, DEFAULT_LAC)
+  const antennas = new Repository(AntennaModel, DEFAULT_ANTENNA)
+  const sites = new Repository(SiteModel, DEFAULT_SITE)
+  const cells = new Repository(CellModel, DEFAULT_CELL3G)
+
+  let index = 1
+  for (const item of data) {
+    const { isValid, missing, invalid } = validate(item, VALIDATION_RULES)
+
+    if (isValid) {
+      // #region data
+
+      const rncId = toString(item['RNC ID'])
+      const rncName = toString(item['RNC Name'])
+      const lacValue = toString(item.LAC)
+      const siteId = toString(item['Site ID'])
+      const siteName = toString(item['Site Name'])
+      const cellId = toString(item.CI)
+      const cellName = toString(item['Cell Name'])
+      const antennaType = toString(item['Antenna Type'])
+      const location = toGeoPoint(
+        toFloat(item.Longitude),
+        toFloat(item.Latitude)
+      )
+
+      // #endregion
+
+      // #region rnc
+
+      const rnc = await rncs.upsertOne(
+        { name: rncName },
+        { name: rncName, ID: rncId },
+        { createdBy }
+      )
+
+      reporter.report({
+        event: rnc.event,
+        entity: EntityType.RNC,
+        name: rnc.name,
+        id: rnc.id
+      })
+
+      // #endregion
+
+      // #region lac
+
+      const lac = lacValue
+        ? await lacs.upsertOne(
+          { name: lacValue },
+          { name: lacValue },
+          { createdBy }
+        )
+        : undefined
+
+      if (lac) {
+        reporter.report({
+          event: lac.event,
+          entity: EntityType.LAC,
+          name: lac.name,
+          id: lac.id
+        })
+      }
+
+      // #endregion
+
+      // #region site
+
+      const site = await sites.upsertOne(
+        { name: siteName },
+        {
+          rnc: rnc._id,
+          lac: lac?._id,
+          ID: siteId,
+          name: siteName,
+          location
+        },
+        { createdBy }
+      )
+
+      reporter.report({
+        event: site.event,
+        entity: EntityType.SITE,
+        name: site.name,
+        id: site.id
+      })
+
+      if (!exists(site._id, rnc.children)) {
+        rnc.children.push(site._id)
+        await rnc.save()
+
+        reporter.report({
+          event: EventType.IMPORT_ADD,
+          entity: EntityType.SITE,
+          name: site.name,
+          id: site.id,
+          targetEntity: EntityType.RNC,
+          targetName: rnc.name,
+          targetId: rnc.id
+        })
+      }
+
+      if (lac && !exists(site._id, lac.children)) {
+        lac.children.push(site._id)
+        await lac.save()
+
+        reporter.report({
+          event: EventType.IMPORT_ADD,
+          entity: EntityType.SITE,
+          name: site.name,
+          id: site.id,
+          targetEntity: EntityType.LAC,
+          targetName: lac.name,
+          targetId: lac.id
+        })
+      }
+
+      // #endregion
+
+      // #region antenna
+
+      const antenna = antennaType
+        ? await antennas.upsertOne(
+          { name: antennaType },
+          { name: antennaType },
+          { createdBy }
+        )
+        : undefined
+
+      if (antenna && antenna.event) {
+        reporter.report({
+          event: antenna.event,
+          entity: EntityType.ANTENNA,
+          name: antenna.name,
+          id: antenna.id
+        })
+      }
+
+      // #endregion
+
+      // #region cell
+
+      const info = getCellNameInfo(cellName, CELL_NAME_RULES)
+      const cell = await cells.upsertOne(
+        { ID: cellId, name: cellName },
+        {
+          rnc: rnc._id,
+          lac: lac?._id,
+          site: site._id,
+          location,
+          ID: cellId,
+          name: cellName,
+          sector: info.sector,
+          antenna: antenna?._id,
+          height: toFloat(item.Height),
+          azimuth: toInt(item.Azimuth),
+          mechanicalTilt: toFloat(item['Mechanical Downtilt']),
+          electricalTilt: toFloat(item['Electrical Downtilt']),
+          scenario: toScenario(item['Scenario（Indoor or Outdoor）']),
+          isActive: item.Active || true,
+          g3: {
+            psc: toInt(item.PSC),
+            band: to3GBand(item['Frequency Band']),
+            arfcn: toInt(item.ARFCN),
+            totalPower: toFloat(item['Total Power(dBm)']),
+            pilotPower: toFloat(item['Pilot Power(dBm)'])
+          }
+        },
+        { createdBy }
+      )
+
+      if (cell.event) {
+        reporter.report({
+          event: cell.event,
+          entity: EntityType.CELL,
+          name: cell.name,
+          id: cell.id
+        })
+      }
+
+      if (!exists(cell._id, site.children)) {
+        site.g3.push(cell._id)
+        site.children.push(cell._id)
+        await site.save()
+
+        reporter.report({
+          event: EventType.IMPORT_ADD,
+          entity: EntityType.CELL,
+          name: cell.name,
+          id: cell.id,
+          targetEntity: EntityType.SITE,
+          targetName: site.name,
+          targetId: site.id
+        })
+      }
+
+      // #endregion
+    } else if (invalid || missing) {
+      reporter.report({
+        level: 'warn',
+        event: EventType.IMPORT_ERROR,
+        invalid,
+        missing,
+        index
+      })
+    }
+
+    index += 1
+  }
+
+  reporter.report({ event: EventType.IMPORT_END })
+  return reporter
+}

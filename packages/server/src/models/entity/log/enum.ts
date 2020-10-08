@@ -24,7 +24,13 @@ export enum EventType {
   // Auth events
   AUTH_SIGNIN = 'AUTH_SIGNIN',
   AUTH_WRONG_PASSWORD = 'AUTH_WRONG_PASSWORD',
-  AUTH_SIGNOUT = 'AUTH_SIGNOUT'
+  AUTH_SIGNOUT = 'AUTH_SIGNOUT',
+
+  // Network events
+  IMPORT_START = 'IMPORT_START',
+  IMPORT_ADD = 'IMPORT_ADD',
+  IMPORT_ERROR = 'IMPORT_ERROR',
+  IMPORT_END = 'IMPORT_END'
 }
 
 registerEnumType(EventType, { name: 'EventType' })

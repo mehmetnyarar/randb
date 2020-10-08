@@ -1,5 +1,8 @@
 {
   "extends": "../../.eslintrc.json",
+  "env": {
+    "browser": true
+  },
   "rules": {
     // Settings for 'eslint-import-resolver-typescript' did not solve 'no-use-before-define' error
     // See https://stackoverflow.com/questions/63818415/react-was-used-before-it-was-defined

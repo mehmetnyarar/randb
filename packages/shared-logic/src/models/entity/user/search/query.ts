@@ -1,5 +1,5 @@
 import { merge } from 'lodash'
-import { UsersFilter } from '~/graphql'
+import { UsersFilter } from '../../../../graphql'
 import { UserSearchBy } from './enum'
 import { UserSearch } from './types'
 

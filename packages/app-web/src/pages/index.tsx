@@ -12,7 +12,7 @@ export const HomeScreen: NextScreen = ({ t }) => {
   const { loading, error, data } = useWelcomeQuery()
 
   return (
-    <Layout title='Home'>
+    <Layout title={t('home')}>
       <main role='main'>
         <p>{t('welcome')}</p>
 

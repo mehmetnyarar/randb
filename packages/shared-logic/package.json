@@ -32,6 +32,7 @@
     "@hookform/resolvers": "^0.1.1",
     "@hookform/strictly-typed": "^0.0.4",
     "@react-native-community/async-storage": "~1.11.0",
+    "apollo-upload-client": "^14.1.2",
     "chalk": "^4.1.0",
     "date-fns": "^2.16.1",
     "formik": "^2.1.5",
@@ -43,6 +44,7 @@
     "react-dom": "16.13.1",
     "react-hook-form": "^6.8.2",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
+    "subscriptions-transport-ws": "^0.9.18",
     "yup": "^0.29.3"
   },
   "devDependencies": {
@@ -51,6 +53,7 @@
     "@graphql-codegen/typescript": "1.17.9",
     "@graphql-codegen/typescript-operations": "1.17.8",
     "@graphql-codegen/typescript-react-apollo": "2.0.6",
+    "@types/apollo-upload-client": "^14.1.0",
     "@types/lodash": "^4.14.161",
     "@types/yup": "^0.29.7",
     "dotenv": "^8.2.0"

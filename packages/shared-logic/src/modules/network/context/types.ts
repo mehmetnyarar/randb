@@ -8,7 +8,7 @@ import { Ne } from '../types'
 export interface NetworkContext extends HookResult<Ne[]> {
   network: NetworkType
   onNetworkChange: (value: NetworkType) => void
-  reload: (value?: NetworkType) => void
+  reload: (value: NetworkType) => void
   query: string
   onQueryChange: (value: string) => void
   current?: Ne

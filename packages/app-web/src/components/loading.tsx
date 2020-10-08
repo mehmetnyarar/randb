@@ -1,6 +1,5 @@
 import React from 'react'
-// import { Props } from 'react-icons'
-import { RiLoader4Line } from 'react-icons/ri'
+import { RiRefreshLine } from 'react-icons/ri'
 
 interface Props {
   icon?: boolean
@@ -15,7 +14,7 @@ export const Loading: React.FC<Props> = ({ icon, spin, text }) => {
   return (
     <>
       <div className='loading'>
-        {icon && <RiLoader4Line className={spin ? 'icon-spin' : undefined} />}
+        {icon && <RiRefreshLine className={spin ? 'icon-spin' : undefined} />}
         {text && <span>{text}</span>}
       </div>
 

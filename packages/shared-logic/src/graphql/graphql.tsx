@@ -14,6 +14,8 @@ export type Scalars = {
   Float: number
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any
 }
 
 export type AnalyticsInput = {
@@ -323,6 +325,10 @@ export enum EventType {
   ENTITY_DELETE = 'ENTITY_DELETE',
   ENTITY_SEARCH = 'ENTITY_SEARCH',
   ENTITY_UPDATE = 'ENTITY_UPDATE',
+  IMPORT_ADD = 'IMPORT_ADD',
+  IMPORT_END = 'IMPORT_END',
+  IMPORT_ERROR = 'IMPORT_ERROR',
+  IMPORT_START = 'IMPORT_START',
   SYS_DEBUG = 'SYS_DEBUG',
   SYS_ERROR = 'SYS_ERROR',
   SYS_FATAL = 'SYS_FATAL',
@@ -331,6 +337,29 @@ export enum EventType {
   SYS_TODO = 'SYS_TODO',
   SYS_TRACE = 'SYS_TRACE',
   SYS_WARN = 'SYS_WARN'
+}
+
+export type File = {
+  __typename?: 'File'
+  name: Scalars['String']
+  path: Scalars['String']
+  size: Scalars['Int']
+  type: Scalars['String']
+}
+
+export enum FileCategory {
+  NETWORK = 'NETWORK'
+}
+
+export type FileInput = {
+  agent?: Maybe<Scalars['String']>
+  origin?: Maybe<RequestOrigin>
+  upload?: Maybe<Scalars['Upload']>
+}
+
+export type FileOptions = {
+  category?: Maybe<FileCategory>
+  directory?: Maybe<Scalars['String']>
 }
 
 export type FloatRangeFilter = {
@@ -408,6 +437,7 @@ export type Log = {
 export type Mutation = {
   __typename?: 'Mutation'
   deleteUser: Scalars['Boolean']
+  importNetwork?: Maybe<Array<NetworkLog>>
   signinUser?: Maybe<CurrentUser>
   signoutUser: Scalars['Boolean']
   upsertUser: User
@@ -415,6 +445,11 @@ export type Mutation = {
 
 export type MutationdeleteUserArgs = {
   data: DeleteUserInput
+}
+
+export type MutationimportNetworkArgs = {
+  data: NetworkImportInput
+  options: FileOptions
 }
 
 export type MutationsigninUserArgs = {
@@ -454,6 +489,17 @@ export type NetworkElementFilter = {
   origin?: Maybe<RequestOrigin>
 }
 
+export type NetworkElementReport = {
+  __typename?: 'NetworkElementReport'
+  antenna?: Maybe<Scalars['Int']>
+  bsc?: Maybe<Scalars['Int']>
+  cell?: Maybe<Scalars['Int']>
+  lac?: Maybe<Scalars['Int']>
+  rnc?: Maybe<Scalars['Int']>
+  site?: Maybe<Scalars['Int']>
+  tac?: Maybe<Scalars['Int']>
+}
+
 export type NetworkElementsFilter = {
   agent?: Maybe<Scalars['String']>
   createdAt?: Maybe<DateRangeFilter>
@@ -469,6 +515,38 @@ export type NetworkElementsFilter = {
   types?: Maybe<Array<ElementType>>
   updatedAt?: Maybe<DateRangeFilter>
   updatedBy?: Maybe<Scalars['ID']>
+}
+
+export type NetworkImportInput = {
+  agent?: Maybe<Scalars['String']>
+  origin?: Maybe<RequestOrigin>
+  type: NetworkType
+  upload?: Maybe<Scalars['Upload']>
+}
+
+export type NetworkImportReport = {
+  __typename?: 'NetworkImportReport'
+  created?: Maybe<NetworkElementReport>
+  deleted?: Maybe<NetworkElementReport>
+  logs: Array<NetworkLog>
+  updated?: Maybe<NetworkElementReport>
+}
+
+export type NetworkLog = {
+  __typename?: 'NetworkLog'
+  date: Scalars['DateTime']
+  entity?: Maybe<EntityType>
+  event: EventType
+  id?: Maybe<Scalars['String']>
+  index?: Maybe<Scalars['Int']>
+  invalid?: Maybe<Scalars['String']>
+  level: Scalars['String']
+  missing?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
+  network?: Maybe<NetworkType>
+  targetEntity?: Maybe<EntityType>
+  targetId?: Maybe<Scalars['String']>
+  targetName?: Maybe<Scalars['String']>
 }
 
 export enum NetworkType {
@@ -1019,6 +1097,34 @@ export type CellQuery = { __typename?: 'Query' } & {
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
+
+export type ImportNetworkMutationVariables = Exact<{
+  data: NetworkImportInput
+  options: FileOptions
+}>
+
+export type ImportNetworkMutation = { __typename?: 'Mutation' } & {
+  importNetwork?: Maybe<
+    Array<
+      { __typename?: 'NetworkLog' } & Pick<
+        NetworkLog,
+        | 'date'
+        | 'level'
+        | 'event'
+        | 'network'
+        | 'entity'
+        | 'name'
+        | 'id'
+        | 'targetEntity'
+        | 'targetName'
+        | 'targetId'
+        | 'index'
+        | 'invalid'
+        | 'missing'
+      >
+    >
+  >
+}
 
 export type RNCsQueryVariables = Exact<{
   filter?: Maybe<NetworkElementsFilter>
@@ -1690,6 +1796,69 @@ export type WelcomeQueryResult = Apollo.QueryResult<
 export function refetchWelcomeQuery (variables?: WelcomeQueryVariables) {
   return { query: WelcomeDocument, variables: variables }
 }
+export const ImportNetworkDocument = gql`
+  mutation ImportNetwork($data: NetworkImportInput!, $options: FileOptions!) {
+    importNetwork(data: $data, options: $options) {
+      date
+      level
+      event
+      network
+      entity
+      name
+      id
+      targetEntity
+      targetName
+      targetId
+      index
+      invalid
+      missing
+    }
+  }
+`
+export type ImportNetworkMutationFn = Apollo.MutationFunction<
+  ImportNetworkMutation,
+  ImportNetworkMutationVariables
+>
+
+/**
+ * __useImportNetworkMutation__
+ *
+ * To run a mutation, you first call `useImportNetworkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useImportNetworkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [importNetworkMutation, { data, loading, error }] = useImportNetworkMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useImportNetworkMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    ImportNetworkMutation,
+    ImportNetworkMutationVariables
+  >
+) {
+  return Apollo.useMutation<
+    ImportNetworkMutation,
+    ImportNetworkMutationVariables
+  >(ImportNetworkDocument, baseOptions)
+}
+export type ImportNetworkMutationHookResult = ReturnType<
+  typeof useImportNetworkMutation
+>
+export type ImportNetworkMutationResult = Apollo.MutationResult<
+  ImportNetworkMutation
+>
+export type ImportNetworkMutationOptions = Apollo.BaseMutationOptions<
+  ImportNetworkMutation,
+  ImportNetworkMutationVariables
+>
 export const RNCsDocument = gql`
   query RNCs($filter: NetworkElementsFilter) {
     rncs(filter: $filter) {

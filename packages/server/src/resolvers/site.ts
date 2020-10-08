@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   FieldResolver,
   ObjectType,
   Query,
@@ -23,18 +24,22 @@ import {
   TacModel,
   toGeoLocation
 } from '~/models'
-import { ConnectionInput, edge, paginate, response } from '~/modules'
+import { Authorize, ConnectionInput, edge, paginate, response } from '~/modules'
 import { createNetworkElementResolver } from './base'
 
 const logger = Logger.create({
   src: 'resolver/site'
 })
 
+// #region Pagination
+
 @ObjectType()
 export class SiteEdge extends edge(Site) {}
 
 @ObjectType()
 export class SiteConnection extends response(SiteEdge) {}
+
+// #endregion
 
 const BaseResolver = createNetworkElementResolver<Site, Cell>(
   Site,
@@ -52,46 +57,46 @@ export class SiteResolver extends BaseResolver {
   // #region Field
 
   @FieldResolver()
-  async bsc (@Root() entity: Site) {
-    return entity.bsc && (await BscModel.findById(entity.bsc))
+  async bsc (@Root() site: Site) {
+    return site.bsc && (await BscModel.findById(site.bsc))
   }
 
   @FieldResolver()
-  async rnc (@Root() entity: Site) {
-    return entity.rnc && (await RncModel.findById(entity.rnc))
+  async rnc (@Root() site: Site) {
+    return site.rnc && (await RncModel.findById(site.rnc))
   }
 
   @FieldResolver()
-  async tac (@Root() entity: Site) {
-    return entity.tac && (await TacModel.findById(entity.tac))
+  async tac (@Root() site: Site) {
+    return site.tac && (await TacModel.findById(site.tac))
   }
 
   @FieldResolver()
-  async lac (@Root() entity: Site) {
-    return entity.lac && (await LacModel.findById(entity.lac))
+  async lac (@Root() site: Site) {
+    return site.lac && (await LacModel.findById(site.lac))
   }
 
   @FieldResolver()
-  location (@Root() entity: Site) {
-    return toGeoLocation(entity.location)
+  location (@Root() site: Site) {
+    return toGeoLocation(site.location)
   }
 
   @FieldResolver()
-  async g2 (@Root() entity: Site) {
-    if (!entity.g2 || !entity.g2.length) return []
-    return CellModel.find({ _id: { $in: refsToObjIds(entity.g2) } })
+  async g2 (@Root() site: Site) {
+    if (!site.g2 || !site.g2.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(site.g2) } })
   }
 
   @FieldResolver()
-  async g3 (@Root() entity: Site) {
-    if (!entity.g3 || !entity.g3.length) return []
-    return CellModel.find({ _id: { $in: refsToObjIds(entity.g3) } })
+  async g3 (@Root() site: Site) {
+    if (!site.g3 || !site.g3.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(site.g3) } })
   }
 
   @FieldResolver()
-  async g4 (@Root() entity: Site) {
-    if (!entity.g4 || !entity.g4.length) return []
-    return CellModel.find({ _id: { $in: refsToObjIds(entity.g4) } })
+  async g4 (@Root() site: Site) {
+    if (!site.g4 || !site.g4.length) return []
+    return CellModel.find({ _id: { $in: refsToObjIds(site.g4) } })
   }
 
   // #endregion
@@ -103,6 +108,7 @@ export class SiteResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns Sites.
    */
+  @Authorized(Authorize.any)
   @Query(() => [Site])
   async sites (@Arg('filter', { nullable: true }) filter: SitesFilter = {}) {
     const query = QueryBuilder.entities<Site>(SiteModel, filter)
@@ -130,6 +136,7 @@ export class SiteResolver extends BaseResolver {
    * @param [connection] Pagination connection.
    * @returns SiteConnection.
    */
+  @Authorized(Authorize.any)
   @Query(() => SiteConnection)
   async pagedSites (
     @Arg('filter', { nullable: true }) filter: SitesFilter = {},
@@ -159,6 +166,7 @@ export class SiteResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns Site.
    */
+  @Authorized(Authorize.any)
   @Query(() => Site, { nullable: true })
   async site (@Arg('filter') filter: SiteFilter) {
     if (filter.id) this.repo.findById(filter.id)

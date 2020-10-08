@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   FieldResolver,
   ObjectType,
   Query,
@@ -22,18 +23,22 @@ import {
   TacModel,
   toGeoLocation
 } from '~/models'
-import { ConnectionInput, edge, paginate, response } from '~/modules'
+import { Authorize, ConnectionInput, edge, paginate, response } from '~/modules'
 import { createEntityResolver } from './base'
 
 const logger = Logger.create({
   src: 'resolver/site'
 })
 
+// #region Pagination
+
 @ObjectType()
 export class CellEdge extends edge(Cell) {}
 
 @ObjectType()
 export class CellConnection extends response(CellEdge) {}
+
+// #endregion
 
 const BaseResolver = createEntityResolver<Cell>(Cell, CellModel, DEFAULT_CELL)
 
@@ -88,6 +93,7 @@ export class CellResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns Cells.
    */
+  @Authorized(Authorize.any)
   @Query(() => [Cell])
   async cells (@Arg('filter', { nullable: true }) filter: CellsFilter = {}) {
     const query = QueryBuilder.entities<Cell>(CellModel, filter)
@@ -119,6 +125,7 @@ export class CellResolver extends BaseResolver {
    * @param [connection] Pagination connection.
    * @returns CellConnection.
    */
+  @Authorized(Authorize.any)
   @Query(() => CellConnection)
   async pagedCells (
     @Arg('filter', { nullable: true }) filter: CellsFilter = {},
@@ -148,6 +155,7 @@ export class CellResolver extends BaseResolver {
    * @param [filter] Filter.
    * @returns Cell.
    */
+  @Authorized(Authorize.any)
   @Query(() => Cell, { nullable: true })
   async cell (@Arg('filter') filter: CellFilter) {
     if (filter.id) this.repo.findById(filter.id)

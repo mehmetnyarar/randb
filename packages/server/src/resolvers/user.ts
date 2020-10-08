@@ -3,6 +3,7 @@ import { hash } from 'bcrypt'
 import { merge } from 'lodash'
 import {
   Arg,
+  Authorized,
   Ctx,
   FieldResolver,
   Mutation,
@@ -11,7 +12,7 @@ import {
   Resolver,
   Root
 } from 'type-graphql'
-import { QueryBuilder, Repository } from '~/db'
+import { QueryBuilder } from '~/db'
 import { GraphQLContext } from '~/graphql'
 import { Logger } from '~/logger'
 import {
@@ -20,13 +21,15 @@ import {
   DeleteUserInput,
   getDoc,
   getLog,
+  toGeoLocation,
   UpsertUserInput,
   User,
   UserFilter,
   UserModel,
   UsersFilter
 } from '~/models'
-import { ConnectionInput, edge, paginate, response } from '~/modules'
+import { Authorize, ConnectionInput, edge, paginate, response } from '~/modules'
+import { createEntityResolver } from './base'
 
 const logger = Logger.create({
   src: 'resolver/user'
@@ -42,34 +45,18 @@ export class UserConnection extends response(UserEdge) {}
 
 // #endregion
 
+const BaseResolver = createEntityResolver<User>(User, UserModel, DEFAULT_USER)
+
 /**
  * User resolver.
  */
 @Resolver(User)
-export class UserResolver {
-  private repo: Repository<User>
-
-  constructor (repo?: Repository<User>) {
-    this.repo = repo || new Repository<User>(UserModel, DEFAULT_USER)
-  }
-
+export class UserResolver extends BaseResolver {
   // #region Field
 
   @FieldResolver()
   location (@Root() user: User) {
-    return user.locations.length
-      ? user.locations[user.locations.length - 1]
-      : undefined
-  }
-
-  @FieldResolver()
-  async createdBy (@Root() entity: User) {
-    return entity.createdBy && UserModel.findById(entity.createdBy)
-  }
-
-  @FieldResolver()
-  async updatedBy (@Root() entity: User) {
-    return entity.updatedBy && UserModel.findById(entity.updatedBy)
+    return user.location && toGeoLocation(user.location)
   }
 
   // #endregion
@@ -81,6 +68,7 @@ export class UserResolver {
    * @param [filter] Filter.
    * @returns Users.
    */
+  @Authorized(Authorize.admin)
   @Query(() => [User])
   async users (@Arg('filter', { nullable: true }) filter: UsersFilter = {}) {
     const query = QueryBuilder.entities<User>(UserModel, filter)
@@ -105,6 +93,7 @@ export class UserResolver {
    * @param [connection] Pagination connection.
    * @returns UserConnection.
    */
+  @Authorized(Authorize.admin)
   @Query(() => UserConnection)
   async pagedUsers (
     @Arg('filter', { nullable: true }) filter: UsersFilter = {},
@@ -131,6 +120,7 @@ export class UserResolver {
    * @param [filter] Filter.
    * @returns User.
    */
+  @Authorized(Authorize.admin)
   @Query(() => User, { nullable: true })
   async user (@Arg('filter') filter: UserFilter) {
     if (filter.id) this.repo.findById(filter.id)
@@ -155,6 +145,7 @@ export class UserResolver {
    * @param context GraphQL context.
    * @returns User.
    */
+  @Authorized(Authorize.admin)
   @Mutation(() => User)
   async upsertUser (
     @Arg('data') input: UpsertUserInput,
@@ -189,6 +180,7 @@ export class UserResolver {
    * @param context GraphQL context.
    * @returns True if the operation succeeds.
    */
+  @Authorized(Authorize.admin)
   @Mutation(() => Boolean)
   async deleteUser (
     @Arg('data') input: DeleteUserInput,

@@ -5,7 +5,7 @@ import { AuthToken, AuthTokenConfig } from '../types'
 import { getBearerToken, getTokenConfig } from './token'
 
 const logger = Logger.create({
-  src: 'cookies'
+  src: 'auth/cookies'
 })
 
 /**
