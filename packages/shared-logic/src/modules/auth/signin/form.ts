@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers'
+import { yupResolver } from '@hookform/resolvers/dist/yup'
 import { useTypedController } from '@hookform/strictly-typed'
 import { merge } from 'lodash'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'

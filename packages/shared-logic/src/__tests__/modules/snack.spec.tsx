@@ -40,7 +40,7 @@ const Component: React.FC<Props> = () => {
 // #endregion
 
 describe('modules/snack', () => {
-  it('', () => {
+  it('should render snack', () => {
     const { getByTestId, queryByTestId } = render(<Component />)
 
     const show = getByTestId('show')

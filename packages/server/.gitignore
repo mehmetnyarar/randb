@@ -1,6 +1,7 @@
 # Directories
 /coverage
 /logs
+/media
 /node_modules
 
 # Files
