@@ -9,7 +9,8 @@ import { ThemeSelection } from '../theme'
 // TODO Create the following pages
 const links: AppLink[] = [
   { path: '/about', title: 'about' },
-  { path: '/contact', title: 'contact' }
+  { path: '/contact', title: 'contact' },
+  { path: '/policy', title: 'policy' }
 ]
 
 interface Props {}
