@@ -1,5 +1,4 @@
 {
-  "screen.dashboard": "Dashboard",
   "ENTITY_CREATE_ERROR": "An error occured while creating this item.",
   "ENTITY_DELETE_ERROR": "An error occured while deleting this item.",
   "ENTITY_UPDATE_ERROR": "An error occured while updating this item.",
@@ -144,6 +143,7 @@
   "screen.about": "About",
   "screen.cell": "Cell",
   "screen.contact": "Contact",
+  "screen.dashboard": "Dashboard",
   "screen.error": "Error",
   "screen.error.0": "Unknown error!",
   "screen.error.400": "Bad request.",

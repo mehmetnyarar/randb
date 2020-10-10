@@ -6,6 +6,19 @@ import { Layout, Main } from '~/components/layout'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
+const solutions = [
+  {
+    title: 'NASA WorldWind',
+    href: 'https://worldwind.arc.nasa.gov/web/get-started/'
+  },
+  {
+    title: 'VTS Browser JS',
+    href: 'https://github.com/melowntech/vts-browser-js'
+  },
+  { title: 'Cesium', href: 'https://cesium.com/cesiumjs/' },
+  { title: 'Terria', href: 'https://terria.io/' }
+]
+
 /**
  * Dashboard screen.
  */
@@ -35,6 +48,17 @@ export const DashboardScreen: NextScreen = ({ t }) => {
             )
           })}
         </ul>
+
+        <h6>Map solutions</h6>
+        <ul className='solutions'>
+          {solutions.map((item, i) => (
+            <li key={i}>
+              <a href={item.href} target='_blank' rel='noreferrer'>
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </Main>
 
       <style jsx>
@@ -63,6 +87,15 @@ export const DashboardScreen: NextScreen = ({ t }) => {
             border: 8px solid ${palette['border-basic-color-4']};
             background: ${palette['background-basic-color-2']};
             font-size: 32px;
+          }
+
+          h6 {
+            margin: 32px 0 8px;
+          }
+          .solutions {
+            padding: 0 16px;
+            font-size: 12px;
+            list-style: disc;
           }
         `}
       </style>

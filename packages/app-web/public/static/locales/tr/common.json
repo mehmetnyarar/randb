@@ -1,5 +1,4 @@
 {
-  "screen.dashboard": "Ana Panel",
   "ENTITY_CREATE_ERROR": "Öğe oluşturulurken bir hata oluştu.",
   "ENTITY_DELETE_ERROR": "Öğe silinirken bir hata oluştu.",
   "ENTITY_UPDATE_ERROR": "Öğe güncellenirken bir hata oluştu.",
@@ -144,6 +143,7 @@
   "screen.about": "Hakkımızda",
   "screen.cell": "Saha",
   "screen.contact": "İletişim",
+  "screen.dashboard": "Ana Panel",
   "screen.error": "Hata",
   "screen.error.0": "Bilinmeyen hata!",
   "screen.error.400": "Kötü talep.",
