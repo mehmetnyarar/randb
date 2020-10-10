@@ -11,6 +11,7 @@ import React, { useContext, useEffect } from 'react'
 import { initializeApollo } from '~/apollo'
 import { GhostButton, InfoButton } from '~/components/button'
 import { Layout } from '~/components/layout'
+import { Loading } from '~/components/loading'
 import { UserCard } from '~/components/user'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
@@ -75,16 +76,14 @@ export const UsersScreen: NextScreen = ({ t }) => {
                   ))}
                 </select>
                 <InfoButton
-                  width={132}
-                  height={66}
-                  margin='0 0 0 16px'
+                  width={100}
                   onClick={() => {
                     const query = getUserFilter(search, filter)
                     console.log('search', { query })
                     find(query)
                   }}
                 >
-                  {t(loading ? '...' : 'search')}
+                  {loading ? <Loading icon spin /> : t('search')}
                 </InfoButton>
               </div>
               <div className='search-status'>
@@ -137,13 +136,10 @@ export const UsersScreen: NextScreen = ({ t }) => {
           }
           .search-box input {
             flex: 1;
-            font-size: 32px;
-            line-height: 1.5;
           }
           .search-box select {
-            margin-left: 16px;
+            margin: 0 16px;
             padding: 8px 16px;
-            height: 66px;
           }
           .search-box .button {
             margin-left: 16px;

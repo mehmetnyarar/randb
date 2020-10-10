@@ -31,6 +31,7 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
       title={stringify.personName(name)}
       content={
         <InfoTable
+          className='full-width'
           records={[
             { label: t('email'), value: email },
             { label: t('phone'), value: stringify.phoneNo(phone) },
