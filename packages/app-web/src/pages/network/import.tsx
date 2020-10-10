@@ -1,4 +1,5 @@
 import {
+  initializeApolloClient,
   NetworkType,
   NETWORK_UPLOAD_LIMIT,
   RequestOrigin,
@@ -7,7 +8,6 @@ import {
   UserRole
 } from '@app/logic'
 import React, { useContext, useEffect } from 'react'
-import { initializeApollo } from '~/apollo'
 import { GhostButton, SubmitButton } from '~/components/button'
 import { Field, Label } from '~/components/form'
 import { FileUpload } from '~/components/input'
@@ -117,7 +117,7 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 NetworkImportScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

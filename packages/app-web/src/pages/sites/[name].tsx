@@ -1,7 +1,12 @@
-import { Logger, Snack, UserRole, useSite } from '@app/logic'
+import {
+  initializeApolloClient,
+  Logger,
+  Snack,
+  UserRole,
+  useSite
+} from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { initializeApollo } from '~/apollo'
 import { Layout } from '~/components/layout'
 import { SiteDetails } from '~/components/network'
 import { withTranslation } from '~/i18n'
@@ -68,7 +73,7 @@ export const SiteScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 SiteScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

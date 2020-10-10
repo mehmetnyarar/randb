@@ -1,5 +1,5 @@
+import { initializeApolloClient } from '@app/logic'
 import React from 'react'
-import { initializeApollo } from '~/apollo'
 import { Error } from '~/components/error'
 import { Layout } from '~/components/layout'
 import { NextScreen } from '~/types'
@@ -21,7 +21,7 @@ export const ErrorScreen: NextScreen<Props> = ({ statusCode }) => {
 }
 
 ErrorScreen.getInitialProps = async ({ res, err }) => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
   const statusCode = res ? res.statusCode : err ? err.statusCode : 0
 
   return {

@@ -1,4 +1,5 @@
 import {
+  initializeApolloClient,
   Logger,
   NEW_USER_ROLES,
   PersonGender,
@@ -10,7 +11,6 @@ import {
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useMemo } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-import { initializeApollo } from '~/apollo'
 import { BasicButton, InfoButton, SubmitButton } from '~/components/button'
 import {
   Field,
@@ -286,7 +286,7 @@ export const UserScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 UserScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

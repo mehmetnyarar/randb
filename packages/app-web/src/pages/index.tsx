@@ -1,6 +1,5 @@
-import { useWelcomeQuery } from '@app/logic'
+import { initializeApolloClient, useWelcomeQuery } from '@app/logic'
 import React from 'react'
-import { initializeApollo } from '~/apollo'
 import { Layout } from '~/components/layout'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
@@ -40,7 +39,7 @@ export const HomeScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 HomeScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

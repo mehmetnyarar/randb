@@ -1,7 +1,12 @@
-import { Logger, Snack, useCell, UserRole } from '@app/logic'
+import {
+  initializeApolloClient,
+  Logger,
+  Snack,
+  useCell,
+  UserRole
+} from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { initializeApollo } from '~/apollo'
 import { Layout } from '~/components/layout'
 import { CellDetails } from '~/components/network'
 import { withTranslation } from '~/i18n'
@@ -68,7 +73,7 @@ export const CellScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 CellScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

@@ -1,6 +1,7 @@
 import {
   Auth,
   getUserFilter,
+  initializeApolloClient,
   Logger,
   Snack,
   usePagedUsers,
@@ -8,7 +9,6 @@ import {
   UserSearchBy
 } from '@app/logic'
 import React, { useContext, useEffect } from 'react'
-import { initializeApollo } from '~/apollo'
 import { GhostButton, InfoButton } from '~/components/button'
 import { Layout } from '~/components/layout'
 import { Loading } from '~/components/loading'
@@ -173,7 +173,7 @@ export const UsersScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 UsersScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),

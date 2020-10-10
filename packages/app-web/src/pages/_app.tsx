@@ -6,16 +6,18 @@ import {
   NetworkProvider,
   RequestOrigin,
   SearchProvider,
-  SnackProvider
+  SnackProvider,
+  useApolloClient
 } from '@app/logic'
 import { ThemeProvider } from '@app/ui'
-import cookies from 'next-cookies'
+import NextCookies from 'next-cookies'
 import NextApp, { AppContext, AppProps } from 'next/app'
 import React from 'react'
 import ReactModal from 'react-modal'
-import { useApollo } from '~/apollo'
 import { SnackBar } from '~/components/snackbar'
+import { GRAPHQL_API_URL, GRAPHQL_SUBSCRIPTIONS_URL } from '~/config'
 import { appWithTranslation } from '~/i18n'
+import { getUserAgent } from '~/utility'
 
 const logger = Logger.create({
   src: 'App'
@@ -28,10 +30,15 @@ if (isBrowser()) ReactModal.setAppElement('body')
  * @param props Props.
  */
 function App ({ Component, pageProps }: AppProps) {
-  const { language, initialApolloState } = pageProps
-  const apolloClient = useApollo(language, initialApolloState)
+  const { agent, ...apolloOptions } = pageProps
+  const apolloClient = useApolloClient({
+    ...apolloOptions,
+    agent: agent || getUserAgent(),
+    apiUrl: GRAPHQL_API_URL,
+    subscriptionsUrl: GRAPHQL_SUBSCRIPTIONS_URL
+  })
 
-  logger.debug('render', { pageProps })
+  logger.debug('render', { pageProps, apolloOptions, agent })
 
   return (
     <ThemeProvider>
@@ -55,17 +62,28 @@ function App ({ Component, pageProps }: AppProps) {
 // https://nextjs.org/docs/basic-features/typescript
 // https://github.com/isaachinman/next-i18next/blob/master/examples/simple/pages/_app.js
 App.getInitialProps = async (appContext: AppContext) => {
-  const language = cookies(appContext.ctx)['next-i18next']
+  const agent = appContext.ctx.req?.headers['user-agent']
+  const cookies = NextCookies(appContext.ctx)
+  const language = cookies['next-i18next']
+  const accessToken = cookies['access-token']
+  const refreshToken = cookies['refresh-token']
   const appProps = await NextApp.getInitialProps(appContext)
-  logger.debug('getInitialProps', { appProps, language })
-
-  return {
+  const props = {
     ...appProps,
     pageProps: {
+      ...appProps.pageProps,
       language,
-      ...appProps.pageProps
+      auth: {
+        accessToken,
+        refreshToken
+      },
+      agent: getUserAgent(agent),
+      origin: RequestOrigin.WEB
     }
   }
+
+  logger.debug('getInitialProps', { appProps, props })
+  return props
 }
 
 export default appWithTranslation(App)

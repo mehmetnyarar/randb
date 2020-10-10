@@ -1,5 +1,6 @@
 import {
   Auth,
+  initializeApolloClient,
   Logger,
   SigninMethod,
   Snack,
@@ -8,7 +9,6 @@ import {
 import { useRouter } from 'next/router'
 import React, { Fragment, useContext, useEffect, useMemo } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-import { initializeApollo } from '~/apollo'
 import { BasicButton, GhostButton, SubmitButton } from '~/components/button'
 import { Divider } from '~/components/divider'
 import {
@@ -253,7 +253,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
  * Initial props.
  */
 SigninScreen.getInitialProps = async () => {
-  const apolloClient = initializeApollo()
+  const apolloClient = initializeApolloClient()
 
   return {
     initialApolloState: apolloClient.cache.extract(),
