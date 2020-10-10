@@ -5,6 +5,7 @@ import { NetworkContext } from './types'
  * Default network context.
  */
 export const DEFAULT_NETWORK: NetworkContext = {
+  neStats: {},
   network: NetworkType.G2,
   onNetworkChange: () => {
     throw new Error('network/onNetworkChange has not been yet implemented!')

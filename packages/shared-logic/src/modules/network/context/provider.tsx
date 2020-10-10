@@ -1,7 +1,7 @@
 import React from 'react'
 import { Network } from './context'
 import { NetworkOptions } from './types'
-import { useNetwork } from './use-network'
+import { useNetwork } from './use'
 
 interface Props extends NetworkOptions {}
 

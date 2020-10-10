@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { AppError, getCustomError, getGraphQLError } from '../../../error'
 import {
   Bsc,
+  NetworkElementReport,
   NetworkType,
   Rnc,
   Tac,
@@ -10,6 +11,7 @@ import {
   useTACsLazyQuery
 } from '../../../graphql'
 import { Logger } from '../../../logger'
+import { getNeStats } from '../reporter'
 import { getNe, getNeList } from '../topology'
 import { Ne } from '../types'
 import { NetworkContext } from './types'
@@ -129,8 +131,8 @@ export const useNetwork = (): NetworkContext => {
 
   const reload = useCallback(
     (value: NetworkType) => {
-      setNetwork(value)
       setLoading(true)
+      setNetwork(value)
 
       switch (value) {
         case NetworkType.G2:
@@ -145,7 +147,6 @@ export const useNetwork = (): NetworkContext => {
     },
     [getBscs, getRncs, getTacs]
   )
-
   const onNetworkChange = useCallback(
     (value: NetworkType) => {
       setQuery('')
@@ -171,6 +172,11 @@ export const useNetwork = (): NetworkContext => {
 
   useEffect(() => reload(network), [reload, network])
 
+  const [neStats, setNeStats] = useState<NetworkElementReport>({})
+  useEffect(() => {
+    setNeStats(getNeStats(network, result))
+  }, [network, result])
+
   return {
     error,
     result,
@@ -183,6 +189,7 @@ export const useNetwork = (): NetworkContext => {
     current,
     setCurrent,
     selected,
-    onSelectItem
+    onSelectItem,
+    neStats
   }
 }

@@ -1,4 +1,5 @@
 {
+  "screen.dashboard": "Ana Panel",
   "ENTITY_CREATE_ERROR": "Öğe oluşturulurken bir hata oluştu.",
   "ENTITY_DELETE_ERROR": "Öğe silinirken bir hata oluştu.",
   "ENTITY_UPDATE_ERROR": "Öğe güncellenirken bir hata oluştu.",

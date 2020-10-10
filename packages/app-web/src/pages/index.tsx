@@ -1,26 +1,23 @@
-import { initializeApolloClient } from '@app/logic'
-import React from 'react'
-import { RiHomeLine } from 'react-icons/ri'
-import { Layout, Main } from '~/components/layout'
+import { Auth, initializeApolloClient } from '@app/logic'
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
 /**
  * Home screen.
  */
-export const HomeScreen: NextScreen = ({ t }) => {
-  return (
-    <Layout title={t('screen.home')}>
-      <Main
-        title={t('screen.home')}
-        icon={<RiHomeLine />}
-        justify='center'
-        align='center'
-      >
-        <p>{t('welcome')}</p>
-      </Main>
-    </Layout>
-  )
+export const HomeScreen: NextScreen = () => {
+  const { push } = useRouter()
+  const { user } = useContext(Auth)
+
+  // Redirect the user to the appropriate home page
+  // based on the authentication status
+  useEffect(() => {
+    push(user ? '/dashboard' : '/welcome')
+  }, [user, push])
+
+  return null
 }
 
 /**

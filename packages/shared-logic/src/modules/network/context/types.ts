@@ -1,4 +1,4 @@
-import { NetworkType } from '../../../graphql'
+import { NetworkElementReport, NetworkType } from '../../../graphql'
 import { HookOptions, HookResult } from '../../../hooks'
 import { Ne } from '../types'
 
@@ -6,6 +6,7 @@ import { Ne } from '../types'
  * Network context.
  */
 export interface NetworkContext extends HookResult<Ne[]> {
+  neStats: NetworkElementReport
   network: NetworkType
   onNetworkChange: (value: NetworkType) => void
   reload: (value: NetworkType) => void

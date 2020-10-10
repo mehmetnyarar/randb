@@ -2,10 +2,11 @@ import { initializeApolloClient } from '@app/logic'
 import React from 'react'
 import { Error } from '~/components/error'
 import { Layout, Main } from '~/components/layout'
+import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
 interface Props {
-  statusCode: number
+  statusCode?: number
 }
 
 /**
@@ -33,4 +34,4 @@ ErrorScreen.getInitialProps = async ({ res, err }) => {
   }
 }
 
-export default ErrorScreen
+export default withTranslation('common')(ErrorScreen)

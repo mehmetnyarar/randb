@@ -3,8 +3,10 @@ import {
   EventType,
   NetworkElementReport,
   NetworkImportReport,
-  NetworkLog
+  NetworkLog,
+  NetworkType
 } from '../../graphql'
+import { Ne } from './types'
 
 /**
  * Filters logs with specific event and entity.
@@ -68,4 +70,52 @@ export const getNetworkImportReport = (
     updated: isValidNeReport(updated) ? updated : undefined,
     deleted: isValidNeReport(deleted) ? deleted : undefined
   }
+}
+
+/**
+ * Creates stats for a specific network.
+ * @param network Network.
+ * @param parents Parent NEs.
+ * @returns NE stats.
+ */
+export const getNeStats = (network: NetworkType, parents: Ne[]) => {
+  const stats: NetworkElementReport = {}
+
+  switch (network) {
+    case NetworkType.G2:
+      stats.bsc = parents.length
+      break
+    case NetworkType.G3:
+      stats.rnc = parents.length
+      break
+    case NetworkType.G4:
+      stats.tac = parents.length
+      break
+  }
+
+  const sitecell = parents.reduce(
+    (total, parent) => {
+      const sites = parent.children
+      if (sites && sites.length) {
+        const cells = sites.reduce((count, site) => {
+          return count + (site.children?.length || 0)
+        }, 0)
+
+        const subtotal = {
+          site: total.site + sites.length,
+          cell: total.cell + cells
+        }
+
+        return subtotal
+      }
+
+      return total
+    },
+    { site: 0, cell: 0 }
+  )
+
+  stats.site = sitecell.site
+  stats.cell = sitecell.cell
+
+  return stats
 }
