@@ -7,7 +7,8 @@ import {
 } from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { Layout } from '~/components/layout'
+import { RiWifiLine } from 'react-icons/ri'
+import { Layout, Main } from '~/components/layout'
 import { CellDetails } from '~/components/network'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
@@ -37,35 +38,16 @@ export const CellScreen: NextScreen = ({ t }) => {
   }, [t, show, error])
 
   return (
-    <>
-      <Layout title={name} roles={[UserRole.SA, UserRole.ADMIN]}>
-        {loading && <span>...</span>}
-        {result && (
-          <main role='main'>
-            <CellDetails value={result} />
-          </main>
-        )}
-      </Layout>
-
-      <style jsx>
-        {`
-          main {
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-          }
-
-          .ne-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-          }
-        `}
-      </style>
-    </>
+    <Layout title={t('screen.cell')} roles={[UserRole.SA, UserRole.ADMIN]}>
+      <Main
+        icon={<RiWifiLine />}
+        title={t('screen.cell')}
+        query={name}
+        loading={loading}
+      >
+        {result && <CellDetails value={result} />}
+      </Main>
+    </Layout>
   )
 }
 

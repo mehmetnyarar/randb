@@ -1,4 +1,5 @@
 import { Cell, stringify } from '@app/logic'
+import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { useTranslation } from '~/i18n'
 import { InfoTable } from '../info'
@@ -44,13 +45,22 @@ export const CellDetails: React.FC<Props> = ({ value }) => {
     } = value
 
     const params = g2 || g3 || g4
-    console.log({ params })
-
     items.push({ label: t('ne.bsc'), value: bsc?.name })
     items.push({ label: t('ne.rnc'), value: rnc?.name })
     items.push({ label: t('ne.tac'), value: tac?.name })
     items.push({ label: t('ne.lac'), value: lac?.name })
-    items.push({ label: t('ne.site'), value: site.name })
+    items.push({
+      label: t('ne.site'),
+      cspan: 1,
+      print: (
+        <Link
+          as={`/sites/${site.name}`}
+          href={{ pathname: '/sites/[name]', query: { name: site.name } }}
+        >
+          <a>{site.name}</a>
+        </Link>
+      )
+    })
     items.push({ label: t('ne.ID'), value: ID })
     items.push({ label: t('ne.name'), value: name })
     items.push({ label: t('ne.location'), value: stringify.location(location) })
@@ -93,7 +103,7 @@ export const CellDetails: React.FC<Props> = ({ value }) => {
   return (
     <>
       <article className='cell-info'>
-        <InfoTable title={value.name} records={records} />
+        <InfoTable records={records} />
       </article>
     </>
   )

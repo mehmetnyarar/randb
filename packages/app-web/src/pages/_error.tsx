@@ -1,7 +1,7 @@
 import { initializeApolloClient } from '@app/logic'
 import React from 'react'
 import { Error } from '~/components/error'
-import { Layout } from '~/components/layout'
+import { Layout, Main } from '~/components/layout'
 import { NextScreen } from '~/types'
 
 interface Props {
@@ -12,10 +12,12 @@ interface Props {
  * Error screen.
  * @param props Props.
  */
-export const ErrorScreen: NextScreen<Props> = ({ statusCode }) => {
+export const ErrorScreen: NextScreen<Props> = ({ t, statusCode }) => {
   return (
-    <Layout title='Error'>
-      <Error statusCode={statusCode} />
+    <Layout title={t('screen.error')}>
+      <Main justify='center' align='center'>
+        <Error statusCode={statusCode} />
+      </Main>
     </Layout>
   )
 }

@@ -2,16 +2,16 @@ import {
   initializeApolloClient,
   NetworkType,
   NETWORK_UPLOAD_LIMIT,
-  RequestOrigin,
   Snack,
   useImportNetworkForm,
   UserRole
 } from '@app/logic'
 import React, { useContext, useEffect } from 'react'
+import { RiStackLine } from 'react-icons/ri'
 import { GhostButton, SubmitButton } from '~/components/button'
 import { Field, Label } from '~/components/form'
 import { FileUpload } from '~/components/input'
-import { Layout } from '~/components/layout'
+import { Layout, Main } from '~/components/layout'
 import { ImportReport } from '~/components/network'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
@@ -25,14 +25,11 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
     isDisabled,
     handleSubmit,
     onValid,
-    result,
     error,
+    result,
+    loading,
     refresh
-  } = useImportNetworkForm({
-    initialValues: {
-      origin: RequestOrigin.WEB
-    }
-  })
+  } = useImportNetworkForm()
 
   const { show } = useContext(Snack)
   useEffect(() => {
@@ -49,16 +46,16 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
       title={t('screen.network.import')}
       roles={[UserRole.SA, UserRole.ADMIN, UserRole.MANAGER]}
     >
-      <main role='main'>
-        <h2>{t('screen.network.import')}</h2>
-        {result ? (
-          <>
-            <GhostButton margin='16px 0' onClick={refresh}>
-              {t('import.new')}
-            </GhostButton>
-            <ImportReport value={result} />
-          </>
-        ) : (
+      <Main
+        icon={<RiStackLine />}
+        title={t('screen.network.import')}
+        loading={loading}
+        actions={
+          <GhostButton onClick={refresh}>{t('import.new')}</GhostButton>
+        }
+      >
+        <>
+          {result && <ImportReport value={result} />}
           <section role='form'>
             <form onSubmit={handleSubmit(onValid)}>
               <Field>
@@ -98,17 +95,8 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
               <SubmitButton disabled={isDisabled}>{t('import')}</SubmitButton>
             </form>
           </section>
-        )}
-      </main>
-
-      <style jsx>
-        {`
-          main {
-            flex: 1;
-            padding: 16px;
-          }
-        `}
-      </style>
+        </>
+      </Main>
     </Layout>
   )
 }

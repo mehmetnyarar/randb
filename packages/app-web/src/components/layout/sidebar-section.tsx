@@ -37,7 +37,7 @@ export const SidebarSection: React.FC<Props> = ({
             flex: ${flex || 'unset'};
           }
           .sidebar-section h3 {
-            margin: 16px 0 8px;
+            margin: 16px 0;
             font-weight: bold;
             font-size: 12px;
             color: ${palette['text-hint-color']};

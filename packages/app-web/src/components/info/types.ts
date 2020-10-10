@@ -6,4 +6,5 @@ export interface InfoRecord {
   label?: string
   value?: InfoValue | InfoRecord | InfoRecord[] | null
   print?: ReactNode | null
+  cspan?: number
 }

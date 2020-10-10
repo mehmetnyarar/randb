@@ -28,7 +28,9 @@ export const useUpsertUserForm = (
 ): UseUpsertUserFormResult => {
   const { onSuccess } = options
   const { username, ...initialValues } = options.initialValues || {}
+
   const create = useMemo(() => username === 'new', [username])
+  const [isCreated, setIsCreated] = useState(false)
 
   // #region Password Visibility
 
@@ -86,6 +88,7 @@ export const useUpsertUserForm = (
         if (data && data.upsertUser) {
           const user = data && (data.upsertUser as User)
           const values = getValues(initialValues, user)
+          if (create) setIsCreated(true)
           setResult(user)
           reset(values)
           onSuccess && onSuccess(user)
@@ -97,7 +100,7 @@ export const useUpsertUserForm = (
         setLoading(false)
       }
     },
-    [initialValues, onSuccess, reset, result, upsertUser]
+    [upsertUser, initialValues, create, result, onSuccess, reset]
   )
   const onInvalid = useCallback<SubmitErrorHandler<UpsertUserInput>>(errors => {
     logger.error('onInvalid', { errors })
@@ -107,19 +110,20 @@ export const useUpsertUserForm = (
 
   // #region Values
 
+  const [password, setPassword] = useState('')
   const createPassword = useCallback(() => {
-    setValue(
-      'password',
-      generate({
-        length: 12,
-        numbers: true,
-        symbols: true,
-        lowercase: true,
-        uppercase: true,
-        excludeSimilarCharacters: true,
-        strict: true
-      })
-    )
+    const value = generate({
+      length: 12,
+      numbers: true,
+      symbols: true,
+      lowercase: true,
+      uppercase: true,
+      excludeSimilarCharacters: true,
+      strict: true
+    })
+
+    setPassword(value)
+    setValue('password', value)
   }, [setValue])
   const [getUser] = useUserLazyQuery({
     fetchPolicy: 'network-only',
@@ -160,6 +164,8 @@ export const useUpsertUserForm = (
 
   return {
     create,
+    isCreated,
+    password,
     createPassword,
     isPasswordVisible,
     onTogglePasswordVisibility,

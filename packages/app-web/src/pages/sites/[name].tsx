@@ -7,7 +7,8 @@ import {
 } from '@app/logic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { Layout } from '~/components/layout'
+import { RiBaseStationLine } from 'react-icons/ri'
+import { Layout, Main } from '~/components/layout'
 import { SiteDetails } from '~/components/network'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
@@ -37,35 +38,16 @@ export const SiteScreen: NextScreen = ({ t }) => {
   }, [t, show, error])
 
   return (
-    <>
-      <Layout title={name} roles={[UserRole.SA, UserRole.ADMIN]}>
-        {loading && <span>...</span>}
-        {result && (
-          <main role='main'>
-            <SiteDetails value={result} />
-          </main>
-        )}
-      </Layout>
-
-      <style jsx>
-        {`
-          main {
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-          }
-
-          .ne-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-          }
-        `}
-      </style>
-    </>
+    <Layout title={t('screen.site')} roles={[UserRole.SA, UserRole.ADMIN]}>
+      <Main
+        icon={<RiBaseStationLine />}
+        title={t('screen.site')}
+        query={name}
+        loading={loading}
+      >
+        {result && <SiteDetails value={result} />}
+      </Main>
+    </Layout>
   )
 }
 

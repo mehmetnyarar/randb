@@ -13,6 +13,7 @@ const logger = Logger.create({
  * Creates a theme context.
  */
 export const useTheme = (): ThemeContext => {
+  const [ready, setReady] = useState(false)
   const [scheme, setScheme] = useState<ColorScheme>(DEFAULT_SCHEME)
   const [palette, setPalette] = useState<ColorPalette>(getColorPalette(scheme))
   const onSchemeChange = useCallback(async (value = DEFAULT_SCHEME) => {
@@ -26,12 +27,14 @@ export const useTheme = (): ThemeContext => {
       const value = await storage.get<ColorScheme>('scheme')
       logger.debug('restore', { value })
       onSchemeChange(value)
+      setReady(true)
     }
 
     restore()
   }, [onSchemeChange])
 
   return {
+    ready,
     scheme,
     palette,
     onSchemeChange

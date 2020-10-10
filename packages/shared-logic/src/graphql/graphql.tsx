@@ -983,6 +983,24 @@ export type SignoutUserMutation = { __typename?: 'Mutation' } & Pick<
   'signoutUser'
 >
 
+export type CurrentUserWithTokensQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type CurrentUserWithTokensQuery = { __typename?: 'Query' } & {
+  currentUser?: Maybe<
+    { __typename?: 'CurrentUser' } & Pick<CurrentUser, 'id' | 'roles'> & {
+        name: { __typename?: 'PersonName' } & Pick<PersonName, 'first' | 'last'>
+        accessToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<UserToken, 'value' | 'expires'>
+        >
+        refreshToken?: Maybe<
+          { __typename?: 'UserToken' } & Pick<UserToken, 'value' | 'expires'>
+        >
+      }
+  >
+}
+
 export type BSCsQueryVariables = Exact<{
   filter?: Maybe<NetworkElementsFilter>
 }>
@@ -1558,6 +1576,79 @@ export type SignoutUserMutationOptions = Apollo.BaseMutationOptions<
   SignoutUserMutation,
   SignoutUserMutationVariables
 >
+export const CurrentUserWithTokensDocument = gql`
+  query CurrentUserWithTokens {
+    currentUser {
+      id
+      name {
+        first
+        last
+      }
+      roles
+      accessToken {
+        value
+        expires
+      }
+      refreshToken {
+        value
+        expires
+      }
+    }
+  }
+`
+
+/**
+ * __useCurrentUserWithTokensQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserWithTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserWithTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserWithTokensQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentUserWithTokensQuery (
+  baseOptions?: Apollo.QueryHookOptions<
+    CurrentUserWithTokensQuery,
+    CurrentUserWithTokensQueryVariables
+  >
+) {
+  return Apollo.useQuery<
+    CurrentUserWithTokensQuery,
+    CurrentUserWithTokensQueryVariables
+  >(CurrentUserWithTokensDocument, baseOptions)
+}
+export function useCurrentUserWithTokensLazyQuery (
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CurrentUserWithTokensQuery,
+    CurrentUserWithTokensQueryVariables
+  >
+) {
+  return Apollo.useLazyQuery<
+    CurrentUserWithTokensQuery,
+    CurrentUserWithTokensQueryVariables
+  >(CurrentUserWithTokensDocument, baseOptions)
+}
+export type CurrentUserWithTokensQueryHookResult = ReturnType<
+  typeof useCurrentUserWithTokensQuery
+>
+export type CurrentUserWithTokensLazyQueryHookResult = ReturnType<
+  typeof useCurrentUserWithTokensLazyQuery
+>
+export type CurrentUserWithTokensQueryResult = Apollo.QueryResult<
+  CurrentUserWithTokensQuery,
+  CurrentUserWithTokensQueryVariables
+>
+export function refetchCurrentUserWithTokensQuery (
+  variables?: CurrentUserWithTokensQueryVariables
+) {
+  return { query: CurrentUserWithTokensDocument, variables: variables }
+}
 export const BSCsDocument = gql`
   query BSCs($filter: NetworkElementsFilter) {
     bscs(filter: $filter) {

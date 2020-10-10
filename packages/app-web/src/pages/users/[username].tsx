@@ -1,9 +1,9 @@
 import {
+  getPersonName,
   initializeApolloClient,
   Logger,
   NEW_USER_ROLES,
   PersonGender,
-  RequestOrigin,
   Snack,
   UserRole,
   useUpsertUserForm
@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useMemo } from 'react'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
+import { RiUserAddLine, RiUserLine } from 'react-icons/ri'
 import { BasicButton, InfoButton, SubmitButton } from '~/components/button'
 import {
   Field,
@@ -19,7 +20,7 @@ import {
   InputGroup,
   Label
 } from '~/components/form'
-import { Layout } from '~/components/layout'
+import { Layout, Main } from '~/components/layout'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
@@ -36,6 +37,8 @@ export const UserScreen: NextScreen = ({ t }) => {
 
   const {
     create,
+    isCreated,
+    password,
     createPassword,
     isPasswordVisible,
     onTogglePasswordVisibility,
@@ -49,16 +52,9 @@ export const UserScreen: NextScreen = ({ t }) => {
     error
   } = useUpsertUserForm({
     initialValues: {
-      username,
-      origin: RequestOrigin.WEB
+      username
     }
   })
-
-  const title = useMemo(
-    () =>
-      user ? `${user.name.first} ${user.name.last}` : t('screen.user.new'),
-    [t, user]
-  )
 
   const { show } = useContext(Snack)
   useEffect(() => {
@@ -69,14 +65,34 @@ export const UserScreen: NextScreen = ({ t }) => {
       })
     }
   }, [t, show, error])
+  useEffect(() => {
+    if (isCreated) {
+      show({
+        type: 'success',
+        content: t('user.create.success', { password })
+      })
+    }
+  }, [t, show, isCreated, password])
+
+  const icon = useMemo(() => (user ? <RiUserLine /> : <RiUserAddLine />), [
+    user
+  ])
+  const query = useMemo(
+    () => (user ? getPersonName(user.name) : t('screen.user.new')),
+    [t, user]
+  )
 
   logger.debug('render', { username, errors, loading, user, error })
 
   return (
     <>
-      <Layout title={title} roles={[UserRole.SA, UserRole.ADMIN]}>
-        <main role='main'>
-          <h2>{title}</h2>
+      <Layout title={t('screen.user')} roles={[UserRole.SA, UserRole.ADMIN]}>
+        <Main
+          icon={icon}
+          title={t('screen.user')}
+          query={query}
+          loading={loading}
+        >
           <section role='form'>
             <form onSubmit={handleSubmit(onValid)}>
               <Field>
@@ -256,20 +272,11 @@ export const UserScreen: NextScreen = ({ t }) => {
               </SubmitButton>
             </form>
           </section>
-        </main>
+        </Main>
       </Layout>
 
       <style jsx>
         {`
-          main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 32px;
-          }
-
           .name-last {
             margin-left: 8px;
           }

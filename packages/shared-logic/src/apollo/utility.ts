@@ -1,8 +1,13 @@
+import { ApolloClient } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { ReactNativeFile } from 'apollo-upload-client'
 import { isPlainObject } from 'lodash'
+import {
+  CurrentUserWithTokensDocument,
+  CurrentUserWithTokensQuery
+} from '../graphql'
 import { storage } from '../storage'
-import { AuthTokens } from './types'
+import { ApolloClientLocalState, AuthTokens } from './types'
 
 /**
  * Returns authentication token by reading them from the local storage.
@@ -31,6 +36,31 @@ export const getBearerToken = async (
 
   const token = accessToken || refreshToken
   return token ? (token.includes('Bearer') ? token : `Bearer ${token}`) : ''
+}
+
+/**
+ * Queries the current user in order to refresh authentication tokens.
+ * @param client ApolloClient.
+ * @returns Bearer token.
+ */
+export const getBearerTokenAsync = async (
+  client?: ApolloClient<ApolloClientLocalState>
+) => {
+  if (client) {
+    const result = await client.query<CurrentUserWithTokensQuery>({
+      query: CurrentUserWithTokensDocument
+    })
+
+    const user = result.data.currentUser
+    if (user) {
+      return getBearerToken(false, {
+        accessToken: user.accessToken?.value,
+        refreshToken: user.refreshToken?.value
+      })
+    }
+  }
+
+  return ''
 }
 
 /**

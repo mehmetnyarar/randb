@@ -9,11 +9,11 @@ interface Props extends InfoRecord {}
 /**
  * Item.
  */
-export const Item: React.FC<Props> = ({ label, value, print }) => {
+export const Item: React.FC<Props> = ({ label, value, print, cspan }) => {
   if (!label && !value && !print) return null
 
   // Custom render
-  if (print) return <Render title={label} value={print} />
+  if (print) return <Render label={label} value={print} cspan={cspan} />
 
   // Render no value
   if (!value) return <Record label={label} value='' />

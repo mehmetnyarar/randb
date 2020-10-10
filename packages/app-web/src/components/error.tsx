@@ -24,31 +24,18 @@ export const Error: React.FC<Props> = ({ statusCode }) => {
 
   return (
     <>
-      <main role='main'>
-        <section className='error'>
-          {statusCode && (
-            <>
-              <span className='error-code'>{statusCode}</span>
-              <Divider vertical margin={16} />
-            </>
-          )}
-          <span className='error-message'>
-            {t(`screen.error.${statusCode}`)}
-          </span>
-        </section>
-      </main>
+      <section className='error'>
+        {statusCode && (
+          <>
+            <span className='error-code'>{statusCode}</span>
+            <Divider vertical margin={16} />
+          </>
+        )}
+        <span className='error-message'>{t(`screen.error.${statusCode}`)}</span>
+      </section>
 
       <style jsx>
         {`
-          main {
-            flex: 1;
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-
           .error {
             display: flex;
             flex-direction: row;

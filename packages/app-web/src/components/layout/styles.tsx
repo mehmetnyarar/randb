@@ -173,6 +173,10 @@ export const GlobalStyles: React.FC = () => {
           word-break: break-word;
         }
 
+        .valign-top {
+          vertical-align: top;
+        }
+
         .icon-spin {
           -webkit-animation: icon-spin 2s infinite linear;
           animation: icon-spin 2s infinite linear;

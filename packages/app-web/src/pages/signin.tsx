@@ -18,7 +18,7 @@ import {
   InputGroup,
   Label
 } from '~/components/form'
-import { Layout } from '~/components/layout'
+import { Layout, Main } from '~/components/layout'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
@@ -71,9 +71,9 @@ export const SigninScreen: NextScreen = ({ t }) => {
   if (result) return null
 
   return (
-    <Layout title={t('auth.signin')}>
-      <main role='main'>
-        <h2>{t('auth.signin')}</h2>
+    <Layout title={t('screen.signin')}>
+      <Main justify='center' align='center'>
+        <h2 className='page-title'>{t('screen.signin')}</h2>
         <section role='form'>
           <form onSubmit={handleSubmit(onValid)}>
             {method === SigninMethod.USERNAME && (
@@ -216,16 +216,11 @@ export const SigninScreen: NextScreen = ({ t }) => {
             ))}
           </aside>
         </section>
-      </main>
-
+      </Main>
       <style jsx>
         {`
-          main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+          .page-title {
+            margin: 32px 0;
           }
 
           .phone-dc {

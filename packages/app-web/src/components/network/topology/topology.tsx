@@ -71,6 +71,7 @@ export const TopologyView: React.FC<Props> = () => {
       <style jsx>
         {`
           .ne-search {
+            margin-top: 6px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -81,7 +82,7 @@ export const TopologyView: React.FC<Props> = () => {
           }
 
           .ne-network {
-            margin: 16px 0;
+            margin: 8px 0;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;

@@ -13,6 +13,8 @@ export interface UseUpsertUserFormOptions
 export interface UseUpsertUserFormResult
   extends FormHookResult<UpsertUserInput, User> {
   create?: boolean
+  isCreated?: boolean
+  password: string
   createPassword: () => void
   isPasswordVisible: boolean
   onTogglePasswordVisibility: () => void

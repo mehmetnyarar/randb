@@ -47,6 +47,7 @@ export const Footer: React.FC<Props> = () => {
       <style jsx>
         {`
           .app-footer {
+            min-height: 100px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;

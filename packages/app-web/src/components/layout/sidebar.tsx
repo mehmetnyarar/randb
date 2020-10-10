@@ -87,7 +87,7 @@ export const Sidebar: React.FC<Props> = ({ roles }) => {
       <style jsx>
         {`
           .sidebar {
-            padding: 16px 8px;
+            padding: 8px;
             min-width: 200px;
             align-self: stretch;
             background: ${palette['background-basic-color-2']};

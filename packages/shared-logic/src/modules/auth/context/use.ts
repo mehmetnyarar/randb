@@ -82,7 +82,8 @@ export const useAuth = (options: AuthOptions = {}): AuthContext => {
           }
 
           // reset apollo client
-          signinUserClient.resetStore()
+          // signinUserClient.resetStore()
+          signinUserClient.clearStore()
 
           // update user
           setUser(omit(currentUser, ['accessToken', 'refreshToken']))
@@ -123,7 +124,8 @@ export const useAuth = (options: AuthOptions = {}): AuthContext => {
         }
 
         // reset apollo client
-        await signoutUserClient.resetStore()
+        // await signoutUserClient.resetStore()
+        signoutUserClient.clearStore()
 
         // update user
         setUser(undefined)

@@ -9,8 +9,9 @@ import {
   UserSearchBy
 } from '@app/logic'
 import React, { useContext, useEffect } from 'react'
+import { RiGroupLine } from 'react-icons/ri'
 import { GhostButton, InfoButton } from '~/components/button'
-import { Layout } from '~/components/layout'
+import { Layout, Main } from '~/components/layout'
 import { Loading } from '~/components/loading'
 import { UserCard } from '~/components/user'
 import { withTranslation } from '~/i18n'
@@ -54,8 +55,11 @@ export const UsersScreen: NextScreen = ({ t }) => {
 
   return (
     <Layout title={t('screen.users')} roles={[UserRole.SA, UserRole.ADMIN]}>
-      <main role='main'>
-        {initializing && <span>{t('initializing')}</span>}
+      <Main
+        icon={<RiGroupLine />}
+        title={t('screen.users')}
+        loading={initializing || loading}
+      >
         {result && (
           <>
             <section id='search' className='search'>
@@ -108,19 +112,10 @@ export const UsersScreen: NextScreen = ({ t }) => {
             </section>
           </>
         )}
-      </main>
+      </Main>
 
       <style jsx>
         {`
-          main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-            padding: 32px;
-          }
-
           .search {
             margin-bottom: 32px;
             display: flex;

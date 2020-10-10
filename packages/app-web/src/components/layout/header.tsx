@@ -46,6 +46,7 @@ export const Header: React.FC<Props> = () => {
       <style jsx>
         {`
           .app-header {
+            height: 75px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;

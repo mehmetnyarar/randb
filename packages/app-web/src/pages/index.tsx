@@ -1,6 +1,7 @@
-import { initializeApolloClient, useWelcomeQuery } from '@app/logic'
+import { initializeApolloClient } from '@app/logic'
 import React from 'react'
-import { Layout } from '~/components/layout'
+import { RiHomeLine } from 'react-icons/ri'
+import { Layout, Main } from '~/components/layout'
 import { withTranslation } from '~/i18n'
 import { NextScreen } from '~/types'
 
@@ -8,29 +9,16 @@ import { NextScreen } from '~/types'
  * Home screen.
  */
 export const HomeScreen: NextScreen = ({ t }) => {
-  const { loading, error, data } = useWelcomeQuery()
-
   return (
-    <Layout title={t('home')}>
-      <main role='main'>
+    <Layout title={t('screen.home')}>
+      <Main
+        title={t('screen.home')}
+        icon={<RiHomeLine />}
+        justify='center'
+        align='center'
+      >
         <p>{t('welcome')}</p>
-
-        {loading && <p>...</p>}
-        {error && <p data-testid='welcome-error'>{t(error.message)}</p>}
-        {data?.welcome && <p>{data.welcome}</p>}
-      </main>
-
-      <style jsx>
-        {`
-          main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-        `}
-      </style>
+      </Main>
     </Layout>
   )
 }

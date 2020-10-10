@@ -2,6 +2,7 @@ import {
   ApolloClient,
   ApolloLink,
   from,
+  fromPromise,
   InMemoryCache,
   split
 } from '@apollo/client'
@@ -14,19 +15,26 @@ import { ConnectionParams } from 'subscriptions-transport-ws'
 import { isBrowser } from '../config'
 import { RequestOrigin } from '../graphql'
 import { Logger } from '../logger'
-import { ApolloOptions } from './types'
-import { getBearerToken, isSubscription, isUpload } from './utility'
+import { ApolloClientLocalState, ApolloOptions } from './types'
+import {
+  getBearerToken,
+  getBearerTokenAsync,
+  isSubscription,
+  isUpload
+} from './utility'
 
 const logger = Logger.create({
-  src: 'apollo/create'
+  src: 'apollo/client'
 })
+
+let apolloClient: ApolloClient<ApolloClientLocalState>
 
 /**
  * Creates a new ApolloClient.
  * @param [options={}] Options.
  * @returns ApolloClient.
  */
-export const createApolloClient = (options: ApolloOptions = {}) => {
+export const create = (options: ApolloOptions = {}) => {
   const { apiUrl, subscriptionsUrl, auth, language, agent, origin } = options
   const mobile = origin === RequestOrigin.MOBILE
   const browser = isBrowser()
@@ -103,15 +111,51 @@ export const createApolloClient = (options: ApolloOptions = {}) => {
 
   // Error
   // https://www.apollographql.com/docs/react/api/link/apollo-link-error/
-  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
-    const headers = operation.getContext().headers
-    logger.debug('errorLink', {
-      graphQLErrors,
-      networkError,
-      operation,
-      headers
-    })
-  })
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      const headers = operation.getContext().headers
+      logger.debug('errorLink', {
+        graphQLErrors,
+        networkError,
+        operation,
+        headers
+      })
+
+      let refreshAuthTokens = false
+      if (graphQLErrors) {
+        for (const error of graphQLErrors) {
+          const { code, path } = error.extensions || {}
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            const paths = ['bscs', 'rncs', 'tacs']
+            if (paths.includes(path)) {
+              refreshAuthTokens = true
+            }
+          }
+        }
+      }
+
+      if (refreshAuthTokens) {
+        logger.debug('refreshAuthTokens')
+        return fromPromise(getBearerTokenAsync(apolloClient))
+          .filter(value => Boolean(value))
+          .flatMap(token => {
+            const originalHeaders = operation.getContext().headers
+            const ctx = {
+              headers: {
+                ...originalHeaders,
+                authorization: token
+              }
+            }
+            logger.debug('refreshAuthTokens', { ctx })
+
+            operation.setContext(ctx)
+            return forward(operation)
+          })
+      }
+
+      return forward(operation)
+    }
+  )
 
   // Retry
   // https://www.apollographql.com/docs/react/api/link/apollo-link-retry/
@@ -137,4 +181,33 @@ export const createApolloClient = (options: ApolloOptions = {}) => {
     ssrMode: !isClient,
     connectToDevTools: isClient
   })
+}
+
+/**
+ * Initializes ApolloClient.
+ * @param [options={}] Options.
+ * @returns ApolloClient.
+ */
+export const initializeApolloClient = (options: ApolloOptions = {}) => {
+  logger.debug('initialize', { options })
+  const { initialState } = options
+  const _apolloClient = apolloClient ?? create(options)
+
+  // If your page has Next.js data fetching methods that use Apollo Client,
+  // the initial state gets hydrated here
+  if (initialState) {
+    // Get existing cache, loaded during client side data fetching
+    const existingCache = _apolloClient.extract()
+    // Restore the cache using the data passed from getStaticProps/getServerSideProps
+    // combined with the existing cached data
+    _apolloClient.cache.restore({ ...existingCache, ...initialState })
+  }
+
+  // For SSG and SSR always create a new Apollo Client
+  if (!isBrowser()) return _apolloClient
+
+  // Create the Apollo Client once in the client
+  if (!apolloClient) apolloClient = _apolloClient
+
+  return _apolloClient
 }

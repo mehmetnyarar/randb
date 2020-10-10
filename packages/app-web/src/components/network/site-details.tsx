@@ -43,9 +43,21 @@ export const SiteDetails: React.FC<Props> = ({ value }) => {
     items.push({ label: t('ne.ID'), value: ID })
     items.push({ label: t('ne.name'), value: name })
     items.push({ label: t('ne.location'), value: stringify.location(location) })
-    items.push({ label: t('ne.cells.g2'), print: <CellList items={g2} /> })
-    items.push({ label: t('ne.cells.g3'), print: <CellList items={g3} /> })
-    items.push({ label: t('ne.cells.g4'), print: <CellList items={g4} /> })
+    items.push({
+      label: t('ne.cells.g2'),
+      cspan: 2,
+      print: <CellList items={g2} />
+    })
+    items.push({
+      label: t('ne.cells.g3'),
+      cspan: 2,
+      print: <CellList items={g3} />
+    })
+    items.push({
+      label: t('ne.cells.g4'),
+      cspan: 2,
+      print: <CellList items={g4} />
+    })
     items.push({
       label: t('ne.active'),
       value: t(stringify.yesNo(isActive)) as string
@@ -72,7 +84,7 @@ export const SiteDetails: React.FC<Props> = ({ value }) => {
   return (
     <>
       <article className='site-info'>
-        <InfoTable title={value.name} records={records} />
+        <InfoTable records={records} />
       </article>
     </>
   )

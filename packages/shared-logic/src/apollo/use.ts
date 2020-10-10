@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Logger } from '../logger'
-import { initializeApolloClient } from './apollo'
+import { initializeApolloClient } from './client'
 import { ApolloOptions } from './types'
 
 const logger = Logger.create({
