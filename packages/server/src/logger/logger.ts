@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { appendFile } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
-import { isProduction, LOGS_DIR, Phase } from '~/config'
+import { DEBUG, isProduction, LOGS_DIR, Phase } from '~/config'
 import { levels, styles } from './const'
 import {
   CreateLoggerOptions,
@@ -52,7 +52,9 @@ export class Logger {
    */
   constructor (options: LoggerOptions = {}, phase?: Phase) {
     this.src = options.src || 'common'
-    this.level = options.level || (isProduction(phase) ? 'warn' : 'debug')
+    this.level = DEBUG
+      ? 'debug'
+      : options.level || (isProduction(phase) ? 'warn' : 'debug')
     this.entries = []
     this.storages = options.storages || []
   }

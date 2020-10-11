@@ -4,6 +4,7 @@ import { Config as ApolloConfig } from 'apollo-server-express'
  * Environment variables.
  */
 export interface Env {
+  DEBUG?: string
   HOST_SSL?: string
   HOST_DOMAIN?: string
   SERVER_PORT?: string
@@ -36,6 +37,11 @@ export type RequiredEnv = Partial<Record<keyof Env, boolean>>
  * Environment configuration.
  */
 export interface EnvConfig {
+  /**
+   * Global debug level.
+   */
+  DEBUG?: boolean
+
   /**
    * Indicates whether SSL is installed on the host machine or not.
    */

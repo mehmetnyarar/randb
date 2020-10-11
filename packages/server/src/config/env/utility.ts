@@ -46,6 +46,7 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
 
   // Defaults
   const {
+    DEBUG = 'false',
     HOST_SSL = 'false',
     HOST_DOMAIN = '',
     SERVER_PORT = '4000',
@@ -68,6 +69,9 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     AUTH_REFRESH_TOKEN = '',
     SA_PASSWORD = ''
   } = env || process.env
+
+  const dev = isDevelopment()
+  const debug = DEBUG === 'true'
 
   // SSL configuration
   const SSL = HOST_SSL === 'true'
@@ -99,6 +103,7 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
     : []
 
   return {
+    DEBUG: debug,
     SSL,
     PORT,
     DOMAIN: HOST_DOMAIN,
@@ -120,11 +125,9 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
           : GQL_AUTH.split(','),
     GRAPHQL_PATH: GQL_API_PATH,
     GRAPHQL_CONFIG: {
-      tracing: GQL_TRACING ? GQL_TRACING === 'true' : undefined,
-      playground: GQL_PLAYGROUND ? GQL_PLAYGROUND === 'true' : undefined,
-      introspection: GQL_INTROSPECTION
-        ? GQL_INTROSPECTION === 'true'
-        : undefined,
+      tracing: GQL_TRACING ? GQL_TRACING === 'true' : debug,
+      playground: GQL_PLAYGROUND ? GQL_PLAYGROUND === 'true' : debug,
+      introspection: GQL_INTROSPECTION ? GQL_INTROSPECTION === 'true' : debug,
       uploads: {
         maxFiles: Number(GQL_UPLOADS_MAX_FILES),
         maxFileSize: Number(GQL_UPLOADS_MAX_FILE_SIZE)
@@ -132,7 +135,7 @@ export const create = (env?: Env, phase?: Phase): EnvConfig => {
       subscriptions: GQL_SUBSCRIPTIONS_PATH
         ? { path: GQL_SUBSCRIPTIONS_PATH }
         : undefined,
-      engine: APOLLO_KEY ? { reportSchema: isDevelopment() } : undefined
+      engine: dev && APOLLO_KEY ? { reportSchema: true } : undefined
     },
     APOLLO_KEY,
     RESET_TOKEN: AUTH_RESET_TOKEN,

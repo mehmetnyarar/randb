@@ -5,6 +5,7 @@ import { create, validate } from '~/config/env/utility'
 // #region Setup
 
 const base: EnvConfig = {
+  DEBUG: false,
   SSL: false,
   PORT: 4000,
   DOMAIN: '',
@@ -19,9 +20,9 @@ const base: EnvConfig = {
   GRAPHQL_AUTH: true,
   GRAPHQL_PATH: undefined,
   GRAPHQL_CONFIG: {
-    tracing: undefined,
-    playground: undefined,
-    introspection: undefined,
+    tracing: false,
+    playground: false,
+    introspection: false,
     uploads: {
       maxFiles: 10,
       maxFileSize: 100000000
@@ -92,7 +93,7 @@ describe('config/env/utility', () => {
   describe('create', () => {
     it('should create a configuration (process.env)', () => {
       const result = create()
-      expect(Object.keys(result)).toHaveLength(19)
+      expect(Object.keys(result)).toHaveLength(20)
     })
 
     it('should create a configuration (default env)', () => {

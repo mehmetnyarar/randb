@@ -1,9 +1,14 @@
 import { config } from 'dotenv'
+import { join } from 'path'
 import 'reflect-metadata'
 import { LogMethod } from '~/logger'
 
+// Load environment variables
+const envPath = join(process.cwd(), '.env.test')
+config({ path: envPath })
+
 // MongoDB In-Memory Server
-config() // Read environment variables for mongodb-memory-server (MONGOMS_*)
+// Read environment variables for mongodb-memory-server (MONGOMS_*)
 jest.setTimeout(600000) // Additional time to download MongoDB binaries
 
 // Disable console printing for the following methods during the tests

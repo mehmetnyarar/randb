@@ -1,6 +1,12 @@
 import { AuthChecker } from 'type-graphql'
+import { Logger } from '~/logger'
 import { UserRole } from '~/models'
+import { CurrentUser } from '~/modules'
 import { GraphQLContext } from './types'
+
+const logger = Logger.create({
+  src: 'graphql/auth'
+})
 
 /**
  * Determines the user roles to be ignored
@@ -9,12 +15,28 @@ import { GraphQLContext } from './types'
  * @returns User roles.
  */
 export const getIgnoredRoles = (config: true | string[]) => {
-  if (config === true) return [] // Do not ignore any
+  if (Array.isArray(config)) {
+    return Object.values(UserRole).reduce((roles, role) => {
+      return config.includes(role) ? roles : roles.concat(role as UserRole)
+    }, [] as UserRole[])
+  }
 
-  // Ignore roles that are specified in env/GRAPHQL_AUTH
-  return Object.values(UserRole).reduce((roles, role) => {
-    return config.includes(role) ? roles : roles.concat(role as UserRole)
-  }, [] as UserRole[])
+  return config
+    ? [] // Do not ignore any roles
+    : Object.values(UserRole) // Ignore all the roles
+}
+
+/**
+ * Determines whether the user is authorized or not.
+ * @param user Current user.
+ * @param roles Roles.
+ * @returns True if he conditions are met.
+ */
+export const isUserAuthorized = (
+  user?: CurrentUser,
+  roles: UserRole[] = []
+) => {
+  return user ? roles.some(role => user.roles.includes(role)) : false
 }
 
 /**
@@ -25,26 +47,20 @@ export const getIgnoredRoles = (config: true | string[]) => {
  * @returns True if the operation is allowed to be performed.
  */
 export const authChecker: AuthChecker<GraphQLContext, UserRole> = async (
-  { context },
+  { context: { auth, currentUser } },
   roles
 ) => {
-  // Allow operation if the auth checker is disabled
-  if (!context.auth) return true
+  let result = true
+  if (auth && roles && roles.length) {
+    const ignore = getIgnoredRoles(auth)
+    const ignoreUser = roles.some(role => ignore.includes(role))
+    logger.debug('', { ignore, ignoreUser })
 
-  // Allow operation if the role is not to be authorized
-  const ignored = getIgnoredRoles(context.auth)
-  if (roles.some(role => ignored.includes(role))) {
-    return true
+    if (!ignoreUser) {
+      result = isUserAuthorized(currentUser, roles)
+    }
   }
 
-  const { currentUser } = context
-
-  // Block operation if the user is not logged in
-  if (!currentUser) return false
-
-  // Allow operation if the roles are not defined/specified
-  if (!roles || !roles.length) return true
-
-  // Allow operation if the user's roles are permitted
-  return roles.some(role => currentUser.roles.includes(role))
+  logger.debug('', { auth, roles, currentUser, result })
+  return result
 }

@@ -13,6 +13,7 @@ validate(parsed, REQUIRED_ENV)
  * Environment configuration.
  */
 export const {
+  DEBUG,
   SSL,
   PORT,
   DOMAIN,
@@ -40,6 +41,7 @@ if (!isTest()) {
     'config/env',
     JSON.stringify(
       {
+        DEBUG,
         SSL,
         PORT,
         DOMAIN,
