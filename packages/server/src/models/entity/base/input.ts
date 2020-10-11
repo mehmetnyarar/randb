@@ -51,6 +51,15 @@ export class EntityInput extends AnalyticsInput {
  */
 @InputType()
 export class DeleteEntityInput extends AnalyticsInput {
-  @Field(() => ID, { nullable: true })
+  @Field(() => ID)
   id!: string
+}
+
+/**
+ * Input to delete entities.
+ */
+@InputType()
+export class DeleteEntitiesInput extends AnalyticsInput {
+  @Field(() => [ID])
+  ids!: string[]
 }

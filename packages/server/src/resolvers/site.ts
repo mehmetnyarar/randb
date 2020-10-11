@@ -1,19 +1,26 @@
+import { without } from 'lodash'
 import {
   Arg,
   Authorized,
+  Ctx,
   FieldResolver,
+  Mutation,
   ObjectType,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
-import { QueryBuilder } from '~/db'
+import { DatabaseError, QueryBuilder, Repository } from '~/db'
+import { GraphQLContext } from '~/graphql'
 import { Logger } from '~/logger'
 import {
   BscModel,
   Cell,
   CellModel,
   DEFAULT_SITE,
+  DeleteEntityInput,
+  EntityType,
+  getLog,
   LacModel,
   refsToObjIds,
   RncModel,
@@ -22,7 +29,8 @@ import {
   SiteModel,
   SitesFilter,
   TacModel,
-  toGeoLocation
+  toGeoLocation,
+  toStrId
 } from '~/models'
 import { Authorize, ConnectionInput, edge, paginate, response } from '~/modules'
 import { createNetworkElementResolver } from './base'
@@ -177,6 +185,74 @@ export class SiteResolver extends BaseResolver {
 
     logger.debug('site', { filter, query })
     return this.repo.findOne(query)
+  }
+
+  // #endregion
+
+  // #region Mutation
+
+  /**
+   * Deletes the site from the system.
+   * @param input Input.
+   * @param context GraphQL context.
+   * @returns True if the operation succeeds.
+   */
+  @Authorized(Authorize.manager)
+  @Mutation(() => Boolean)
+  async deleteSite (
+    @Arg('data') input: DeleteEntityInput,
+    @Ctx() { currentUser }: GraphQLContext
+  ) {
+    const { id } = input
+    const log = getLog(input, {}, currentUser)
+
+    // find the cell
+    const site = await this.repo.findById(id)
+    if (!site) {
+      throw new DatabaseError('ENTITY_NOT_FOUND', {
+        operation: 'DELETE',
+        entity: EntityType.SITE,
+        id,
+        data: JSON.stringify(input)
+      })
+    }
+
+    // Remove from BSC
+    const bscs = new Repository(BscModel)
+    const bsc = site.bsc ? await bscs.findById(toStrId(site.bsc)) : undefined
+    if (bsc) {
+      await bscs.update(bsc, { children: without(bsc.children, site._id) }, log)
+    }
+
+    // Remove from RNC
+    const rncs = new Repository(RncModel)
+    const rnc = site.rnc ? await rncs.findById(toStrId(site.rnc)) : undefined
+    if (rnc) {
+      await rncs.update(rnc, { children: without(rnc.children, site._id) }, log)
+    }
+
+    // Remove from TAC
+    const tacs = new Repository(TacModel)
+    const tac = site.tac ? await tacs.findById(toStrId(site.tac)) : undefined
+    if (tac) {
+      await tacs.update(tac, { children: without(tac.children, site._id) }, log)
+    }
+
+    // Remove from LAC
+    const lacs = new Repository(LacModel)
+    const lac = site.lac ? await lacs.findById(toStrId(site.lac)) : undefined
+    if (lac) {
+      await lacs.update(lac, { children: without(lac.children, site._id) }, log)
+    }
+
+    // Delete all the cells
+    const cells = new Repository(CellModel)
+    await cells.deleteMany(site.children.map(toStrId))
+
+    // Delete the site
+    await this.repo.delete(site, log)
+
+    return true
   }
 
   // #endregion

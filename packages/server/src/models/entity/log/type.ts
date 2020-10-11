@@ -27,6 +27,10 @@ export class Log extends Entity {
   @Prop()
   entityId?: Types.ObjectId
 
+  @Field(() => [ID], { nullable: true })
+  @Prop()
+  entityIds?: Types.ObjectId[]
+
   @Field({ nullable: true })
   @Prop()
   message?: string

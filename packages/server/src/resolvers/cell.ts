@@ -1,13 +1,17 @@
+import { pick, without } from 'lodash'
 import {
   Arg,
   Authorized,
+  Ctx,
   FieldResolver,
+  Mutation,
   ObjectType,
   Query,
   Resolver,
   Root
 } from 'type-graphql'
-import { QueryBuilder } from '~/db'
+import { DatabaseError, QueryBuilder, Repository } from '~/db'
+import { GraphQLContext } from '~/graphql'
 import { Logger } from '~/logger'
 import {
   AntennaModel,
@@ -17,14 +21,25 @@ import {
   CellModel,
   CellsFilter,
   DEFAULT_CELL,
+  DeleteEntitiesInput,
+  DeleteEntityInput,
+  EntityType,
+  getLog,
+  getStrId,
   LacModel,
+  NetworkType,
   RncModel,
+  Site,
   SiteModel,
   TacModel,
-  toGeoLocation
+  toGeoLocation,
+  toStrId
 } from '~/models'
 import { Authorize, ConnectionInput, edge, paginate, response } from '~/modules'
 import { createEntityResolver } from './base'
+
+type CellInfo = Pick<Cell, '_id' | 'network'>
+type CellsBySites = { [key: string]: CellInfo[] }
 
 const logger = Logger.create({
   src: 'resolver/site'
@@ -97,16 +112,16 @@ export class CellResolver extends BaseResolver {
   @Query(() => [Cell])
   async cells (@Arg('filter', { nullable: true }) filter: CellsFilter = {}) {
     const query = QueryBuilder.entities<Cell>(CellModel, filter)
-      .ids('id', filter.ids)
+      .ids('bsc', filter.bscs)
+      .ids('rnc', filter.rncs)
+      .ids('tac', filter.tacs)
+      .ids('lac', filter.lacs)
+      .id('site', filter.site)
       .re('name', filter.name)
       .eq('type', filter.type)
       .in('type', filter.types)
       .eq('network', filter.network)
       .in('network', filter.networks)
-      .ids('bsc', filter.bscs)
-      .ids('rnc', filter.rncs)
-      .ids('tac', filter.tacs)
-      .ids('lac', filter.lacs)
       .in('scenario', filter.scenarios)
       .eq('g2', filter.g2)
       .eq('g3', filter.g3)
@@ -132,16 +147,20 @@ export class CellResolver extends BaseResolver {
     @Arg('connection', { nullable: true }) connection: ConnectionInput = {}
   ) {
     const query = QueryBuilder.entities<Cell>(CellModel, filter)
-      .ids('id', filter.ids)
+      .ids('bsc', filter.bscs)
+      .ids('rnc', filter.rncs)
+      .ids('tac', filter.tacs)
+      .ids('lac', filter.lacs)
+      .id('site', filter.site)
       .re('name', filter.name)
       .eq('type', filter.type)
       .in('type', filter.types)
       .eq('network', filter.network)
       .in('network', filter.networks)
-      .ids('bsc', filter.bscs)
-      .ids('rnc', filter.rncs)
-      .ids('tac', filter.tacs)
-      .ids('lac', filter.lacs)
+      .in('scenario', filter.scenarios)
+      .eq('g2', filter.g2)
+      .eq('g3', filter.g3)
+      .eq('g4', filter.g4)
       .conditions()
 
     logger.debug('pagedCells', { filter, query })
@@ -166,6 +185,145 @@ export class CellResolver extends BaseResolver {
 
     logger.debug('cell', { filter, query })
     return this.repo.findOne(query)
+  }
+
+  // #endregion
+
+  // #region Mutation
+
+  /**
+   * Deletes the cell from the system.
+   * @param input Input.
+   * @param context GraphQL context.
+   * @returns True if the operation succeeds.
+   */
+  @Authorized(Authorize.manager)
+  @Mutation(() => Boolean)
+  async deleteCell (
+    @Arg('data') input: DeleteEntityInput,
+    @Ctx() { currentUser }: GraphQLContext
+  ) {
+    const { id } = input
+    const log = getLog(input, {}, currentUser)
+
+    // find cell
+    const cell = await this.repo.findById(id)
+    if (!cell) {
+      throw new DatabaseError('ENTITY_NOT_FOUND', {
+        operation: 'DELETE',
+        entity: EntityType.CELL,
+        id,
+        data: JSON.stringify(input)
+      })
+    }
+
+    const sites = new Repository(SiteModel)
+
+    // find site
+    const siteId = getStrId(cell.site)
+    const site = await sites.findById(siteId)
+    if (!site) {
+      throw new DatabaseError('ENTITY_NOT_FOUND', {
+        operation: 'DELETE',
+        entity: EntityType.CELL,
+        id,
+        data: JSON.stringify({ ...input, siteId })
+      })
+    }
+
+    // remove cell from the site
+    const updates: Partial<Site> = {
+      children: without(site.children, cell._id)
+    }
+    switch (cell.network) {
+      case NetworkType.G2:
+        updates.g2 = without(site.g2, cell._id)
+        break
+      case NetworkType.G3:
+        updates.g3 = without(site.g3, cell._id)
+        break
+      case NetworkType.G4:
+        updates.g4 = without(site.g4, cell._id)
+        break
+    }
+    await sites.update(site, updates, log)
+
+    // delete cell
+    await this.repo.delete(cell, log)
+
+    return true
+  }
+
+  /**
+   * Deletes cells from the system.
+   * @param input Input.
+   * @param context GraphQL context.
+   * @returns True if the operation succeeds.
+   */
+  @Authorized(Authorize.manager)
+  @Mutation(() => Boolean)
+  async deleteCells (
+    @Arg('data') input: DeleteEntitiesInput,
+    @Ctx() { currentUser }: GraphQLContext
+  ) {
+    const { ids } = input
+    const log = getLog(input, {}, currentUser)
+
+    // find cells
+    const cells = await this.repo.find({ _id: { $in: ids } })
+
+    // organize cells by sites
+    const cellsBySites = cells.reduce((result, cell) => {
+      const cellInfo = pick(cell, ['_id', 'network'])
+      const siteId = toStrId(cell.site)
+      const keys = Object.keys(result)
+      result[siteId] = keys.includes(siteId)
+        ? result[siteId].concat(cellInfo)
+        : [cellInfo]
+
+      return result
+    }, {} as CellsBySites)
+
+    // Remove cells from sites
+    const sites = new Repository(SiteModel)
+    const siteIds = Object.keys(cellsBySites)
+    for (const siteId of siteIds) {
+      const site = await sites.findById(siteId)
+
+      if (site) {
+        const cellsBySite = cellsBySites[siteId]
+        const children = cellsBySite.map(cell => cell._id)
+        const updates: Partial<Site> = {
+          children: without(site.children, ...children)
+        }
+
+        site.g2 = without(
+          site.g2,
+          ...cellsBySite
+            .filter(cell => cell.network === NetworkType.G2)
+            .map(cell => cell._id)
+        )
+        site.g3 = without(
+          site.g3,
+          ...cellsBySite
+            .filter(cell => cell.network === NetworkType.G3)
+            .map(cell => cell._id)
+        )
+        site.g4 = without(
+          site.g4,
+          ...cellsBySite
+            .filter(cell => cell.network === NetworkType.G4)
+            .map(cell => cell._id)
+        )
+
+        await sites.update(site, updates, log)
+      }
+    }
+
+    // Delete cells
+    await this.repo.deleteMany(ids, log)
+
+    return true
   }
 
   // #endregion

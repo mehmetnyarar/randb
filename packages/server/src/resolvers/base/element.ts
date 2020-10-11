@@ -4,6 +4,8 @@ import { ClassType, FieldResolver, Resolver, Root } from 'type-graphql'
 import { ElementType, NetworkElement, NetworkType } from '~/models'
 import { createEntityResolver } from './entity'
 
+const PARENT = [ElementType.BSC, ElementType.RNC, ElementType.TAC]
+
 let network: NetworkType | undefined
 const getNetwork = (type: ElementType) => {
   switch (type) {
@@ -42,14 +44,24 @@ export function createNetworkElementResolver<
   abstract class NetworkElementResolver extends EntityResolver {
     @FieldResolver(() => [ChildrenType])
     async children (@Root() entity: NetworkElement) {
-      if (!entity.children) return []
+      if (!entity.children || !entity.children.length) return []
 
-      network = getNetwork(entity.type)
-      const useNetwork = entity.type === ElementType.SITE
+      if (PARENT.includes(entity.type)) {
+        // For parent NE queries (BSC, RNC, TAC), sites should have children
+        // with the appropriate network type
+        network = getNetwork(entity.type)
+      } else if (entity.type === ElementType.SITE) {
+        // Site should have all the children available if the network is not set
+        if (network) {
+          return ChildrenModel.find({
+            _id: { $in: entity.children as Types.ObjectId[] },
+            network
+          } as any)
+        }
+      }
 
       return ChildrenModel.find({
-        _id: { $in: entity.children as Types.ObjectId[] },
-        network: useNetwork ? network : undefined
+        _id: { $in: entity.children as Types.ObjectId[] }
       } as any)
     }
   }

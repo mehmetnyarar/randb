@@ -3,9 +3,10 @@ import equals from 'fast-deep-equal/es6'
 import { toUpper } from 'lodash'
 import { CreateQuery, FilterQuery } from 'mongoose'
 import { Logger } from '~/logger'
-import { Entity, EntityType, EventType, Log, LogModel } from '~/models'
+import { Entity, EntityType, EventType, Log, LogModel, toId } from '~/models'
 import { Nullable } from '~/types'
 import { DatabaseError } from './error'
+import { QueryBuilder } from './query'
 
 /**
  * Entity manager.
@@ -404,6 +405,41 @@ export class Repository<T extends Entity> {
     }
 
     return this.delete(entity, log)
+  }
+
+  /**
+   * Deletes many items at once.
+   * @param ids IDs.
+   * @param [log={}] Log.
+   * @returns True if the operation succeeds.
+   */
+  public async deleteMany (ids: string[], log: Partial<Log> = {}) {
+    try {
+      const query = new QueryBuilder(this.model).ids('_id', ids).conditions()
+      await this.model.deleteMany(query)
+    } catch (error) {
+      throw new DatabaseError('ENTITY_DELETE_MANY_ERROR', {
+        operation: 'DELETE',
+        entity: this.type,
+        id: ids.join(','),
+        error
+      })
+    }
+
+    try {
+      await LogModel.create({
+        ...log,
+        event: log.event || EventType.ENTITY_DELETE_MANY,
+        entity: log.entity || this.type,
+        entityIds: ids.map(toId),
+        createdAt: new Date(),
+        isActive: true
+      } as CreateQuery<Log>)
+    } catch (error) {
+      // fail silently
+    }
+
+    return true
   }
 
   // #endregion

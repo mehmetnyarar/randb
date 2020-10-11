@@ -10,6 +10,7 @@ export type DatabaseErrorMessage =
   | 'ENTITY_UPDATE_ERROR'
   | 'ENTITY_NOT_FOUND'
   | 'ENTITY_DELETE_ERROR'
+  | 'ENTITY_DELETE_MANY_ERROR'
 
 /**
  * Error stack.
