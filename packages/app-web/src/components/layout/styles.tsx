@@ -83,8 +83,7 @@ export const GlobalStyles: React.FC = () => {
         section[role='form'] {
           min-width: 480px;
           max-width: 720px;
-          margin-top: 32px;
-          padding: 32px;
+          padding: 16px;
           border-radius: 4px;
           border: 1px solid ${palette['border-basic-color-3']};
           background: ${palette['background-basic-color-2']};

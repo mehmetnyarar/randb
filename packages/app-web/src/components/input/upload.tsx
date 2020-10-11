@@ -70,11 +70,11 @@ export const FileUpload: React.FC<Props> = props => {
       <section className='file-upload'>
         <div className='file-upload-actions'>
           {value ? (
-            <DangerButton width={100} onClick={handleDelete}>
+            <DangerButton width={150} onClick={handleDelete}>
               {t('delete')}
             </DangerButton>
           ) : (
-            <PrimaryButton width={100} onClick={handleBrowse}>
+            <PrimaryButton width={150} onClick={handleBrowse}>
               {t('browse')}
             </PrimaryButton>
           )}

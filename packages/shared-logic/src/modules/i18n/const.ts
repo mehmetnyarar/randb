@@ -9,6 +9,6 @@ export const I18N: I18n = {
   name: 'global',
   supportedCurrencies: [Currency.EUR, Currency.KZT, Currency.TRY, Currency.USD],
   defaultCurrency: Currency.USD,
-  supportedLanguages: [Language.en, Language.tr],
+  supportedLanguages: [Language.en, Language.ru, Language.tr],
   defaultLanguage: Language.en
 }

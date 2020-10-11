@@ -398,8 +398,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    */
   static entities<T extends Entity, Helpers = {}> (
     model: ModelType<T, Helpers>,
-    filter: EntitiesFilter = {},
-    phase?: Phase
+    filter: EntitiesFilter = {}
   ) {
     return new QueryBuilder<T>(model)
       .ids('id', filter.ids)
@@ -407,8 +406,9 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
       .id('createdBy', filter.createdBy)
       .between('updatedAt', filter.updatedAt)
       .id('updatedBy', filter.updatedBy)
-      .visible('isMock', filter.isMock, phase)
-      .visible('isActive', filter.isActive, phase)
+      .eq('isActive', filter.isActive)
+    // TODO Hide mock entities in production
+    // .visible('isMock', filter.isMock || false, phase)
   }
 
   /**

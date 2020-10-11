@@ -55,48 +55,59 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
         }
       >
         <>
-          {result && <ImportReport value={result} />}
-          <section role='form'>
-            <form onSubmit={handleSubmit(onValid)}>
-              <Field>
-                <Label htmlFor='type'>{t('network.type')}</Label>
-                <TypedController
-                  name='type'
-                  render={({ value, onChange, onBlur }: any) => (
-                    <select
-                      id='type'
-                      value={value}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                    >
-                      {Object.values(NetworkType).map((type, i) => (
-                        <option key={i} value={type}>
-                          {t(`network.type.${type}`)}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                />
-              </Field>
-              <Field>
-                <Label htmlFor='upload'>{t('file')}</Label>
-                <TypedController
-                  name='upload'
-                  render={({ value, onChange }: any) => (
-                    <FileUpload
-                      id='upload'
-                      value={value}
-                      onChange={onChange}
-                      limit={NETWORK_UPLOAD_LIMIT}
-                    />
-                  )}
-                />
-              </Field>
-              <SubmitButton disabled={isDisabled}>{t('import')}</SubmitButton>
-            </form>
-          </section>
+          {result ? (
+            <ImportReport value={result} />
+          ) : (
+            <section role='form'>
+              <form onSubmit={handleSubmit(onValid)}>
+                <Field>
+                  <Label htmlFor='type'>{t('network.type')}</Label>
+                  <TypedController
+                    name='type'
+                    render={({ value, onChange, onBlur }: any) => (
+                      <select
+                        id='type'
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        className='network-select'
+                      >
+                        {Object.values(NetworkType).map((type, i) => (
+                          <option key={i} value={type}>
+                            {t(`network.type.${type}`)}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                </Field>
+                <Field>
+                  <Label htmlFor='upload'>{t('file')}</Label>
+                  <TypedController
+                    name='upload'
+                    render={({ value, onChange }: any) => (
+                      <FileUpload
+                        id='upload'
+                        value={value}
+                        onChange={onChange}
+                        limit={NETWORK_UPLOAD_LIMIT}
+                      />
+                    )}
+                  />
+                </Field>
+                <SubmitButton disabled={isDisabled}>{t('import')}</SubmitButton>
+              </form>
+            </section>
+          )}
         </>
       </Main>
+      <style jsx>
+        {`
+          .network-select {
+            width: 150px;
+          }
+        `}
+      </style>
     </Layout>
   )
 }
