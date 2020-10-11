@@ -24,5 +24,11 @@ export const DEFAULT_NETWORK: NetworkContext = {
   selected: [],
   onSelectItem: () => {
     throw new Error('network/onSelectItem has not been yet implemented!')
+  },
+  onDeleteSite: () => {
+    throw new Error('network/onDeleteSite has not been yet implemented!')
+  },
+  onDeleteCell: () => {
+    throw new Error('network/onDeleteCell has not been yet implemented!')
   }
 }

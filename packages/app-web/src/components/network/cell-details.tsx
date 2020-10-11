@@ -1,7 +1,9 @@
-import { Cell, stringify } from '@app/logic'
+import { Cell, Network, stringify } from '@app/logic'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import React, { useCallback, useContext, useMemo } from 'react'
 import { useTranslation } from '~/i18n'
+import { DangerButton } from '../button'
 import { InfoTable } from '../info'
 import { InfoRecord } from '../info/types'
 
@@ -14,6 +16,14 @@ interface Props {
  */
 export const CellDetails: React.FC<Props> = ({ value }) => {
   const { t } = useTranslation()
+  const { push } = useRouter()
+  const { onDeleteCell } = useContext(Network)
+
+  const { id } = value
+  const onDelete = useCallback(() => {
+    onDeleteCell(id, () => push('/dashboard'))
+  }, [onDeleteCell, id, push])
+
   const records = useMemo<InfoRecord[]>(() => {
     const items: InfoRecord[] = []
     const {
@@ -102,9 +112,30 @@ export const CellDetails: React.FC<Props> = ({ value }) => {
 
   return (
     <>
-      <article className='cell-info'>
+      <article className='ne'>
         <InfoTable records={records} />
+        <div className='ne-actions'>
+          <DangerButton onClick={onDelete}>{t('delete')}</DangerButton>
+        </div>
       </article>
+
+      <style jsx>
+        {`
+          .ne-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+          }
+          .ne-actions {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+          }
+        `}
+      </style>
     </>
   )
 }

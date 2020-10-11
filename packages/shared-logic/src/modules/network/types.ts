@@ -16,6 +16,7 @@ export interface Ne {
   state?: SelectState
   isCurrent?: boolean
   isVisible?: boolean
+  isDeleted?: boolean
   areChildrenVisible?: boolean
 }
 

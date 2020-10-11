@@ -249,15 +249,21 @@ export type DateRangeFilter = {
   min?: Maybe<Scalars['DateTime']>
 }
 
+export type DeleteEntitiesInput = {
+  agent?: Maybe<Scalars['String']>
+  ids: Array<Scalars['ID']>
+  origin?: Maybe<RequestOrigin>
+}
+
 export type DeleteEntityInput = {
   agent?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
+  id: Scalars['ID']
   origin?: Maybe<RequestOrigin>
 }
 
 export type DeleteUserInput = {
   agent?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['ID']>
+  id: Scalars['ID']
   origin?: Maybe<RequestOrigin>
 }
 
@@ -323,6 +329,7 @@ export enum EventType {
   AUTH_WRONG_PASSWORD = 'AUTH_WRONG_PASSWORD',
   ENTITY_CREATE = 'ENTITY_CREATE',
   ENTITY_DELETE = 'ENTITY_DELETE',
+  ENTITY_DELETE_MANY = 'ENTITY_DELETE_MANY',
   ENTITY_SEARCH = 'ENTITY_SEARCH',
   ENTITY_UPDATE = 'ENTITY_UPDATE',
   IMPORT_ADD = 'IMPORT_ADD',
@@ -422,6 +429,7 @@ export type Log = {
   deactivatedAt?: Maybe<Scalars['DateTime']>
   entity?: Maybe<EntityType>
   entityId?: Maybe<Scalars['ID']>
+  entityIds?: Maybe<Array<Scalars['ID']>>
   event: EventType
   id: Scalars['ID']
   ip?: Maybe<Scalars['String']>
@@ -436,11 +444,26 @@ export type Log = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  deleteCell: Scalars['Boolean']
+  deleteCells: Scalars['Boolean']
+  deleteSite: Scalars['Boolean']
   deleteUser: Scalars['Boolean']
   importNetwork?: Maybe<Array<NetworkLog>>
   signinUser?: Maybe<CurrentUser>
   signoutUser: Scalars['Boolean']
   upsertUser: User
+}
+
+export type MutationdeleteCellArgs = {
+  data: DeleteEntityInput
+}
+
+export type MutationdeleteCellsArgs = {
+  data: DeleteEntitiesInput
+}
+
+export type MutationdeleteSiteArgs = {
+  data: DeleteEntityInput
 }
 
 export type MutationdeleteUserArgs = {
@@ -1112,6 +1135,24 @@ export type CellQuery = { __typename?: 'Query' } & {
   >
 }
 
+export type DeleteCellMutationVariables = Exact<{
+  data: DeleteEntityInput
+}>
+
+export type DeleteCellMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'deleteCell'
+>
+
+export type DeleteCellsMutationVariables = Exact<{
+  data: DeleteEntitiesInput
+}>
+
+export type DeleteCellsMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'deleteCells'
+>
+
 export type WelcomeQueryVariables = Exact<{ [key: string]: never }>
 
 export type WelcomeQuery = { __typename?: 'Query' } & Pick<Query, 'welcome'>
@@ -1170,6 +1211,15 @@ export type RNCsQuery = { __typename?: 'Query' } & {
       }
   >
 }
+
+export type DeleteSiteMutationVariables = Exact<{
+  data: DeleteEntityInput
+}>
+
+export type DeleteSiteMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'deleteSite'
+>
 
 export type SiteQueryVariables = Exact<{
   filter: SiteFilter
@@ -1841,6 +1891,100 @@ export type CellQueryResult = Apollo.QueryResult<CellQuery, CellQueryVariables>
 export function refetchCellQuery (variables?: CellQueryVariables) {
   return { query: CellDocument, variables: variables }
 }
+export const DeleteCellDocument = gql`
+  mutation DeleteCell($data: DeleteEntityInput!) {
+    deleteCell(data: $data)
+  }
+`
+export type DeleteCellMutationFn = Apollo.MutationFunction<
+  DeleteCellMutation,
+  DeleteCellMutationVariables
+>
+
+/**
+ * __useDeleteCellMutation__
+ *
+ * To run a mutation, you first call `useDeleteCellMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCellMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCellMutation, { data, loading, error }] = useDeleteCellMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteCellMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCellMutation,
+    DeleteCellMutationVariables
+  >
+) {
+  return Apollo.useMutation<DeleteCellMutation, DeleteCellMutationVariables>(
+    DeleteCellDocument,
+    baseOptions
+  )
+}
+export type DeleteCellMutationHookResult = ReturnType<
+  typeof useDeleteCellMutation
+>
+export type DeleteCellMutationResult = Apollo.MutationResult<DeleteCellMutation>
+export type DeleteCellMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCellMutation,
+  DeleteCellMutationVariables
+>
+export const DeleteCellsDocument = gql`
+  mutation DeleteCells($data: DeleteEntitiesInput!) {
+    deleteCells(data: $data)
+  }
+`
+export type DeleteCellsMutationFn = Apollo.MutationFunction<
+  DeleteCellsMutation,
+  DeleteCellsMutationVariables
+>
+
+/**
+ * __useDeleteCellsMutation__
+ *
+ * To run a mutation, you first call `useDeleteCellsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCellsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCellsMutation, { data, loading, error }] = useDeleteCellsMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteCellsMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCellsMutation,
+    DeleteCellsMutationVariables
+  >
+) {
+  return Apollo.useMutation<DeleteCellsMutation, DeleteCellsMutationVariables>(
+    DeleteCellsDocument,
+    baseOptions
+  )
+}
+export type DeleteCellsMutationHookResult = ReturnType<
+  typeof useDeleteCellsMutation
+>
+export type DeleteCellsMutationResult = Apollo.MutationResult<
+  DeleteCellsMutation
+>
+export type DeleteCellsMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCellsMutation,
+  DeleteCellsMutationVariables
+>
 export const WelcomeDocument = gql`
   query Welcome {
     welcome
@@ -2014,6 +2158,52 @@ export type RNCsQueryResult = Apollo.QueryResult<RNCsQuery, RNCsQueryVariables>
 export function refetchRNCsQuery (variables?: RNCsQueryVariables) {
   return { query: RNCsDocument, variables: variables }
 }
+export const DeleteSiteDocument = gql`
+  mutation DeleteSite($data: DeleteEntityInput!) {
+    deleteSite(data: $data)
+  }
+`
+export type DeleteSiteMutationFn = Apollo.MutationFunction<
+  DeleteSiteMutation,
+  DeleteSiteMutationVariables
+>
+
+/**
+ * __useDeleteSiteMutation__
+ *
+ * To run a mutation, you first call `useDeleteSiteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSiteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSiteMutation, { data, loading, error }] = useDeleteSiteMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteSiteMutation (
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteSiteMutation,
+    DeleteSiteMutationVariables
+  >
+) {
+  return Apollo.useMutation<DeleteSiteMutation, DeleteSiteMutationVariables>(
+    DeleteSiteDocument,
+    baseOptions
+  )
+}
+export type DeleteSiteMutationHookResult = ReturnType<
+  typeof useDeleteSiteMutation
+>
+export type DeleteSiteMutationResult = Apollo.MutationResult<DeleteSiteMutation>
+export type DeleteSiteMutationOptions = Apollo.BaseMutationOptions<
+  DeleteSiteMutation,
+  DeleteSiteMutationVariables
+>
 export const SiteDocument = gql`
   query Site($filter: SiteFilter!) {
     site(filter: $filter) {

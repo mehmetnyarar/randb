@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { AppError, getCustomError, getGraphQLError } from '../../../error'
+import {
+  AppError,
+  getCustomError,
+  getExceptionError,
+  getGraphQLError
+} from '../../../error'
 import {
   Bsc,
   NetworkElementReport,
@@ -7,6 +12,8 @@ import {
   Rnc,
   Tac,
   useBSCsLazyQuery,
+  useDeleteCellMutation,
+  useDeleteSiteMutation,
   useRNCsLazyQuery,
   useTACsLazyQuery
 } from '../../../graphql'
@@ -128,7 +135,6 @@ export const useNetwork = (): NetworkContext => {
   })
 
   const [network, setNetwork] = useState(NetworkType.G2)
-
   const reload = useCallback(
     (value: NetworkType) => {
       setLoading(true)
@@ -170,6 +176,44 @@ export const useNetwork = (): NetworkContext => {
     [reload, bscs, rncs, tacs, current, selected]
   )
 
+  const [deleteSite] = useDeleteSiteMutation()
+  const onDeleteSite = useCallback(
+    async (id: string, callback?: () => void) => {
+      try {
+        const { data, errors } = await deleteSite({
+          variables: { data: { id } }
+        })
+        if (data && data.deleteSite) {
+          reload(network)
+          if (callback) callback()
+        } else setError(getGraphQLError(errors))
+      } catch (ex) {
+        logger.debug('deleteSite/ex', ex)
+        setError(getExceptionError(ex))
+      }
+    },
+    [deleteSite, reload, network]
+  )
+
+  const [deleteCell] = useDeleteCellMutation()
+  const onDeleteCell = useCallback(
+    async (id: string, callback?: () => void) => {
+      try {
+        const { data, errors } = await deleteCell({
+          variables: { data: { id } }
+        })
+        if (data && data.deleteCell) {
+          reload(network)
+          if (callback) callback()
+        } else setError(getGraphQLError(errors))
+      } catch (ex) {
+        logger.debug('deleteCell/ex', ex)
+        setError(getExceptionError(ex))
+      }
+    },
+    [deleteCell, reload, network]
+  )
+
   useEffect(() => reload(network), [reload, network])
 
   const [neStats, setNeStats] = useState<NetworkElementReport>({})
@@ -190,6 +234,8 @@ export const useNetwork = (): NetworkContext => {
     setCurrent,
     selected,
     onSelectItem,
-    neStats
+    neStats,
+    onDeleteSite,
+    onDeleteCell
   }
 }

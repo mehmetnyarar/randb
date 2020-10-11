@@ -16,6 +16,8 @@ export interface NetworkContext extends HookResult<Ne[]> {
   setCurrent: (value: Ne) => void
   selected: Ne[]
   onSelectItem: (value: Ne, checked?: boolean) => void
+  onDeleteSite: (id: string, callback?: () => void) => void | Promise<void>
+  onDeleteCell: (id: string, callback?: () => void) => void | Promise<void>
 }
 
 /**
