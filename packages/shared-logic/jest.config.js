@@ -27,8 +27,8 @@ module.exports = {
     '!<rootDir>/src/**/index.ts',
     '!<rootDir>/src/**/const.ts',
     '!<rootDir>/src/**/context.ts',
-    '!<rootDir>/src/config/env/env.ts',
-    '!<rootDir>/src/config/env/env.config.ts',
+    '!<rootDir>/src/apollo/client.ts',
+    '!<rootDir>/src/apollo/use.ts',
     '!<rootDir>/src/graphql/graphql.tsx',
     '!<rootDir>/src/graphql/documents/**/*.ts',
     '!<rootDir>/src/form/yup.ts'

@@ -4,5 +4,4 @@
 /node_modules
 
 # Files
-env.ts
 *.graphql
