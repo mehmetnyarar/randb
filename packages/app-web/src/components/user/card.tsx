@@ -1,10 +1,10 @@
 import { stringify, User, UserRole } from '@app/logic'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from '~/i18n'
 import { DangerButton, InfoButton } from '../button'
 import { Card } from '../card'
-import { InfoTable } from '../info'
+import { InfoRecord, InfoTable } from '../info'
 
 interface Props {
   user: User
@@ -20,30 +20,30 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
   const { t } = useTranslation()
   const router = useRouter()
 
-  const { id, username, name, email, phone } = user
-
+  const { id, username, name, roles } = user
+  const sa = useMemo(() => roles.includes(UserRole.SA), [roles])
+  const data = useMemo<InfoRecord[]>(() => {
+    return [
+      { title: t('email'), value: user.email },
+      { title: t('phone'), value: stringify.phoneNo(user.phone) },
+      {
+        title: t('user.roles'),
+        render: (
+          <ul>
+            {user.roles.map((role, index) => (
+              <li key={index}>{t(`user.role.${role}`)}</li>
+            ))}
+          </ul>
+        )
+      }
+    ]
+  }, [t, user])
   const [loading, setLoading] = useState(false)
-  const canDelete = !isDisabled && !user.roles.includes(UserRole.SA) && !loading
-  const canEdit = !isDisabled && !user.roles.includes(UserRole.SA) && !loading
 
   return (
     <Card
       title={stringify.personName(name)}
-      content={
-        <InfoTable
-          className='full-width'
-          records={[
-            { label: t('email'), value: email },
-            { label: t('phone'), value: stringify.phoneNo(phone) },
-            {
-              label: t('user.roles'),
-              value: user.roles.map(role => ({
-                value: t(`user.role.${role}`) as string
-              }))
-            }
-          ]}
-        />
-      }
+      content={<InfoTable data={data} className='full-width' />}
       actions={
         <>
           <InfoButton
@@ -52,7 +52,7 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
               setLoading(true)
               router.push(`/users/${username}`)
             }}
-            disabled={!canEdit}
+            disabled={sa || loading || isDisabled}
           >
             {t('edit')}
           </InfoButton>
@@ -63,7 +63,7 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
               setLoading(true)
               await onDelete(id)
             }}
-            disabled={!canDelete}
+            disabled={sa || loading || isDisabled}
           >
             {t('delete')}
           </DangerButton>

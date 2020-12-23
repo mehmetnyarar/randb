@@ -1,5 +1,5 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { ApolloClientLocalState, LogMethod } from '@app/logic'
+// import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { LogMethod } from '@app/logic' // ApolloClientLocalState
 import '@testing-library/jest-dom/extend-expect'
 import { config } from 'dotenv'
 import i18n from 'i18next'
@@ -26,16 +26,16 @@ jest.mock('next/router', () => ({
 }))
 
 // Mock Apollo Client
-jest.mock('~/apollo', () => {
-  const client = new ApolloClient<ApolloClientLocalState>({
-    cache: new InMemoryCache()
-  })
+// jest.mock('~/apollo', () => {
+//   const client = new ApolloClient<ApolloClientLocalState>({
+//     cache: new InMemoryCache()
+//   })
 
-  return {
-    initializeApollo: () => client,
-    useApollo: () => client
-  }
-})
+//   return {
+//     initializeApollo: () => client,
+//     useApollo: () => client
+//   }
+// })
 
 // Mock react-modal
 jest

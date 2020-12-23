@@ -22,10 +22,9 @@ const logger = Logger.create({
  */
 export const CellScreen: NextScreen = ({ t }) => {
   const router = useRouter()
-  const name = router.query.name as string
-  logger.debug('render', { name })
-
   const { show } = useContext(Snack)
+
+  const name = router.query.name as string
   const { error, result, loading } = useCell({ name })
 
   useEffect(() => {
@@ -36,6 +35,8 @@ export const CellScreen: NextScreen = ({ t }) => {
       })
     }
   }, [t, show, error])
+
+  logger.debug('render', { name })
 
   return (
     <Layout title={t('screen.cell')} roles={[UserRole.SA, UserRole.ADMIN]}>

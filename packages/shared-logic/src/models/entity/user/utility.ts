@@ -7,6 +7,7 @@ import { UserRole } from '../../../graphql'
  * @returns True if the conditions are met.
  */
 export const isUserAuthorized = (auth?: UserRole[], user?: UserRole[]) => {
+  console.debug('isUserAuthorized', { auth, user })
   if (!auth || !auth.length) return true
   if (!user || !user.length) return false
   return auth.some(role => user.includes(role))

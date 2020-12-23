@@ -1,5 +1,6 @@
 import { I18N } from '@app/logic'
-import React from 'react'
+import { Theme } from '@app/ui'
+import React, { useContext } from 'react'
 import { useTranslation } from '~/i18n'
 
 interface Props {}
@@ -9,6 +10,7 @@ interface Props {}
  */
 export const LanguageSelection: React.FC<Props> = () => {
   const { t, i18n } = useTranslation()
+  const { palette } = useContext(Theme)
 
   return (
     <>
@@ -36,7 +38,6 @@ export const LanguageSelection: React.FC<Props> = () => {
       <style jsx>
         {`
           .app-language {
-            margin-top: 16px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
@@ -47,6 +48,8 @@ export const LanguageSelection: React.FC<Props> = () => {
             margin-right: 8px;
           }
           .app-language select {
+            background: transparent;
+            color: ${palette['text-basic-color']};
           }
         `}
       </style>

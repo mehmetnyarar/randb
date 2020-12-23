@@ -1,10 +1,10 @@
 import React from 'react'
+import { InfoRecord } from '../types'
 import { Item } from './item'
-import { InfoRecord } from './types'
 
 interface Props {
-  title?: string
-  records: InfoRecord[]
+  data: InfoRecord[]
+  caption?: string
   className?: string
 }
 
@@ -12,14 +12,14 @@ interface Props {
  * Info table.
  */
 export const InfoTable: React.FC<Props> = props => {
-  const { title, records, className } = props
+  const { data, caption, className } = props
 
   return (
     <table className={className}>
-      {title && <caption>{title}</caption>}
+      {caption && <caption>{caption}</caption>}
       <tbody>
-        {records.map((record, i) => (
-          <Item key={i} {...record} />
+        {data.map((item, index) => (
+          <Item key={index} {...item} />
         ))}
       </tbody>
     </table>

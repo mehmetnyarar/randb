@@ -1,6 +1,8 @@
-import { ColorScheme, COLOR_SCHEMES, Theme } from '@app/ui'
+import { Theme } from '@app/ui'
 import React, { useContext } from 'react'
+import { RiMoonLine, RiSunLine } from 'react-icons/ri'
 import { useTranslation } from '~/i18n'
+import { GhostButton } from './button'
 
 interface Props {}
 
@@ -14,35 +16,23 @@ export const ThemeSelection: React.FC<Props> = () => {
   return (
     <>
       <div className='app-theme'>
-        <label htmlFor='theme'>{t('theme')}</label>
-        <select
-          id='theme'
-          value={scheme}
-          onChange={e => onSchemeChange(e.target.value as ColorScheme)}
-          data-testid='theme'
+        <span>{t('theme')}</span>
+        <GhostButton
+          aria-label={t('theme')}
+          onClick={() => onSchemeChange(scheme === 'light' ? 'dark' : 'light')}
         >
-          {COLOR_SCHEMES.map(option => (
-            <option key={option} value={option}>
-              {t(`theme.${option}`)}
-            </option>
-          ))}
-        </select>
+          {scheme === 'light' ? <RiSunLine /> : <RiMoonLine />}
+        </GhostButton>
       </div>
 
       <style jsx>
         {`
           .app-theme {
-            margin-top: 16px;
+            margin-right: 8px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            margin-right: 8px;
-          }
-          .app-theme label {
-            margin-right: 8px;
-          }
-          .app-theme select {
           }
         `}
       </style>

@@ -1,29 +1,26 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+import { waitFor } from '@testing-library/react'
 import React from 'react'
-import { currentUser, welcome } from 'test/mocks'
+import { currentUser } from 'test/mocks'
 import { render } from 'test/render'
-import { waitForResponse } from 'test/utils'
 import Screen from '~/pages/index'
 
+const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+const push = jest.fn()
+useRouter.mockImplementationOnce(() => ({ push }))
+
 describe('pages/index', () => {
-  it('should render', async () => {
-    const { getByRole, queryByText } = render(<Screen />, {
-      mocks: [welcome.success, currentUser.isNotSignedIn]
+  it('should redirect to the welcome page', async () => {
+    const { container } = render(<Screen />, {
+      mocks: [currentUser.isNotSignedIn]
     })
 
-    expect(getByRole('main')).toBeInTheDocument()
-    expect(queryByText(/welcome/i)).toBeInTheDocument()
-
-    await waitForResponse()
-    expect(queryByText(/graphql/i)).toBeInTheDocument()
-  })
-
-  it('should render (welcome error)', async () => {
-    const { queryByText, queryByTestId } = render(<Screen />, {
-      mocks: [welcome.failure, currentUser.isNotSignedIn]
+    expect(container).toBeEmptyDOMElement()
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith('/welcome')
     })
-
-    await waitForResponse()
-    expect(queryByText(/graphql/i)).not.toBeInTheDocument()
-    expect(queryByTestId('welcome-error')).toBeInTheDocument()
   })
+
+  test.todo('should redirect to the dashboard page')
 })

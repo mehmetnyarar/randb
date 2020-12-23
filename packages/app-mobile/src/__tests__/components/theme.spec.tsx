@@ -8,8 +8,8 @@ describe('components/theme', () => {
     const { queryByText } = render(<ThemeSelection />)
 
     await waitFor(() => {
-      expect(queryByText('light')).toBeTruthy()
-      expect(queryByText('dark')).toBeFalsy()
+      expect(queryByText('light')).toBeFalsy()
+      expect(queryByText('dark')).toBeTruthy()
     })
 
     test.todo('Simulate theme change')

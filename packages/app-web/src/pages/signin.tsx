@@ -83,6 +83,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                   name='username'
                   render={({ value, onChange, onBlur }: any) => (
                     <input
+                      id='username'
                       type='text'
                       value={value}
                       onChange={value => onChange(value)}
@@ -91,7 +92,6 @@ export const SigninScreen: NextScreen = ({ t }) => {
                       placeholder={t('username.placeholder')}
                       autoCapitalize='none'
                       autoComplete='username'
-                      data-testid='username'
                     />
                   )}
                 />
@@ -105,6 +105,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                   name='email'
                   render={({ value, onChange, onBlur }: any) => (
                     <input
+                      id='email'
                       type='email'
                       value={value}
                       onChange={value => onChange(value)}
@@ -113,7 +114,6 @@ export const SigninScreen: NextScreen = ({ t }) => {
                       placeholder={t('email.placeholder')}
                       autoCapitalize='none'
                       autoComplete='email'
-                      data-testid='email'
                     />
                   )}
                 />
@@ -135,6 +135,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         className='full-width'
                         placeholder={t('phone.cc')}
                         autoComplete='tel-country-code'
+                        aria-labelledby='phone.cc'
                       />
                     )}
                   />
@@ -149,6 +150,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         className='phone-dc full-width'
                         placeholder={t('phone.dc')}
                         autoComplete='tel-area-code'
+                        aria-labelledby='phone.dc'
                       />
                     )}
                   />
@@ -163,6 +165,7 @@ export const SigninScreen: NextScreen = ({ t }) => {
                         className='full-width'
                         placeholder={t('phone.sn')}
                         autoComplete='tel-local'
+                        aria-labelledby='phone.sn'
                       />
                     )}
                   />
@@ -171,19 +174,19 @@ export const SigninScreen: NextScreen = ({ t }) => {
               </Field>
             )}
             <Field>
-              <Label>{t('password')}</Label>
+              <Label htmlFor='password'>{t('password')}</Label>
               <InputGroup>
                 <TypedController
                   name='password'
                   render={({ value, onChange, onBlur }: any) => (
                     <input
+                      id='password'
                       type={isPasswordVisible ? 'text' : 'password'}
                       value={value}
                       onChange={value => onChange(value)}
                       onBlur={onBlur}
                       className='full-width'
                       autoComplete='current-password'
-                      data-testid='password'
                     />
                   )}
                 />

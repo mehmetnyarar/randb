@@ -1,36 +1,39 @@
-import { fireEvent, waitFor } from '@testing-library/dom'
+import { fireEvent, waitFor } from '@testing-library/react'
+import { axe } from 'jest-axe'
 import React from 'react'
-import { signinUser } from 'test/mocks'
-import { render } from 'test/render'
+import { currentUser, signinUser } from 'test/mocks'
+import { render } from 'test/utils'
 import Screen from '~/pages/signin'
 
 describe('pages/signin', () => {
-  // eslint-disable-next-line jest/expect-expect
-  it('should change signin method', () => {
-    const { getByText, queryByText } = render(<Screen />)
-
-    expect(queryByText('auth.signin.method.USERNAME')).not.toBeInTheDocument()
-    expect(queryByText('auth.signin.method.EMAIL')).toBeInTheDocument()
-    expect(queryByText('auth.signin.method.PHONE')).toBeInTheDocument()
-
-    const toPhone = getByText('auth.signin.method.PHONE')
-    fireEvent.click(toPhone)
-
-    expect(queryByText('auth.signin.method.USERNAME')).toBeInTheDocument()
-    expect(queryByText('auth.signin.method.EMAIL')).toBeInTheDocument()
-    expect(queryByText('auth.signin.method.PHONE')).not.toBeInTheDocument()
-  })
-
-  it('should signin', async () => {
-    const { container, getByTestId } = render(<Screen />, {
-      mocks: [signinUser.success]
+  it('should render', async () => {
+    const { findByText, getByLabelText, queryByText } = render(<Screen />, {
+      mocks: [currentUser.isNotSignedIn]
     })
 
-    const username = getByTestId('username')
-    expect(username).toBeInTheDocument()
-    fireEvent.change(username, { target: 'test-user' })
+    const title = await findByText('screen.signin')
+    expect(title).toBeInTheDocument()
 
-    const password = getByTestId('password')
+    expect(getByLabelText('username')).toBeInTheDocument()
+    expect(queryByText('auth.signin.method.USERNAME')).toBeFalsy()
+    expect(queryByText('auth.signin.method.EMAIL')).toBeInTheDocument()
+    expect(queryByText('auth.signin.method.PHONE')).toBeInTheDocument()
+  })
+
+  test.todo('should change the signin method')
+
+  it('should signin the user', async () => {
+    const { container, findByLabelText, getByTestId } = render(<Screen />, {
+      mocks: [currentUser.isNotSignedIn, signinUser.success]
+    })
+
+    const a11y = await axe(container)
+    expect(a11y).toHaveNoViolations()
+
+    const input = await findByLabelText('username')
+    fireEvent.change(input, { target: 'test-user' })
+
+    const password = await findByLabelText('password')
     fireEvent.change(password, { target: '123456' })
 
     const submit = getByTestId('submit')
@@ -41,23 +44,25 @@ describe('pages/signin', () => {
     })
   })
 
-  it('should fail to signin', async () => {
-    const { getByTestId } = render(<Screen />, {
-      mocks: [signinUser.failure]
+  it('should fail to signin the user', async () => {
+    const { container, findByLabelText, getByTestId } = render(<Screen />, {
+      mocks: [currentUser.isNotSignedIn, signinUser.failure]
     })
 
-    const username = getByTestId('username')
-    expect(username).toBeInTheDocument()
-    fireEvent.change(username, { target: 'no-user' })
+    const a11y = await axe(container)
+    expect(a11y).toHaveNoViolations()
 
-    const password = getByTestId('password')
+    const input = await findByLabelText('username')
+    fireEvent.change(input, { target: 'no-user' })
+
+    const password = await findByLabelText('password')
     fireEvent.change(password, { target: '123456' })
 
     const submit = getByTestId('submit')
     fireEvent.click(submit)
 
     waitFor(() => {
-      expect(submit).toBeInTheDocument()
+      expect(container).not.toBeEmptyDOMElement()
     })
   })
 })

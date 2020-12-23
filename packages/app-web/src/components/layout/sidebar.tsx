@@ -1,11 +1,16 @@
 import { isUserAuthorized, UserRole } from '@app/logic'
-import { Theme } from '@app/ui'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React from 'react'
+import { push as Menu } from 'react-burger-menu'
 import { useTranslation } from '~/i18n'
+import { useMenu } from '~/state'
 import { AppLink } from '~/types'
 import { TopologyView } from '../network'
 import { SidebarSection as Section } from './sidebar-section'
+
+// itemListElement does not exist in the TS definitions
+// https://github.com/negomi/react-burger-menu/issues/429
+const SidebarMenu = Menu as any
 
 interface SidebarLink extends AppLink {
   roles?: UserRole[]
@@ -59,11 +64,23 @@ interface Props {
  */
 export const Sidebar: React.FC<Props> = ({ roles }) => {
   const { t } = useTranslation()
-  const { palette } = useContext(Theme)
+  const { isOpen, toggle } = useMenu()
 
   return (
     <>
-      <aside id='sidebar' className='sidebar'>
+      <SidebarMenu
+        id='sidebar'
+        width={300}
+        // noOverlay
+        disableAutoFocus
+        itemListElement='div'
+        isOpen={isOpen}
+        onOpen={toggle}
+        onClose={toggle}
+        outerContainerId='__next'
+        pageWrapId='main'
+        className='sidebar'
+      >
         <Section title={t('network')}>
           <TopologyView />
         </Section>
@@ -82,26 +99,15 @@ export const Sidebar: React.FC<Props> = ({ roles }) => {
             ) : null
           })}
         </nav>
-      </aside>
+      </SidebarMenu>
 
       <style jsx>
         {`
-          .sidebar {
-            padding: 8px;
-            min-width: 200px;
-            align-self: stretch;
-            background: ${palette['background-basic-color-2']};
-            border-right: 1px solid ${palette['border-basic-color-3']};
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
-          }
-
           .sidebar nav {
+            margin-top: 32px;
           }
-          .sidebar nav a {
-            padding: 8px;
+          a {
+            margin-bottom: 8px;
           }
         `}
       </style>

@@ -24,7 +24,7 @@ export const Main: React.FC<Props> = props => {
 
   return (
     <>
-      <div className='main-content'>
+      <div id='main' className='main-content'>
         <ContentHeader {...contentHeaderProps} />
         <main role='main'>{children}</main>
       </div>
@@ -32,6 +32,7 @@ export const Main: React.FC<Props> = props => {
       <style jsx>
         {`
           .main-content {
+            padding-top: 75px; /* Page header is fixed */
             flex: 1;
             display: flex;
             flex-direction: column;

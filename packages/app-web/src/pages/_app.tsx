@@ -14,6 +14,7 @@ import NextCookies from 'next-cookies'
 import NextApp, { AppContext, AppProps } from 'next/app'
 import React from 'react'
 import ReactModal from 'react-modal'
+import { RecoilRoot } from 'recoil'
 import { SnackBar } from '~/components/snackbar'
 import { GRAPHQL_API_URL, GRAPHQL_SUBSCRIPTIONS_URL } from '~/config'
 import { appWithTranslation } from '~/i18n'
@@ -41,20 +42,22 @@ function App ({ Component, pageProps }: AppProps) {
   logger.debug('render', { pageProps, apolloOptions, agent })
 
   return (
-    <ThemeProvider>
-      <SnackProvider>
-        <ApolloProvider client={apolloClient}>
-          <AuthProvider origin={RequestOrigin.WEB}>
-            <SearchProvider>
-              <NetworkProvider>
-                <Component {...pageProps} />
-              </NetworkProvider>
-            </SearchProvider>
-          </AuthProvider>
-        </ApolloProvider>
-        <SnackBar />
-      </SnackProvider>
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider>
+        <SnackProvider>
+          <ApolloProvider client={apolloClient}>
+            <AuthProvider origin={RequestOrigin.WEB}>
+              <SearchProvider>
+                <NetworkProvider>
+                  <Component {...pageProps} />
+                </NetworkProvider>
+              </SearchProvider>
+            </AuthProvider>
+          </ApolloProvider>
+          <SnackBar />
+        </SnackProvider>
+      </ThemeProvider>
+    </RecoilRoot>
   )
 }
 

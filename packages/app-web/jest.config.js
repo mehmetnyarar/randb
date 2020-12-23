@@ -25,7 +25,8 @@ module.exports = {
       testPathIgnorePatterns: [
         '<rootDir>/.next',
         '<rootDir>/coverage',
-        '<rootDir>/dist'
+        '<rootDir>/dist',
+        '<rootDir>/test'
       ]
     }
   ],

@@ -14,10 +14,8 @@ export const Content: React.FC<Props> = ({ roles, children }) => {
   if (roles) {
     return (
       <>
-        <div className='app-content with-sidebar'>
-          <Sidebar roles={roles} />
-          {children}
-        </div>
+        <Sidebar roles={roles} />
+        {children}
 
         <style jsx>
           {`

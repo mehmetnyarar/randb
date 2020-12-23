@@ -1,8 +1,8 @@
-import { Auth, Snack, useSigninUserForm } from '@app/logic'
+import { Auth, SigninMethod, Snack, useSigninUserForm } from '@app/logic'
 import { StackScreenProps } from '@react-navigation/stack'
 import { Input } from '@ui-kitten/components'
-import React, { useContext, useEffect } from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import React, { Fragment, useContext, useEffect } from 'react'
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { GhostButton, SubmitButton } from '~/components/button'
 import {
   Field,
@@ -52,29 +52,25 @@ export const SigninScreen: React.FC<Props> = () => {
   const { onSkipChange } = useContext(Auth)
   const {
     method,
-    altMethod,
+    otherMethods,
     onMethodChange,
     isPasswordVisible,
     onTogglePasswordVisibility,
     TypedController,
-    errors,
     isDisabled,
     handleSubmit,
     onValid,
+    errors,
+    // loading,
+    // result,
     error
-  } = useSigninUserForm({
-    initialValues: {
-      phone: { cc: '', dc: '000', sn: '0000000' },
-      password: '4p9?(IgB7!'
-    }
-  })
+  } = useSigninUserForm()
 
   const { show } = useContext(Snack)
   useEffect(() => {
     if (error) {
       show({
         type: 'error',
-        title: 'Error',
         content: error.messages.join('. ')
       })
     }
@@ -82,7 +78,24 @@ export const SigninScreen: React.FC<Props> = () => {
 
   return (
     <Layout allowBack allowMenu={false} style={styles.layout}>
-      {method === 'email' && (
+      {method === SigninMethod.USERNAME && (
+        <Field>
+          <Label>Username</Label>
+          <TypedController
+            name='username'
+            render={({ value, onChange }: any) => (
+              <Input
+                value={value}
+                onChangeText={value => onChange(value)}
+                placeholder=''
+                autoCapitalize='none'
+              />
+            )}
+          />
+          <FieldError error={errors.username?.message} />
+        </Field>
+      )}
+      {method === SigninMethod.EMAIL && (
         <Field>
           <Label>E-mail</Label>
           <TypedController
@@ -102,7 +115,7 @@ export const SigninScreen: React.FC<Props> = () => {
           <FieldError error={errors.email?.message} />
         </Field>
       )}
-      {method === 'phone' && (
+      {method === SigninMethod.PHONE && (
         <Field>
           <Label>Phone</Label>
           <InputGroup>
@@ -180,9 +193,17 @@ export const SigninScreen: React.FC<Props> = () => {
       </SubmitButton>
 
       <View style={styles.aside}>
-        <GhostButton onPress={() => onMethodChange()}>
-          {`Signin with ${altMethod} instead`}
-        </GhostButton>
+        <Text>Signin with</Text>
+        {otherMethods.map((m, i) => (
+          <Fragment key={i}>
+            <GhostButton
+              onPress={() => onMethodChange(m)}
+              data-testid={`onMethodChange-${m}`}
+            >
+              {m}
+            </GhostButton>
+          </Fragment>
+        ))}
         <GhostButton style={styles.skip} onPress={() => onSkipChange(true)}>
           or skip signin
         </GhostButton>

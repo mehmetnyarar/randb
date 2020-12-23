@@ -81,12 +81,12 @@ export const DashboardScreen: NextScreen = ({ t }) => {
             font-size: 24px;
           }
           .ne-stat-value {
-            width: 128px;
-            height: 128px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            border: 8px solid ${palette['border-basic-color-4']};
+            border: 4px solid ${palette['border-basic-color-4']};
             background: ${palette['background-basic-color-2']};
-            font-size: 32px;
+            font-size: 24px;
           }
 
           h6 {
@@ -96,6 +96,14 @@ export const DashboardScreen: NextScreen = ({ t }) => {
             padding: 0 16px;
             font-size: 12px;
             list-style: disc;
+          }
+
+          @media screen and (min-width: 600px) {
+            .ne-stat-value {
+              width: 128px;
+              height: 128px;
+              font-size: 32px;
+            }
           }
         `}
       </style>

@@ -34,8 +34,8 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
       <style jsx>
         {`
           .card {
-            margin: 0 16px 16px 0;
-            min-width: 300px;
+            flex: 1;
+            margin: 0 0 16px 0;
             border-radius: 4px;
             border: 1px solid ${palette['border-basic-color-3']};
             background: ${palette['background-basic-color-1']};
@@ -43,6 +43,7 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
+            font-size: smaller;
           }
 
           .card-title {
@@ -71,6 +72,13 @@ export const Card: React.FC<Props> = ({ title, content, actions }) => {
             justify-content: flex-end;
             align-items: center;
             background: ${palette['background-basic-color-2']};
+          }
+
+          @media screen and (min-width: 600px) {
+            .card {
+              width: 300px;
+              margin: 0 16px 16px 0;
+            }
           }
         `}
       </style>

@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 
 export type InfoValue = string | number | boolean
+export type InfoValues = Record<string, InfoValue | undefined | null>
 
 export interface InfoRecord {
-  label?: string
+  title: string
   value?: InfoValue | InfoRecord | InfoRecord[] | null
-  print?: ReactNode | null
-  cspan?: number
+  render?: ReactNode | null
 }

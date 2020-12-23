@@ -33,10 +33,15 @@ export enum DateFormat {
  * Formats date as a string.
  * @param date Date.
  * @param as Format.
+ * @param [defaultValue=""] Value to return if the result is nil.
  * @returns Stringified date.
  */
-export const getDateString = (date?: DateType | null, as = DateFormat.dmy) => {
-  if (!date) return ''
+export const getDateString = (
+  date?: DateType | null,
+  as = DateFormat.dmy,
+  defaultValue = ''
+) => {
+  if (!date) return defaultValue
 
   const value =
     typeof date === 'string'

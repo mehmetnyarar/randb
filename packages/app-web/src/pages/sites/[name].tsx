@@ -22,10 +22,9 @@ const logger = Logger.create({
  */
 export const SiteScreen: NextScreen = ({ t }) => {
   const router = useRouter()
-  const name = router.query.name as string
-  logger.debug('render', { name })
-
   const { show } = useContext(Snack)
+
+  const name = router.query.name as string
   const { error, result, loading } = useSite({ name })
 
   useEffect(() => {
@@ -36,6 +35,8 @@ export const SiteScreen: NextScreen = ({ t }) => {
       })
     }
   }, [t, show, error])
+
+  logger.debug('render', { name })
 
   return (
     <Layout title={t('screen.site')} roles={[UserRole.SA, UserRole.ADMIN]}>

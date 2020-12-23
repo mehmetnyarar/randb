@@ -69,26 +69,28 @@ export const UsersScreen: NextScreen = ({ t }) => {
                   value={search.text}
                   onChange={e => onSearchTextChange(e.target.value)}
                 />
-                <select
-                  value={search.by}
-                  onChange={e => onSearchByChange(e.target.value as any)}
-                >
-                  {Object.values(UserSearchBy).map((option, i) => (
-                    <option key={i} value={option}>
-                      {t(`user.search.by.${option}`)}
-                    </option>
-                  ))}
-                </select>
-                <InfoButton
-                  width={100}
-                  onClick={() => {
-                    const query = getUserFilter(search, filter)
-                    console.log('search', { query })
-                    find(query)
-                  }}
-                >
-                  {loading ? <Loading icon spin /> : t('search')}
-                </InfoButton>
+                <div className='search-box-action'>
+                  <select
+                    value={search.by}
+                    onChange={e => onSearchByChange(e.target.value as any)}
+                  >
+                    {Object.values(UserSearchBy).map((option, i) => (
+                      <option key={i} value={option}>
+                        {t(`user.search.by.${option}`)}
+                      </option>
+                    ))}
+                  </select>
+                  <InfoButton
+                    width={100}
+                    onClick={() => {
+                      const query = getUserFilter(search, filter)
+                      console.log('search', { query })
+                      find(query)
+                    }}
+                  >
+                    {loading ? <Loading icon spin /> : t('search')}
+                  </InfoButton>
+                </div>
               </div>
               <div className='search-status'>
                 <span>{loading ? t('loading') : ''}</span>
@@ -125,19 +127,24 @@ export const UsersScreen: NextScreen = ({ t }) => {
           }
           .search-box {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
           }
           .search-box input {
             flex: 1;
           }
-          .search-box select {
-            margin: 0 16px;
-            padding: 8px 16px;
+          .search-box-action {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
           }
-          .search-box .button {
-            margin-left: 16px;
+          .search-box select {
+            flex: 1;
+            margin: 0 16px 0 0;
+            padding: 8px 16px;
           }
 
           .search-status {
@@ -157,6 +164,18 @@ export const UsersScreen: NextScreen = ({ t }) => {
             justify-content: flex-start;
             align-items: flex-start;
             flex-wrap: wrap;
+          }
+
+          @media screen and (min-width: 600px) {
+            .search-box {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .search-box-action {
+              margin: 0 0 0 16px;
+            }
           }
         `}
       </style>

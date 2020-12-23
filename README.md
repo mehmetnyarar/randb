@@ -92,9 +92,9 @@ TODO
 - [ ] Update brand colors (`~/theme/palette/brand.ts` in `packages/shared-ui`)
 
 ```sh
-yarn dev:server
-yarn dev:logic
-yarn dev:ui
+yarn dev:server #required for web and mobile apps
+yarn dev:logic # required initially and optional during the development
+yarn dev:ui # required initially and optional during the development
 yarn dev:web
 yarn dev:mobile
 ```

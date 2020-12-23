@@ -7,7 +7,7 @@ import {
   UserRole
 } from '@app/logic'
 import React, { useContext, useEffect } from 'react'
-import { RiStackLine } from 'react-icons/ri'
+import { RiAddCircleFill, RiStackLine } from 'react-icons/ri'
 import { GhostButton, SubmitButton } from '~/components/button'
 import { Field, Label } from '~/components/form'
 import { FileUpload } from '~/components/input'
@@ -51,7 +51,9 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
         title={t('screen.network.import')}
         loading={loading}
         actions={
-          <GhostButton onClick={refresh}>{t('import.new')}</GhostButton>
+          <GhostButton onClick={refresh} aria-label={t('import.new')}>
+            <RiAddCircleFill />
+          </GhostButton>
         }
       >
         <>

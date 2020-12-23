@@ -1,4 +1,3 @@
-export * from './cell-details'
+export * from './details'
 export * from './report'
-export * from './site-details'
 export * from './topology'

@@ -27,7 +27,7 @@ export const Header: React.FC<Props> = () => {
         <nav className='user-nav' aria-label='User Navigation'>
           {user ? (
             <>
-              <span>
+              <span className='user-name'>
                 {t('welcome.user', { name: getPersonName(user.name) })}
               </span>
               <Divider vertical margin={16} />
@@ -61,6 +61,16 @@ export const Header: React.FC<Props> = () => {
           }
           .app-header h2 {
             font-variant: petite-caps;
+            margin-left: ${user ? 32 : 4}px;
+          }
+
+          .user-name {
+            display: none;
+          }
+          @media screen and (min-width: 600px) {
+            .user-name {
+              display: inline-block;
+            }
           }
 
           .user-nav {

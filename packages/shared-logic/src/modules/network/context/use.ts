@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   AppError,
   getCustomError,
@@ -18,6 +18,7 @@ import {
   useTACsLazyQuery
 } from '../../../graphql'
 import { Logger } from '../../../logger'
+import { Auth } from '../../auth'
 import { getNeStats } from '../reporter'
 import { getNe, getNeList } from '../topology'
 import { Ne } from '../types'
@@ -31,6 +32,8 @@ const logger = Logger.create({
  * Network hook.
  */
 export const useNetwork = (): NetworkContext => {
+  const { user } = useContext(Auth)
+
   const [error, setError] = useState<AppError>()
   const [result, setResult] = useState<Ne[]>([])
   const [loading, setLoading] = useState(false)
@@ -214,7 +217,11 @@ export const useNetwork = (): NetworkContext => {
     [deleteCell, reload, network]
   )
 
-  useEffect(() => reload(network), [reload, network])
+  useEffect(() => {
+    console.debug('network/init', { user, network })
+    if (user) reload(network)
+    else setResult([])
+  }, [user, reload, network])
 
   const [neStats, setNeStats] = useState<NetworkElementReport>({})
   useEffect(() => {

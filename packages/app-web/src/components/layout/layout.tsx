@@ -12,7 +12,8 @@ import { Main } from './main'
 import { GlobalStyles } from './styles'
 
 const logger = Logger.create({
-  src: 'Layout'
+  src: 'Layout',
+  level: 'off'
 })
 
 interface Props {

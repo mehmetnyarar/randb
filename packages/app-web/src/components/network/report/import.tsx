@@ -23,14 +23,14 @@ export const ImportReport: React.FC<Props> = ({ value }) => {
           <h3>{t('summary')}</h3>
         </header>
         <div className='summary-items'>
-          {Object.keys(summary || {}).map((key, i) => {
+          {Object.keys(summary || {}).map((key, index) => {
             const item = summary[key]
             return item ? (
               <InfoTable
-                key={i}
-                title={t(`network.import.${key}`)}
-                records={Object.keys(item).map(key => ({
-                  label: t(`ne.${key}`),
+                key={index}
+                caption={t(`network.import.${key}`)}
+                data={Object.keys(item).map(key => ({
+                  title: t(`ne.${key}`),
                   value: item[key]
                 }))}
                 className='mr-16'
