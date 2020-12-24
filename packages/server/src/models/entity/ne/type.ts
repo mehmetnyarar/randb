@@ -32,8 +32,7 @@ export class NetworkElement extends Entity {
   location?: Geometry
 
   // Type of children differs based on the type of network element
-  // @Field must implemented individually per entity
-  @Prop()
+  // @Props and @Field must implemented individually per entity
   children?: Ref<NetworkElement>[]
 
   @Field(() => User, { nullable: true })

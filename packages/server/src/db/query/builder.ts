@@ -23,12 +23,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
   /**
    * Document query.
    */
-  public query: DocumentQuery<
-    DocumentType<T>[],
-    DocumentType<T>,
-    QueryHelpers
-  > &
-    QueryHelpers
+  public query: DocumentQuery<T, DocumentType<T>, QueryHelpers>
 
   // #endregion
 
@@ -40,7 +35,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    */
   constructor (model: ModelType<T, QueryHelpers>) {
     this.model = model
-    this.query = this.model.find()
+    this.query = this.model.find() as any
   }
 
   // #endregion
@@ -51,7 +46,7 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
    * Resets the query.
    */
   public reset () {
-    this.query = this.model.find()
+    this.query = this.model.find() as any
   }
 
   /**
