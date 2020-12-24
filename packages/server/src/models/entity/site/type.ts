@@ -13,7 +13,7 @@ import { Tac } from '../tac'
  * Site.
  */
 @ObjectType()
-@EntityModel('sites')
+@EntityModel('sites', 0)
 @Index({ location: '2dsphere' })
 export class Site extends NetworkElement {
   @Field(() => Bsc, { nullable: true })

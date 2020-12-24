@@ -8,7 +8,7 @@ import { Site } from '../site'
  * BSC.
  */
 @ObjectType()
-@EntityModel('bscs')
+@EntityModel('bscs', 0)
 @Index({ location: '2dsphere' })
 export class Bsc extends NetworkElement {
   @Field(() => [Site])

@@ -23,7 +23,12 @@ export class QueryBuilder<T extends Entity, QueryHelpers = {}> {
   /**
    * Document query.
    */
-  public query: DocumentQuery<DocumentType<T>[], DocumentType<T>, QueryHelpers>
+  public query: DocumentQuery<
+    DocumentType<T>[],
+    DocumentType<T>,
+    QueryHelpers
+  > &
+    QueryHelpers
 
   // #endregion
 

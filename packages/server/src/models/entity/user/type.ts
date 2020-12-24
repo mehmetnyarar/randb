@@ -74,7 +74,7 @@ export class User extends Entity {
   @Prop({ default: '' })
   password!: string
 
-  @Prop({ default: [] })
+  @Prop({ type: String, default: [] })
   oldPasswords!: string[]
 
   @Prop({ default: 0 })

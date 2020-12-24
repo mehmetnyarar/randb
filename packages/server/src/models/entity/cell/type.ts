@@ -18,7 +18,7 @@ import { Cell4G } from './g4'
  * Cell.
  */
 @ObjectType()
-@EntityModel('cells')
+@EntityModel('cells', 0)
 export class Cell extends NetworkElement {
   @Field(() => Bsc, { nullable: true })
   @Prop({ ref: 'Bsc' })

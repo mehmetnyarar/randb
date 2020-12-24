@@ -8,7 +8,7 @@ import { Site } from '../site'
  * LAC.
  */
 @ObjectType()
-@EntityModel('lacs')
+@EntityModel('lacs', 0)
 @Index({ location: '2dsphere' })
 export class Lac extends NetworkElement {
   @Field(() => [Site])

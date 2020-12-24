@@ -11,7 +11,7 @@ import { EventType } from './enum'
  * Log.
  */
 @ObjectType()
-@EntityModel('logs')
+@EntityModel('logs', 0)
 export class Log extends Entity {
   // #region Log
 
