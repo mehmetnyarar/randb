@@ -1,7 +1,7 @@
 import { Snack } from '@app/logic'
 import { fireEvent } from '@testing-library/dom'
 import React, { useContext } from 'react'
-import { render } from 'test/render'
+import { render } from 'test/utils'
 
 // #region Setup
 

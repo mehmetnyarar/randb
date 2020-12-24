@@ -3,7 +3,7 @@
 import { waitFor } from '@testing-library/react'
 import React from 'react'
 import { currentUser } from 'test/mocks'
-import { render } from 'test/render'
+import { render } from 'test/utils'
 import Screen from '~/pages/index'
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter')
