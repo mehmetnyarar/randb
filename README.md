@@ -85,10 +85,10 @@ Use `yarn commit` command to commit changes.
 
 ## Development
 
-TODO
-
 - [ ] Create and configure `.env` in `packages/server`
-- [ ] Create and configure `~/config/env/env.ts` in `packages/shared-logic`
+- [ ] Create and configure `.env` in `packages/shared-logic`
+- [ ] Create and configure `.env` in `packages/app-mobile`
+- [ ] Create and configure `.env` in `packages/app-web`
 - [ ] Update brand colors (`~/theme/palette/brand.ts` in `packages/shared-ui`)
 
 ```sh
@@ -110,3 +110,27 @@ yarn test:mobile
 ```
 
 ## Production
+
+Manual deployment:
+
+```sh
+# Initial deployment
+git clone https://github.com/mehmetnyarar/randb.git
+cd randb
+yarn install
+yarn build:logic
+yarn build:ui
+yarn build:web
+pm2 start yarn --interpreter bash --name randb-server --cwd ./randb -- start:server
+pm2 start yarn --interpreter bash --name randb-web --cwd ./randb -- start:web
+
+# Second time and onwards
+pm2 stop all
+cd randb
+git pull
+yarn reset
+yarn build:logic
+yarn build:ui
+yarn build:web
+pm2 restart
+```

@@ -4,14 +4,14 @@ This is a web application ([Next.js](https://nextjs.org/)) which targets all use
 
 ## Structure
 
-| Directory  | Description          |
-| ---------- | -------------------- |
-| components | React components     |
-| pages      | Next.js pages        |
-| types      | Interfaces and types |
-| apollo     | Apollo Client        |
-| config     | Configuration        |
-| i18n       | I18n                 |
+| Directory  | Description                |
+| ---------- | -------------------------- |
+| components | React components           |
+| pages      | Next.js pages              |
+| state      | Recoil atoms and selectors |
+| types      | Interfaces and types       |
+| config     | Configuration              |
+| i18n       | I18n                       |
 
 ## Apollo
 

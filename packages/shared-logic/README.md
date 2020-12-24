@@ -6,19 +6,18 @@ This is a shared library that provides application logic to the front-end applic
 
 | Directory | Description                                                                      |
 | --------- | -------------------------------------------------------------------------------- |
+| apollo    | Apollo client                                                                    |
 | config    | Configuration                                                                    |
+| error     | Error handlers                                                                   |
 | form      | Form utilities                                                                   |
 | graphql   | Apollo GraphQL                                                                   |
+| hooks     | Custom hooks                                                                     |
 | logger    | Logging utility                                                                  |
 | models    | Types/interfaces, hooks, and other helpers & utilities                           |
 | modules   | Types/interfaces, hooks, and other helpers & utilities                           |
+| search    | Search context                                                                   |
 | storage   | [Async Storage](https://react-native-community.github.io/async-storage/) helpers |
-
-## Config
-
-Configuration of any sort is provided via constants and environment variables that are located in the `~/config` directory.
-
-- Check `~/config/env/env.config.ts` to see how environment variables are/should be set
+| utility   | Various utilities                                                                |
 
 ## Form
 
