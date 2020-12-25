@@ -74,8 +74,8 @@ export const NetworkImportScreen: NextScreen = ({ t }) => {
                         onBlur={onBlur}
                         className='network-select'
                       >
-                        {Object.values(NetworkType).map((type, i) => (
-                          <option key={i} value={type}>
+                        {Object.values(NetworkType).map(type => (
+                          <option key={type} value={type}>
                             {t(`network.type.${type}`)}
                           </option>
                         ))}

@@ -8,15 +8,17 @@ import { NextScreen } from '~/types'
 
 const solutions = [
   {
+    id: 'nasa',
     title: 'NASA WorldWind',
     href: 'https://worldwind.arc.nasa.gov/web/get-started/'
   },
   {
+    id: 'vts',
     title: 'VTS Browser JS',
     href: 'https://github.com/melowntech/vts-browser-js'
   },
-  { title: 'Cesium', href: 'https://cesium.com/cesiumjs/' },
-  { title: 'Terria', href: 'https://terria.io/' }
+  { id: 'cesium', title: 'Cesium', href: 'https://cesium.com/cesiumjs/' },
+  { id: 'terria', title: 'Terria', href: 'https://terria.io/' }
 ]
 
 /**
@@ -34,13 +36,13 @@ export const DashboardScreen: NextScreen = ({ t }) => {
         loading={false}
       >
         <ul className='ne-stats'>
-          {Object.keys(neStats).map((key, i) => {
-            const value = neStats[key]
+          {Object.keys(neStats).map(stat => {
+            const value = neStats[stat]
             if (typeof value === 'undefined') return null
 
             return (
-              <li key={i} className='ne-stat'>
-                <h5>{t(`ne.${key}`)}</h5>
+              <li key={stat} className='ne-stat'>
+                <h5>{t(`ne.${stat}`)}</h5>
                 <div className='ne-stat-value'>
                   <span>{value}</span>
                 </div>
@@ -51,8 +53,8 @@ export const DashboardScreen: NextScreen = ({ t }) => {
 
         <h6>Map solutions</h6>
         <ul className='solutions'>
-          {solutions.map((item, i) => (
-            <li key={i}>
+          {solutions.map(item => (
+            <li key={item.id}>
               <a href={item.href} target='_blank' rel='noreferrer'>
                 {item.title}
               </a>

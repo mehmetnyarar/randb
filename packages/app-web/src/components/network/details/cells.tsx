@@ -12,8 +12,8 @@ interface Props {
 export const CellList: React.FC<Props> = ({ items }) => {
   return (
     <ul>
-      {items.map((cell, i) => (
-        <li key={i}>
+      {items.map(cell => (
+        <li key={cell.id}>
           <Link href='/cells/[name]' as={`/cells/${cell.name}`}>
             <a>{cell.name}</a>
           </Link>

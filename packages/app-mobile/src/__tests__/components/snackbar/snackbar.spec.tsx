@@ -11,7 +11,6 @@ const Component: React.FC = () => {
     <Button
       title='Show Snack'
       onPress={() => {
-        console.warn('Showing snack now...')
         show({
           type: 'info',
           title: 'Test',

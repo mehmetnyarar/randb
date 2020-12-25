@@ -36,9 +36,9 @@ export const TopologyView: React.FC<Props> = () => {
       </div>
 
       <ul className='ne-network'>
-        {Object.values(NetworkType).map((type, index) => {
+        {Object.values(NetworkType).map(type => {
           return (
-            <li key={index} className='ne-network-type'>
+            <li key={type} className='ne-network-type'>
               <input
                 id={type}
                 type='radio'
@@ -62,8 +62,8 @@ export const TopologyView: React.FC<Props> = () => {
       </ul>
 
       <ul className='ne-list'>
-        {result.map((ne, i) => (
-          <ElementView key={i} element={ne} />
+        {result.map(ne => (
+          <ElementView key={ne.id} element={ne} />
         ))}
       </ul>
 

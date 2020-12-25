@@ -22,8 +22,8 @@ export const Item: React.FC<Props> = props => {
           {!isNil(value) &&
             (Array.isArray(value) ? (
               <dl>
-                {value.map((item, index) => (
-                  <Item key={index} {...item} />
+                {value.map(item => (
+                  <Item key={item.id} {...item} />
                 ))}
               </dl>
             ) : isObject(value) ? (

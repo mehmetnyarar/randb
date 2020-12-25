@@ -17,6 +17,7 @@ interface SidebarLink extends AppLink {
 }
 
 interface SidebarNavSection {
+  id: string
   label: string
   roles: UserRole[]
   links: SidebarLink[]
@@ -26,10 +27,12 @@ type SidebarNav = SidebarNavSection[]
 
 const nav: SidebarNav = [
   {
+    id: 'network',
     label: 'manage.network',
     roles: [UserRole.SA, UserRole.ADMIN, UserRole.MANAGER],
     links: [
       {
+        id: 'import',
         path: '/network/import',
         title: 'screen.network.import',
         description: 'screen.network.import.description'
@@ -37,15 +40,18 @@ const nav: SidebarNav = [
     ]
   },
   {
+    id: 'user',
     label: 'manage.users',
     roles: [UserRole.SA, UserRole.ADMIN],
     links: [
       {
+        id: 'list',
         path: '/users',
         title: 'screen.users',
         description: 'screen.users.description'
       },
       {
+        id: 'add',
         as: '/users/new',
         path: { pathname: '/users/[username]', query: { username: 'new' } },
         title: 'screen.user.new',
@@ -85,13 +91,13 @@ export const Sidebar: React.FC<Props> = ({ roles }) => {
           <TopologyView />
         </Section>
         <nav role='navigation' aria-label='Sidebar Navigation'>
-          {nav.map((section, sectionIndex) => {
+          {nav.map(section => {
             return isUserAuthorized(section.roles, roles) ? (
-              <Section key={sectionIndex} title={t(section.label)}>
-                {section.links.map((item, itemIndex) => {
-                  return isUserAuthorized(item.roles, roles) ? (
-                    <Link key={itemIndex} href={item.path} as={item.as}>
-                      <a title={t(item.description)}>{t(item.title)}</a>
+              <Section key={section.id} title={t(section.label)}>
+                {section.links.map(link => {
+                  return isUserAuthorized(link.roles, roles) ? (
+                    <Link key={link.id} href={link.path} as={link.as}>
+                      <a title={t(link.description)}>{t(link.title)}</a>
                     </Link>
                   ) : null
                 })}

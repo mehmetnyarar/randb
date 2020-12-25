@@ -218,7 +218,6 @@ export const useNetwork = (): NetworkContext => {
   )
 
   useEffect(() => {
-    console.debug('network/init', { user, network })
     if (user) reload(network)
     else setResult([])
   }, [user, reload, network])

@@ -206,8 +206,8 @@ export const UserScreen: NextScreen = ({ t }) => {
                       onBlur={onBlur}
                       className='full-width'
                     >
-                      {Object.values(PersonGender).map((gender, i) => (
-                        <option key={i} value={gender}>
+                      {Object.values(PersonGender).map(gender => (
+                        <option key={gender} value={gender}>
                           {t(`person.gender.${gender}`)}
                         </option>
                       ))}
@@ -227,8 +227,8 @@ export const UserScreen: NextScreen = ({ t }) => {
                       onBlur={onBlur}
                       className='full-width'
                     >
-                      {NEW_USER_ROLES.map((role, i) => (
-                        <option key={i} value={role}>
+                      {NEW_USER_ROLES.map(role => (
+                        <option key={role} value={role}>
                           {t(`user.role.${role}`)}
                         </option>
                       ))}

@@ -97,8 +97,8 @@ export const ElementView: React.FC<Props> = ({ element }) => {
 
         {areChildrenVisible ? (
           <ul className='ne-list'>
-            {children.map((e, i) => (
-              <ElementView key={i} element={e} />
+            {children.map(e => (
+              <ElementView key={e.id} element={e} />
             ))}
           </ul>
         ) : null}

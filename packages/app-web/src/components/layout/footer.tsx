@@ -6,11 +6,10 @@ import { AppLink } from '~/types'
 import { LanguageSelection } from '../language'
 import { ThemeSelection } from '../theme'
 
-// TODO Create the following pages
 const links: AppLink[] = [
-  { path: '/about', title: 'about' },
-  { path: '/contact', title: 'contact' },
-  { path: '/policy', title: 'policy' }
+  { id: 'about', path: '/about', title: 'about' },
+  { id: 'contact', path: '/contact', title: 'contact' },
+  { id: 'policy', path: '/policy', title: 'policy' }
 ]
 
 interface Props {}
@@ -37,8 +36,8 @@ export const Footer: React.FC<Props> = () => {
           </div>
         </section>
         <nav role='navigation' aria-label='Footer Navigation'>
-          {links.map((link, index) => (
-            <Link key={index} href={link.path}>
+          {links.map(link => (
+            <Link key={link.id} href={link.path}>
               <a title={link.description}>{t(`screen.${link.title}`)}</a>
             </Link>
           ))}

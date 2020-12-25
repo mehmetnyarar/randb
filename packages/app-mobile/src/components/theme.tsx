@@ -31,10 +31,7 @@ export const ThemeSelection: React.FC = () => {
     (index: IndexPath | IndexPath[]) => {
       if (!Array.isArray(index)) {
         const theme = themes.find(t => t.id === index.row)
-        if (theme) {
-          onSchemeChange(theme.scheme)
-          console.log('onThemeChange', { index })
-        }
+        if (theme) onSchemeChange(theme.scheme)
       }
     },
     [onSchemeChange]

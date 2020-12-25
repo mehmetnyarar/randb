@@ -24,14 +24,16 @@ export const UserCard: React.FC<Props> = ({ user, onDelete, isDisabled }) => {
   const sa = useMemo(() => roles.includes(UserRole.SA), [roles])
   const data = useMemo<InfoRecord[]>(() => {
     return [
-      { title: t('email'), value: user.email },
-      { title: t('phone'), value: stringify.phoneNo(user.phone) },
+      { id: 'username', title: t('username'), value: user.username },
+      { id: 'email', title: t('email'), value: user.email },
+      { id: 'phone', title: t('phone'), value: stringify.phoneNo(user.phone) },
       {
+        id: 'roles',
         title: t('user.roles'),
         render: (
           <ul>
-            {user.roles.map((role, index) => (
-              <li key={index}>{t(`user.role.${role}`)}</li>
+            {user.roles.map(role => (
+              <li key={role}>{t(`user.role.${role}`)}</li>
             ))}
           </ul>
         )

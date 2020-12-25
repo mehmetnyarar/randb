@@ -55,11 +55,12 @@ export const CellDetails: React.FC<Props> = ({ value }) => {
     const params = g2 || g3 || g4
 
     return [
-      { title: t('ne.bsc'), value: bsc?.name },
-      { title: t('ne.rnc'), value: rnc?.name },
-      { title: t('ne.tac'), value: tac?.name },
-      { title: t('ne.lac'), value: lac?.name },
+      { id: 'bsc', title: t('ne.bsc'), value: bsc?.name },
+      { id: 'rnc', title: t('ne.rnc'), value: rnc?.name },
+      { id: 'tac', title: t('ne.tac'), value: tac?.name },
+      { id: 'lac', title: t('ne.lac'), value: lac?.name },
       {
+        id: 'site',
         title: t('ne.site'),
         render: (
           <Link
@@ -70,36 +71,68 @@ export const CellDetails: React.FC<Props> = ({ value }) => {
           </Link>
         )
       },
-      { title: t('ne.ID'), value: ID },
-      { title: t('ne.name'), value: name },
-      { title: t('ne.location'), value: stringify.location(location) },
-      { title: t('ne.scenario'), value: scenario },
-      { title: t('ne.sector'), value: sector },
-      { title: t('ne.antenna'), value: antenna?.name },
-      { title: t('ne.tilt.electric'), value: electricalTilt },
-      { title: t('ne.tilt.mechanic'), value: mechanicalTilt },
-      { title: t('ne.height'), value: height },
-      { title: t('ne.azimuth'), value: azimuth },
+      { id: 'neId', title: t('ne.ID'), value: ID },
+      { id: 'name', title: t('ne.name'), value: name },
       {
+        id: 'location',
+        title: t('ne.location'),
+        value: stringify.location(location)
+      },
+      { id: 'scenario', title: t('ne.scenario'), value: scenario },
+      { id: 'sector', title: t('ne.sector'), value: sector },
+      { id: 'antenna', title: t('ne.antenna'), value: antenna?.name },
+      {
+        id: 'electricTilt',
+        title: t('ne.tilt.electric'),
+        value: electricalTilt
+      },
+      {
+        id: 'mechanicTilt',
+        title: t('ne.tilt.mechanic'),
+        value: mechanicalTilt
+      },
+      { id: 'height', title: t('ne.height'), value: height },
+      { id: 'azimuth', title: t('ne.azimuth'), value: azimuth },
+      {
+        id: 'params',
         title: t('ne.cell.params'),
         value: Object.keys(params).map(key => ({
+          id: `param.${key}`,
           title: t(`ne.cell.param.${key}`),
           value: params[key]
         }))
       },
-      { title: t('ne.active'), value: t(stringify.yesNo(isActive)) as string },
-      { title: t('ne.deactivated'), value: stringify.date(deactivatedAt) },
-      { title: t('ne.created'), value: stringify.date(createdAt) },
       {
+        id: 'active',
+        title: t('ne.active'),
+        value: t(stringify.yesNo(isActive)) as string
+      },
+      {
+        id: 'deactivatedAt',
+        title: t('ne.deactivated'),
+        value: stringify.date(deactivatedAt)
+      },
+      {
+        id: 'createdAt',
+        title: t('ne.created'),
+        value: stringify.date(createdAt)
+      },
+      {
+        id: 'createdBy',
         title: t('ne.created.by'),
         value: stringify.personName(createdBy?.name)
       },
-      { title: t('ne.updated'), value: stringify.date(updatedAt) },
       {
+        id: 'updatedAt',
+        title: t('ne.updated'),
+        value: stringify.date(updatedAt)
+      },
+      {
+        id: 'updatedBy',
         title: t('ne.updated.by'),
         value: stringify.personName(updatedBy?.name)
       },
-      { title: t('ne.id'), value: id }
+      { id: 'ref', title: t('ne.id'), value: id }
     ]
   }, [t, value])
 

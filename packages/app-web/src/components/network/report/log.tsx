@@ -98,8 +98,8 @@ export const Log: React.FC<Props> = ({ value }) => {
               <>
                 <p>{t('error.invalid')}</p>
                 <ul>
-                  {invalid.split(',').map((field, i) => (
-                    <li key={i}>{field}</li>
+                  {invalid.split(',').map(field => (
+                    <li key={field}>{field}</li>
                   ))}
                 </ul>
               </>
@@ -108,8 +108,8 @@ export const Log: React.FC<Props> = ({ value }) => {
               <>
                 <p>{t('error.invalid')}</p>
                 <ul>
-                  {invalid.split(',').map((field, i) => (
-                    <li key={i}>{field}</li>
+                  {invalid.split(',').map(field => (
+                    <li key={field}>{field}</li>
                   ))}
                 </ul>
               </>

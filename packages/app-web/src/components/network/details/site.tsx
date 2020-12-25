@@ -45,29 +45,63 @@ export const SiteDetails: React.FC<Props> = ({ value }) => {
     } = value
 
     return [
-      { title: t('ne.bsc'), value: bsc?.name },
-      { title: t('ne.rnc'), value: rnc?.name },
-      { title: t('ne.tac'), value: tac?.name },
-      { title: t('ne.lac'), value: lac?.name },
-      { title: t('ne.ID'), value: ID },
-      { title: t('ne.name'), value: name },
-      { title: t('ne.location'), value: stringify.location(location) },
-      { title: t('ne.cells.g2'), render: <CellList items={g2} /> },
-      { title: t('ne.cells.g3'), render: <CellList items={g3} /> },
-      { title: t('ne.cells.g4'), render: <CellList items={g4} /> },
-      { title: t('ne.active'), value: t(stringify.yesNo(isActive)) as string },
-      { title: t('ne.deactivated'), value: stringify.date(deactivatedAt) },
-      { title: t('ne.created'), value: stringify.date(createdAt) },
+      { id: 'bsc', title: t('ne.bsc'), value: bsc?.name },
+      { id: 'rnc', title: t('ne.rnc'), value: rnc?.name },
+      { id: 'tac', title: t('ne.tac'), value: tac?.name },
+      { id: 'lac', title: t('ne.lac'), value: lac?.name },
+      { id: 'neId', title: t('ne.ID'), value: ID },
+      { id: 'name', title: t('ne.name'), value: name },
       {
+        id: 'location',
+        title: t('ne.location'),
+        value: stringify.location(location)
+      },
+      {
+        id: 'cells2g',
+        title: t('ne.cells.g2'),
+        render: <CellList items={g2} />
+      },
+      {
+        id: 'cells3g',
+        title: t('ne.cells.g3'),
+        render: <CellList items={g3} />
+      },
+      {
+        id: 'cells4g',
+        title: t('ne.cells.g4'),
+        render: <CellList items={g4} />
+      },
+      {
+        id: 'active',
+        title: t('ne.active'),
+        value: t(stringify.yesNo(isActive)) as string
+      },
+      {
+        id: 'deactivatedAt',
+        title: t('ne.deactivated'),
+        value: stringify.date(deactivatedAt)
+      },
+      {
+        id: 'createdAt',
+        title: t('ne.created'),
+        value: stringify.date(createdAt)
+      },
+      {
+        id: 'createdBy',
         title: t('ne.created.by'),
         value: stringify.personName(createdBy?.name)
       },
-      { title: t('ne.updated'), value: stringify.date(updatedAt) },
       {
+        id: 'updatedAt',
+        title: t('ne.updated'),
+        value: stringify.date(updatedAt)
+      },
+      {
+        id: 'updatedBy',
         title: t('ne.updated.by'),
         value: stringify.personName(updatedBy?.name)
       },
-      { title: t('ne.id'), value: id }
+      { id: 'ref', title: t('ne.id'), value: id }
     ]
   }, [t, value])
 

@@ -18,8 +18,8 @@ export const InfoTable: React.FC<Props> = props => {
     <table className={className}>
       {caption && <caption>{caption}</caption>}
       <tbody>
-        {data.map((item, index) => (
-          <Item key={index} {...item} />
+        {data.map(item => (
+          <Item key={item.id} {...item} />
         ))}
       </tbody>
     </table>

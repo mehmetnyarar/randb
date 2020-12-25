@@ -14,6 +14,7 @@ export interface AppLinkPath<Query = {}> {
  * Application link.
  */
 export interface AppLink<Query = {}> {
+  id: string
   as?: string
   path: string | AppLinkPath<Query>
   title: string

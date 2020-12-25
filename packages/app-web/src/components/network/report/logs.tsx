@@ -25,8 +25,8 @@ export const Logs: React.FC<Props> = ({ value }) => {
           </tr>
         </thead>
         <tbody>
-          {value.map((log, i) => (
-            <Log key={i} value={log} />
+          {value.map(log => (
+            <Log key={log.id} value={log} />
           ))}
         </tbody>
       </table>

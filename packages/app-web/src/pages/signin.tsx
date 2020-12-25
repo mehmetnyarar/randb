@@ -206,14 +206,14 @@ export const SigninScreen: NextScreen = ({ t }) => {
 
           <aside className='signin-methods' data-testid='signin-methods'>
             <span>{t('auth.signin.method')}</span>
-            {otherMethods.map((m, i) => (
-              <Fragment key={i}>
+            {otherMethods.map((otherMethod, i) => (
+              <Fragment key={otherMethod}>
                 {i > 0 && <Divider vertical />}
                 <GhostButton
-                  onClick={() => onMethodChange(m)}
-                  data-testid={`onMethodChange-${m}`}
+                  onClick={() => onMethodChange(otherMethod)}
+                  data-testid={`onMethodChange-${otherMethod}`}
                 >
-                  {t(`auth.signin.method.${m}`)}
+                  {t(`auth.signin.method.${otherMethod}`)}
                 </GhostButton>
               </Fragment>
             ))}

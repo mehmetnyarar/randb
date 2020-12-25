@@ -81,7 +81,6 @@ export const getGraphQLError = (
   type: AppCustomError = 'nodata',
   messages?: string[]
 ): AppError => {
-  console.log('getGraphQLError', { error })
   return error
     ? Array.isArray(error)
       ? getGraphQLErrors([...error])

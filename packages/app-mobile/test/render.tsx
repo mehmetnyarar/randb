@@ -63,8 +63,6 @@ const Navigator: React.FC<WrapperProps> = ({ auth, screen }) => {
   const showSignin = auth && !(user || skip)
   const Screen = screen as React.FC
 
-  if (auth) console.warn('Navigator', { user, skip, showSignin })
-
   return (
     <NavigationContainer>
       <Stack.Navigator>

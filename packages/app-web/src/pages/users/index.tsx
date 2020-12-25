@@ -74,8 +74,8 @@ export const UsersScreen: NextScreen = ({ t }) => {
                     value={search.by}
                     onChange={e => onSearchByChange(e.target.value as any)}
                   >
-                    {Object.values(UserSearchBy).map((option, i) => (
-                      <option key={i} value={option}>
+                    {Object.values(UserSearchBy).map(option => (
+                      <option key={option} value={option}>
                         {t(`user.search.by.${option}`)}
                       </option>
                     ))}
@@ -84,7 +84,6 @@ export const UsersScreen: NextScreen = ({ t }) => {
                     width={100}
                     onClick={() => {
                       const query = getUserFilter(search, filter)
-                      console.log('search', { query })
                       find(query)
                     }}
                   >
@@ -103,9 +102,9 @@ export const UsersScreen: NextScreen = ({ t }) => {
             <section id='results' className='results'>
               {result.edges
                 .map(edge => edge.node)
-                .map((user, i) => (
+                .map(user => (
                   <UserCard
-                    key={i}
+                    key={user.id}
                     user={user}
                     onDelete={onDelete}
                     isDisabled={currentUser?.id === user.id}

@@ -15,8 +15,8 @@ export const InfoList: React.FC<Props> = props => {
 
   return (
     <dl className={className}>
-      {data.map((item, i) => (
-        <Item key={i} {...item} />
+      {data.map(item => (
+        <Item key={item.id} {...item} />
       ))}
     </dl>
   )

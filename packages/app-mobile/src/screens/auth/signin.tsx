@@ -194,13 +194,13 @@ export const SigninScreen: React.FC<Props> = () => {
 
       <View style={styles.aside}>
         <Text>Signin with</Text>
-        {otherMethods.map((m, i) => (
-          <Fragment key={i}>
+        {otherMethods.map(otherMethod => (
+          <Fragment key={otherMethod}>
             <GhostButton
-              onPress={() => onMethodChange(m)}
-              data-testid={`onMethodChange-${m}`}
+              onPress={() => onMethodChange(otherMethod)}
+              data-testid={`onMethodChange-${otherMethod}`}
             >
-              {m}
+              {otherMethod}
             </GhostButton>
           </Fragment>
         ))}
